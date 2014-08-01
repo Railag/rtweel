@@ -15,18 +15,18 @@ Already done:
 - 1 Mb apk file weight, 2.8 Mb installed app size.
 
 TODO:
-- Tweet UI (date parsing, text assignment)
-- Timeline updating mechanism improving
-- Loading animation on app start
-- Something with first app pre-login activity
+- ~~Tweet UI (date parsing, text assignment)~~
+- ~~Timeline updating mechanism improving~~
+- ~~Loading animation on app start~~
+- ~~Something with first app pre-login activity~~
 - Improving the detail view tweet window
-- Adding network exceptions avoiding, screen rotating info saving
+- Adding ~~network exceptions avoiding~~, screen rotating info saving
 - Logout
 - Followers
 - Direct messages
 - Mentions
 - Trends
-- Paging system improvement
+- ~~Paging system improvement~~
 - Tweet deletion
 - Last tweet edition
 - links and pictures in tweets
@@ -35,5 +35,6 @@ TODO:
 And a lot of small fixes
 
 Note: Current 0.16 version isn't stable at all. 
+
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into /src/com.rtweel.twitteroauth/ConstantValues.java class.
 
