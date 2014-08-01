@@ -1,11 +1,11 @@
 v0.18:
 ======
--Timeline getting speed improved
--New pre-login layout
--Simple no-network exceptions added
--Valid switching between home and user timelines
--Home and user timeline's Sqlite tables
--Other small fixes
+- Timeline getting speed improved
+- New pre-login layout
+- Simple no-network exceptions added
+- Valid switching between home and user timelines
+- Home and user timeline's Sqlite tables
+- Other small fixes
 
 v0.17:
 ======
