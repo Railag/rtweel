@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Rtweel</string>
+    <string name="title_activity_detail">Просмотр</string>
+    <string name="title_activity_tweet">Твиты</string>
+    
+    
+    <string name="home_button">Назад</string>
+    <string name="edit_button">Изменить</string>
+    <string name="done_button">Готово</string>
+    <string name="add_button">Добавить</string>
+    <string name="delete_button">Удалить</string>
+    <string name="tweet_button">Твиты</string>
+    
+    <string name="spinner">Спиннер</string>
+    
+    <string name="hint_name">Имя</string>
+    <string name="hint_text">Текст</string>
+    <string name="hint_location">Местоположение</string>
+    
+    <string-array name="titles">
+       <item >Все твиты</item>
+       <item >BSUIR [UNIVERSITY]</item>
+       <item >ksisportal</item> 
+       <item >БРСМ БГУИР</item>
+    </string-array>
+    
+</resources>

@@ -1,0 +1,527 @@
+package com.rtweel.activities;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+import com.nineoldandroids.view.ViewHelper;
+import java.util.Date;
+import twitter4j.Status;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.rtweel.R;
+import com.rtweel.asynctasks.LoadTimelineTask;
+import com.rtweel.asynctasks.TimelineDownTask;
+import com.rtweel.asynctasks.TimelineUpTask;
+import com.rtweel.cache.App;
+import com.rtweel.constant.Extras;
+import com.rtweel.tweet.Timeline;
+import com.rtweel.tweet.TweetAdapter;
+import com.rtweel.twitteroauth.ConstantValues;
+import com.rtweel.twitteroauth.TwitterGetAccessTokenTask;
+import com.rtweel.twitteroauth.TwitterUtil;
+
+public class MainActivity extends ActionBarActivity { // implements
+														// ActionBar.OnNavigationListener
+														// {
+
+	public static int lastPosition = 0;
+
+	private ActionBar sActionBar;
+
+	private static final int EDIT_REQUEST = 0;
+	private static final int ADD_DEL_REQUEST = 1;
+
+	private BaseAdapter adapter;
+
+	@SuppressWarnings("rawtypes")
+	private AdapterView mAdapter;
+
+	private Timeline mTimeline;
+
+	private Date time;
+
+	private ListView list;
+	private ProgressBar mLoadingBar;
+
+	private boolean mContentLoaded;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
+
+		getSupportActionBar().hide();
+		time = new Date();
+
+		/*
+		 * Login Check
+		 */
+		if (loginCheck()) {
+			Date tmp = new Date();
+			Log.i("DEBUG",
+					"after login check: " + (tmp.getTime() - time.getTime()));
+			initialize();
+			tmp = new Date();
+			Log.i("DEBUG",
+					"after initialization: " + (tmp.getTime() - time.getTime()));
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int requestResult,
+			Intent intent) {
+
+		if (requestCode == EDIT_REQUEST) {
+			if (requestResult == RESULT_OK) {
+				Status tweet = mTimeline.get(intent.getExtras().getInt(
+						Extras.TWEET_POSITION));
+				/*
+				 * tweet.setText(intent.getExtras().getString(Extras.TEXT));
+				 * tweet.setName(intent.getExtras().getString(Extras.USER));
+				 * tweet
+				 * .setLocation(intent.getExtras().getString(Extras.LOCATION));
+				 * tweet
+				 * .setImagePath(intent.getExtras().getString(Extras.IMAGE_PATH
+				 * ));
+				 */
+				// for (Status tw : newtweets) {
+
+				/*
+				 * if (true) tw.getPosition() ==
+				 * intent.getExtras().getInt(Extras.TWEET_POSITION)) {
+				 * tw.setText(intent.getExtras().getString(Extras.TEXT ));
+				 * tw.setName(intent.getExtras().getString(Extras .USER));
+				 * tw.setLocation(intent.getExtras().getString
+				 * (Extras.LOCATION));
+				 */
+				// break;
+				// }
+				// }
+				adapter.notifyDataSetChanged();
+
+				adapter.notifyDataSetInvalidated();
+			}
+		}
+		if (requestCode == ADD_DEL_REQUEST) {
+			if (requestResult == RESULT_OK) {
+				if (intent.getExtras().getBoolean(Extras.ADD_CHECK) == true) {
+					/*
+					 * Gson gson = new Gson(); String result = null; try {
+					 * InputStream stream =
+					 * getResources().getAssets().open("0.json");
+					 * InputStreamReader reader = new InputStreamReader(stream);
+					 * BufferedReader bReader = new BufferedReader(reader);
+					 * StringBuilder builder = new StringBuilder(); String
+					 * singleLine = null; while ((singleLine =
+					 * bReader.readLine()) != null) {
+					 * builder.append(singleLine); } bReader.close(); result =
+					 * builder.toString(); Tweet tweet = gson.fromJson(result,
+					 * Tweet.class); tweet.setPosition(lastPosition++);
+					 * tweet.setText(intent.getExtras().getString(Extras.TEXT));
+					 * tweet.setName(intent.getExtras().getString(Extras.USER));
+					 * tweet
+					 * .setLocation(intent.getExtras().getString(Extras.LOCATION
+					 * ));
+					 * tweet.setImagePath(intent.getExtras().getString(Extras
+					 * .IMAGE_PATH)); tweets.add(tweet);
+					 * 
+					 * if (SPINNER_STATE != 0) { String mName = null; switch
+					 * (SPINNER_STATE) { case 1: mName = "BSUIR [UNIVERSITY]";
+					 * break; case 2: mName = "ksisportal"; break; case 3: mName
+					 * = "БРСМ БГУИР"; break; }
+					 * 
+					 * if
+					 * (mName.equals(intent.getExtras().getString(Extras.USER)))
+					 * { newtweets.add(tweet); } } } catch (IOException e) {
+					 * e.printStackTrace(); }
+					 */
+					adapter.notifyDataSetChanged();
+
+					adapter.notifyDataSetInvalidated();
+				}
+
+				else if (intent.getExtras().getBoolean(Extras.ADD_CHECK) == false) {
+					mTimeline.remove(intent.getExtras().getInt(
+							Extras.TWEET_POSITION));
+					lastPosition--;
+
+					// newtweets.clear();
+					for (Status tw : mTimeline) {
+						try {
+
+							// if (tw.getUser().getName().equals(mName))
+							// newtweets.add(tw);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+					}
+
+					adapter.notifyDataSetChanged();
+
+					adapter.notifyDataSetInvalidated();
+				}
+			}
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.reload_home_timeline: {
+			// TwitterUserTimelineTask task = new
+			// TwitterUserTimelineTask(getApplicationContext());
+			// try {
+
+			App app = (App) getApplication();
+			if (!app.isOnline()) {
+				Log.i("DEBUG", "home timeline button onClick NO NETWORK");
+				Toast.makeText(
+						getApplicationContext(),
+						"No network connection, couldn't load tweets!",
+						Toast.LENGTH_LONG).show();
+				return true;
+			}
+			mTimeline.clear();
+			// mTimeline.addAll(task.execute().get());
+			// } catch (InterruptedException e) {
+			// e.printStackTrace();
+			// } catch (ExecutionException e) {
+			// e.printStackTrace();
+			// }
+			
+			mTimeline.setTimelineType(Timeline.HOME_TIMELINE);
+			list.setVisibility(View.GONE);
+			crossfade();
+			Log.i("DEBUG", "Updating home timeline...");
+			// mTimeline.updateTimelineUp();
+
+			// TimelineUpTask task = new TimelineUpTask(MainActivity.this);
+			LoadTimelineTask task = new LoadTimelineTask(this);
+			task.execute(mTimeline);
+			break;
+		}
+		case R.id.reload_user_timeline: {
+			/*
+			 * TwitterTimelineTask task = new
+			 * TwitterTimelineTask(getApplicationContext(),
+			 * Timeline.USER_TIMELINE); try { tweets.clear();
+			 * tweets.addAll(task.execute().get()); } catch
+			 * (InterruptedException e) { e.printStackTrace(); } catch
+			 * (ExecutionException e) { e.printStackTrace(); }
+			 */
+			
+			App app = (App) getApplication();
+			if (!app.isOnline()) {
+				Log.i("DEBUG", "user timeline button onClick NO NETWORK");
+				Toast.makeText(
+						getApplicationContext(),
+						"No network connection, couldn't load tweets!",
+						Toast.LENGTH_LONG).show();
+				return true;
+			}
+			mTimeline.clear();
+			mTimeline.setTimelineType(Timeline.USER_TIMELINE);
+			list.setVisibility(View.GONE);
+			crossfade();
+			Log.i("DEBUG", "Updating user timeline...");
+			// mTimeline.updateTimelineUp();
+
+			// TimelineUpTask task = new TimelineUpTask(MainActivity.this);
+			LoadTimelineTask task = new LoadTimelineTask(this);
+			task.execute(mTimeline);
+
+			// adapter.notifyDataSetChanged();
+			// adapter.notifyDataSetInvalidated();
+			break;
+		}
+		case R.id.tweet_send_open: {
+			Intent intent = new Intent(MainActivity.this,
+					SendTweetActivity.class);
+			startActivity(intent);
+			break;
+		}
+		}
+		// Intent intent = new Intent(MainActivity.this, TweetActivity.class);
+		// startActivityForResult(intent, ADD_DEL_REQUEST);
+		return true;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (findViewById(R.id.list) != null) {
+			getMenuInflater().inflate(R.menu.main, menu);
+		} else {
+			getMenuInflater().inflate(R.menu.login, menu);
+		}
+		return true;
+	}
+
+	private void initialize() {
+
+		Log.i("DEBUG", "Initialize...");
+		Log.i("DEBUG", "YES AUTH");
+
+		mTimeline = new Timeline(getApplicationContext());
+
+		LoadTimelineTask task = new LoadTimelineTask(this);
+		task.execute(mTimeline);
+
+		// getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+		setContentView(R.layout.activity_main);
+
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		getSupportActionBar().show();
+
+		list = (ListView) findViewById(R.id.list);
+
+		mLoadingBar = (ProgressBar) findViewById(R.id.loading);
+
+		list.setVisibility(View.GONE);
+		crossfade();
+
+		list.setOnTouchListener(new OnTouchListener() {
+
+			float x1, x2;
+
+			@SuppressLint("ClickableViewAccessibility")
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+
+				int action = event.getAction();
+				switch (action) {
+				case MotionEvent.ACTION_DOWN: {
+					x1 = event.getX();
+					break;
+				}
+				case MotionEvent.ACTION_UP: {
+					x2 = event.getX();
+
+					float distance = x2 - x1;
+
+					if (distance > 125) { // Right swipe
+						App app = (App) getApplication();
+						if (!app.isOnline()) {
+							Log.i("DEBUG", "Right swipe NO NETWORK");
+							Toast.makeText(
+									getApplicationContext(),
+									"No network connection, couldn't load tweets!",
+									Toast.LENGTH_LONG).show();
+							return false;
+						}
+						list.setVisibility(View.GONE);
+						crossfade();
+						Log.i("DEBUG", "SWIPE RIGHT");
+						time = new Date();
+						// mTimeline.updateTimelineUp();
+						TimelineUpTask task = new TimelineUpTask(
+								MainActivity.this);
+						task.execute(mTimeline);
+
+						// TODO Some scrolling up
+
+						// Scroller scroller = new
+						// Scroller(getApplicationContext());
+						// scroller.startScroll((int)x2, (int)event.getY(), 0,
+						// -800);
+					}
+					if (distance < -125) { // Left Swipe
+						App app = (App) getApplication();
+						if (!app.isOnline()) {
+							Log.i("DEBUG", "Left swipe NO NETWORK");
+							Toast.makeText(
+									getApplicationContext(),
+									"No network connection, couldn't load tweets!",
+									Toast.LENGTH_LONG).show();
+							return false;
+						}
+						list.setVisibility(View.GONE);
+						crossfade();
+						Log.i("DEBUG", "SWIPE LEFT");
+						time = new Date();
+
+						TimelineDownTask task = new TimelineDownTask(
+								MainActivity.this);
+						task.execute(mTimeline);
+
+						// TODO Some scrolling up
+
+						mAdapter.setOnItemClickListener(new OnItemClickListener() {
+
+							@Override
+							public void onItemClick(AdapterView<?> parent,
+									View view, int position, long id) {
+								Intent intent = new Intent(MainActivity.this,
+										DetailActivity.class);
+								twitter4j.Status tweet = (twitter4j.Status) adapter
+										.getItem(position);
+
+								intent.putExtra(Extras.USER, tweet.getUser()
+										.getName());
+								intent.putExtra(Extras.TEXT, tweet.getText());
+								intent.putExtra(Extras.LOCATION, tweet
+										.getUser().getLocation());
+
+								startActivityForResult(intent, EDIT_REQUEST);
+							}
+						});
+					}
+					break;
+				}
+				}
+				return false;
+			}
+		});
+
+		mAdapter = list;
+
+		adapter = new TweetAdapter(mTimeline, getApplicationContext());//
+
+		mAdapter.setAdapter(adapter);
+
+		mAdapter.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(MainActivity.this,
+						DetailActivity.class);
+				Status tweet = (Status) adapter.getItem(position);
+
+				intent.putExtra(Extras.USER, tweet.getUser().getName());
+				intent.putExtra(Extras.TEXT, tweet.getText());
+				intent.putExtra(Extras.LOCATION, tweet.getUser().getLocation());
+
+				startActivityForResult(intent, EDIT_REQUEST);
+			}
+		});
+
+		// String[] titles = getResources().getStringArray(R.array.titles);
+
+		// ArrayAdapter<String> spinnerAdapter = new
+		// ArrayAdapter<String>(getApplicationContext(),
+		// R.layout.spinner, titles);
+
+		// getSupportActionBar().setListNavigationCallbacks(spinnerAdapter,
+		// this);
+	}
+
+	private boolean loginCheck() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		if (!sharedPreferences.getBoolean(
+				ConstantValues.PREFERENCE_TWITTER_IS_LOGGED_IN, false)) {
+			Toast.makeText(getApplicationContext(), "Logging in...",
+					Toast.LENGTH_LONG).show();
+			try {
+				Uri uri = getIntent().getData();
+				if (uri != null
+						&& uri.toString().startsWith(
+								ConstantValues.TWITTER_CALLBACK_URL)) {
+					String verifier = uri
+							.getQueryParameter(ConstantValues.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
+					Log.i("DEBUG", "ACCESS TOKEN2");
+					Log.i("DEBUG", "Verifier: " + verifier);
+					new TwitterGetAccessTokenTask(getApplicationContext())
+							.execute(verifier).get();
+					initialize();
+				} else {
+					Log.i("DEBUG", "Browser authentification...");
+					TwitterAuthenticateTask task = new TwitterAuthenticateTask();
+					task.execute();
+				}
+			} catch (Exception e) {
+				Log.i("DEBUG", e.toString());
+				e.printStackTrace();
+			}
+			return false;
+
+		} else {
+			return true;
+		}
+	}
+
+	class TwitterAuthenticateTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			Intent intent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(TwitterUtil.getInstance().getRequestToken()
+							.getAuthenticationURL()));
+			startActivity(intent);
+			return null;
+		}
+	}
+
+	public void crossfade() {
+		mContentLoaded = !mContentLoaded;
+
+		final View showView = mContentLoaded ? mLoadingBar : list;
+		final View hideView = mContentLoaded ? list : mLoadingBar;
+
+		// Set the content view to 0% opacity but visible, so that it is visible
+		// (but fully transparent) during the animation.
+		ViewHelper.setAlpha(list, 0f);
+		// showView.setAlpha(0f);
+		showView.setVisibility(View.VISIBLE);
+
+		int mShortAnimationDuration = getResources().getInteger(
+				android.R.integer.config_shortAnimTime);
+		// Animate the content view to 100% opacity, and clear any animation
+		// listener set on the view.
+		// showView.animate()
+		animate(showView).alpha(1f).setDuration(mShortAnimationDuration)
+				.setListener(null);
+
+		// Animate the loading view to 0% opacity. After the animation ends,
+		// set its visibility to GONE as an optimization step (it won't
+		// participate in layout passes, etc.)
+		// hideView.animate()
+		animate(hideView).alpha(0f).setDuration(mShortAnimationDuration)
+				.setListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationEnd(Animator animation) {
+						hideView.setVisibility(View.GONE);
+					}
+				});
+	}
+
+	public ListView getList() {
+		return list;
+	}
+
+	public BaseAdapter getAdapter() {
+		return adapter;
+	}
+
+	public AdapterView getAdapterView() {
+		return mAdapter;
+	}
+
+	public void setAdapterView(ListView list) {
+		mAdapter = list;
+	}
+
+}

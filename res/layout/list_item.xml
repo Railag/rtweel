@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="left"
+    android:orientation="vertical" >
+
+<TextView
+    android:id="@+id/tweet_author"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:layout_marginLeft="35dp"
+    android:gravity="left"
+    android:orientation="horizontal"
+    android:textColor="#008080"
+    android:textSize="20sp"
+    android:textStyle="bold" />
+
+<ImageView
+    android:id="@+id/tweet_author_picture"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/tweet_author"
+    android:layout_alignParentLeft="true"
+    android:contentDescription="@string/authors_picture_description_content" />
+
+<TextView
+    android:id="@+id/tweet_date"
+    android:layout_width="100dp"
+    android:layout_height="58dp"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentTop="true"
+    android:gravity="fill_horizontal"
+    android:orientation="horizontal"
+    android:textSize="14sp" />
+
+<TextView
+    android:id="@+id/tweet_text"
+    android:layout_width="match_parent"
+    android:layout_height="96dp"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/tweet_author"
+    android:layout_marginTop="10dp"
+    android:gravity="fill_horizontal"
+    android:orientation="horizontal"
+    android:textColor="#008080"
+    android:textSize="14sp" />
+
+</RelativeLayout>

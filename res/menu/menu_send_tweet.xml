@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" 
+ xmlns:ActionBar="http://schemas.android.com/apk/res-auto">
+     
+     <item
+        android:id="@+id/tweet_send_back"
+        android:orderInCategory="200"
+        ActionBar:showAsAction="ifRoom"
+        android:title="@string/tweet_send_back"/>
+
+ 	<item
+        android:id="@+id/tweet_send_ok"
+        android:orderInCategory="100"
+        ActionBar:showAsAction="ifRoom"
+        android:title="@string/tweet_send_ok"/>
+</menu>
