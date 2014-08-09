@@ -1136,6 +1136,7 @@ containing a value of this type.
         public static final int list_delete=0x7f050051;
         public static final int list_item=0x7f050029;
         public static final int loading=0x7f050044;
+        public static final int logout_button=0x7f05005c;
         public static final int middle=0x7f050012;
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;
@@ -1171,8 +1172,8 @@ containing a value of this type.
         public static final int tweet_author_picture=0x7f05004e;
         public static final int tweet_date=0x7f05004f;
         public static final int tweet_input=0x7f050047;
-        public static final int tweet_send_back=0x7f05005c;
-        public static final int tweet_send_ok=0x7f05005d;
+        public static final int tweet_send_back=0x7f05005d;
+        public static final int tweet_send_ok=0x7f05005e;
         public static final int tweet_send_open=0x7f050059;
         public static final int tweet_text=0x7f050050;
         public static final int up=0x7f050021;
@@ -1299,6 +1300,7 @@ containing a value of this type.
         public static final int home_button=0x7f0a0010;
         public static final int introduction_text=0x7f0a0028;
         public static final int logout=0x7f0a0020;
+        public static final int logout_button=0x7f0a0029;
         public static final int make_photo=0x7f0a001b;
         public static final int reload_home_timeline=0x7f0a0025;
         public static final int reload_user_timeline=0x7f0a0026;
@@ -2703,7 +2705,7 @@ containing a value of this type.
          */
         public static final int[] MenuView = {
             0x010100ae, 0x0101012c, 0x0101012d, 0x0101012e,
-            0x0101012f, 0x01010130, 0x01010131, 0x01010435
+            0x0101012f, 0x01010130, 0x01010131, 0x01010438
         };
         /**
           <p>

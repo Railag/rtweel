@@ -45,14 +45,22 @@ public class TweetContentProvider extends ContentProvider {
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		Log.i("DEBUG", "delete " + uri.toString());
-		return 0;
+		App app = (App) getContext();
+		SQLiteDatabase db = app.getDB();
+		int deletedRowsNumber = db.delete(uri.getPath().replace('/', ' '),
+				selection, selectionArgs);
+		Log.i("DEBUG", deletedRowsNumber + " rows deleted");
+		return deletedRowsNumber;
 	}
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
 		Log.i("DEBUG", "update " + uri.toString());
-		return 0;
+		App app = (App) getContext();
+		SQLiteDatabase db = app.getDB();
+		int result = db.update(uri.getPath().replace('/', ' '), values, selection, selectionArgs);
+		Log.i("DEBUG", "Update result: " + result);
+		return result;
 	}
-
 }

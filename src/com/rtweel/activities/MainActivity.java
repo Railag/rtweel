@@ -1,16 +1,20 @@
 package com.rtweel.activities;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-import com.nineoldandroids.view.ViewHelper;
-import java.util.Date;
 import twitter4j.Status;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -28,12 +32,17 @@ import android.widget.Toast;
 
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.view.ViewHelper;
 import com.rtweel.R;
 import com.rtweel.asynctasks.LoadTimelineTask;
 import com.rtweel.asynctasks.TimelineDownTask;
 import com.rtweel.asynctasks.TimelineUpTask;
 import com.rtweel.cache.App;
+import com.rtweel.constant.Broadcast;
 import com.rtweel.constant.Extras;
+import com.rtweel.services.TweetReceiver;
+import com.rtweel.services.TweetService;
+import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.tweet.Timeline;
 import com.rtweel.tweet.TweetAdapter;
 import com.rtweel.twitteroauth.ConstantValues;
@@ -58,12 +67,12 @@ public class MainActivity extends ActionBarActivity { // implements
 
 	private Timeline mTimeline;
 
-	private Date time;
-
 	private ListView list;
 	private ProgressBar mLoadingBar;
 
 	private boolean mContentLoaded;
+
+	private TweetReceiver mReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,19 +80,18 @@ public class MainActivity extends ActionBarActivity { // implements
 		setContentView(R.layout.activity_login);
 
 		getSupportActionBar().hide();
-		time = new Date();
 
+		String[] fileList = this.fileList();
+		Log.i("DEBUG", "File list:");
+		for(String s : fileList) {
+			Log.i("DEBUG", s);
+		}
+		
 		/*
 		 * Login Check
 		 */
 		if (loginCheck()) {
-			Date tmp = new Date();
-			Log.i("DEBUG",
-					"after login check: " + (tmp.getTime() - time.getTime()));
 			initialize();
-			tmp = new Date();
-			Log.i("DEBUG",
-					"after initialization: " + (tmp.getTime() - time.getTime()));
 		}
 	}
 
@@ -189,53 +197,30 @@ public class MainActivity extends ActionBarActivity { // implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.reload_home_timeline: {
-			// TwitterUserTimelineTask task = new
-			// TwitterUserTimelineTask(getApplicationContext());
-			// try {
 
 			App app = (App) getApplication();
 			if (!app.isOnline()) {
 				Log.i("DEBUG", "home timeline button onClick NO NETWORK");
-				Toast.makeText(
-						getApplicationContext(),
+				Toast.makeText(getApplicationContext(),
 						"No network connection, couldn't load tweets!",
 						Toast.LENGTH_LONG).show();
 				return true;
 			}
 			mTimeline.clear();
-			// mTimeline.addAll(task.execute().get());
-			// } catch (InterruptedException e) {
-			// e.printStackTrace();
-			// } catch (ExecutionException e) {
-			// e.printStackTrace();
-			// }
-			
+
 			mTimeline.setTimelineType(Timeline.HOME_TIMELINE);
 			list.setVisibility(View.GONE);
 			crossfade();
 			Log.i("DEBUG", "Updating home timeline...");
-			// mTimeline.updateTimelineUp();
-
-			// TimelineUpTask task = new TimelineUpTask(MainActivity.this);
 			LoadTimelineTask task = new LoadTimelineTask(this);
 			task.execute(mTimeline);
 			break;
 		}
 		case R.id.reload_user_timeline: {
-			/*
-			 * TwitterTimelineTask task = new
-			 * TwitterTimelineTask(getApplicationContext(),
-			 * Timeline.USER_TIMELINE); try { tweets.clear();
-			 * tweets.addAll(task.execute().get()); } catch
-			 * (InterruptedException e) { e.printStackTrace(); } catch
-			 * (ExecutionException e) { e.printStackTrace(); }
-			 */
-			
 			App app = (App) getApplication();
 			if (!app.isOnline()) {
 				Log.i("DEBUG", "user timeline button onClick NO NETWORK");
-				Toast.makeText(
-						getApplicationContext(),
+				Toast.makeText(getApplicationContext(),
 						"No network connection, couldn't load tweets!",
 						Toast.LENGTH_LONG).show();
 				return true;
@@ -245,20 +230,39 @@ public class MainActivity extends ActionBarActivity { // implements
 			list.setVisibility(View.GONE);
 			crossfade();
 			Log.i("DEBUG", "Updating user timeline...");
-			// mTimeline.updateTimelineUp();
 
 			// TimelineUpTask task = new TimelineUpTask(MainActivity.this);
 			LoadTimelineTask task = new LoadTimelineTask(this);
 			task.execute(mTimeline);
-
-			// adapter.notifyDataSetChanged();
-			// adapter.notifyDataSetInvalidated();
 			break;
 		}
 		case R.id.tweet_send_open: {
 			Intent intent = new Intent(MainActivity.this,
 					SendTweetActivity.class);
 			startActivity(intent);
+			break;
+		}
+		case R.id.logout_button: {
+			App app = (App) getApplication();
+
+			boolean dbDeleted = deleteDatabase(TweetDatabaseOpenHelper
+					.getDbName());
+			Log.i("DEBUG", "DB DELETED = " + dbDeleted);
+
+			app.createDb();
+
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getApplicationContext());
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
+			editor.putString(
+					ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
+			editor.putBoolean(ConstantValues.PREFERENCE_TWITTER_IS_LOGGED_IN,
+					false);
+			editor.commit();
+
+			TwitterUtil.getInstance().reset();
+			finish();
 			break;
 		}
 		}
@@ -283,6 +287,31 @@ public class MainActivity extends ActionBarActivity { // implements
 		Log.i("DEBUG", "YES AUTH");
 
 		mTimeline = new Timeline(getApplicationContext());
+
+		Timeline.setDefaultTimeline(mTimeline);
+
+		IntentFilter filter = new IntentFilter(Broadcast.BROADCAST_ACTION);
+
+		TweetReceiver mReceiver = new TweetReceiver();
+
+		LocalBroadcastManager.getInstance(this).registerReceiver(
+				mReceiver, filter);
+
+		// Intent intent = new Intent(this, TweetService.class);
+		// intent.putExtra("TEST", "Messageeeee!");
+
+		// startService(intent);
+		Intent serviceIntent = new Intent(this, TweetService.class);
+		PendingIntent alarmIntent = PendingIntent.getService(this, 0,
+				serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		// Handler handler = new Handler();
+		// handler.postDelayed(new Runnable() {
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+				SystemClock.elapsedRealtime()
+						+ AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+				AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
+		Log.i("DEBUG", "AlarmManager is set");
 
 		LoadTimelineTask task = new LoadTimelineTask(this);
 		task.execute(mTimeline);
@@ -334,7 +363,6 @@ public class MainActivity extends ActionBarActivity { // implements
 						list.setVisibility(View.GONE);
 						crossfade();
 						Log.i("DEBUG", "SWIPE RIGHT");
-						time = new Date();
 						// mTimeline.updateTimelineUp();
 						TimelineUpTask task = new TimelineUpTask(
 								MainActivity.this);
@@ -360,7 +388,6 @@ public class MainActivity extends ActionBarActivity { // implements
 						list.setVisibility(View.GONE);
 						crossfade();
 						Log.i("DEBUG", "SWIPE LEFT");
-						time = new Date();
 
 						TimelineDownTask task = new TimelineDownTask(
 								MainActivity.this);
@@ -417,15 +444,6 @@ public class MainActivity extends ActionBarActivity { // implements
 				startActivityForResult(intent, EDIT_REQUEST);
 			}
 		});
-
-		// String[] titles = getResources().getStringArray(R.array.titles);
-
-		// ArrayAdapter<String> spinnerAdapter = new
-		// ArrayAdapter<String>(getApplicationContext(),
-		// R.layout.spinner, titles);
-
-		// getSupportActionBar().setListNavigationCallbacks(spinnerAdapter,
-		// this);
 	}
 
 	private boolean loginCheck() {
@@ -523,5 +541,22 @@ public class MainActivity extends ActionBarActivity { // implements
 	public void setAdapterView(ListView list) {
 		mAdapter = list;
 	}
+
+	@Override
+	protected void onDestroy() {
+//		unregisterReceiver(mReceiver);
+		super.onDestroy();
+	}
+
+	public Timeline getTimeline() {
+		return mTimeline;
+	}
+	
+	@Override
+		protected void onResume() {
+			super.onResume();
+			IntentFilter filter = new IntentFilter(Broadcast.BROADCAST_ACTION);    
+		    LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+		}
 
 }

@@ -2,12 +2,19 @@ package com.rtweel.asynctasks;
 
 import java.util.List;
 
-import com.rtweel.activities.MainActivity;
-import com.rtweel.tweet.Timeline;
-
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
+import android.support.v7.appcompat.R;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.rtweel.activities.MainActivity;
+import com.rtweel.tweet.Timeline;
 
 public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 
@@ -15,6 +22,12 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 
 	public TimelineDownTask(MainActivity mainActivity) {
 		mActivity = mainActivity;
+	}
+
+	@Override
+	protected void onPreExecute() {
+
+		super.onPreExecute();
 	}
 
 	@Override

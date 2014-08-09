@@ -1,5 +1,9 @@
 package com.rtweel.twitteroauth;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
+import com.rtweel.cache.App;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
@@ -7,7 +11,9 @@ import twitter4j.auth.RequestToken;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class TwitterGetAccessTokenTask extends
 		AsyncTask<String, String, String> {
@@ -29,6 +35,26 @@ public class TwitterGetAccessTokenTask extends
 
 				AccessToken accessToken = twitter.getOAuthAccessToken(
 						requestToken, verifier);
+
+				FileOutputStream outputStream = null;
+
+				try {
+					File sp = new File(
+							Environment.getExternalStorageDirectory()
+									+ App.PATH);
+					outputStream = new FileOutputStream(sp);
+
+					String outputString = accessToken.getToken() + ' '
+							+ accessToken.getTokenSecret();
+					// outputString.replace(' ',
+					// (char)Character.NON_SPACING_MARK);
+					Log.i("DEBUG", outputString);
+
+					outputStream.write(outputString.getBytes());
+					outputStream.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				SharedPreferences sharedPreferences = PreferenceManager
 						.getDefaultSharedPreferences(sContext);
@@ -52,6 +78,7 @@ public class TwitterGetAccessTokenTask extends
 					ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
 			String accessTokenSecret = sharedPreferences.getString(
 					ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
+
 			AccessToken accessToken = new AccessToken(accessTokenString,
 					accessTokenSecret);
 			try {

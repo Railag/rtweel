@@ -18,4 +18,8 @@
         android:orderInCategory="500"
         ActionBar:showAsAction="ifRoom"
         android:title="@string/reload_user_timeline"/>
+ 	<item android:id="@+id/logout_button"
+ 	    android:orderInCategory="1000"
+ 	    ActionBar:showAsAction="never"
+ 	    android:title="@string/logout_button" />
 </menu>

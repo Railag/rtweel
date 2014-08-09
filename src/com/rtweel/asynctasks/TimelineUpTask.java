@@ -2,6 +2,8 @@ package com.rtweel.asynctasks;
 
 import java.util.List;
 
+import twitter4j.TwitterException;
+
 import com.rtweel.activities.MainActivity;
 import com.rtweel.tweet.Timeline;
 
@@ -22,9 +24,21 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 		Timeline timeline = params[0];
 		List<twitter4j.Status> downloadedList = timeline.downloadTimeline(0,
 				Timeline.getTweetsPerPage(), Timeline.UP_TWEETS);
+//		boolean available;
+//		try {
+//			available = timeline.searchCheckIsAvailable(timeline
+//					.getTwitter().getAccountSettings().getScreenName());
+//			if (available) {
+//				downloadedList.addAll(timeline.downloadTimeline(0, Timeline.getTweetsPerPage(), Timeline.UP_TWEETS));
+//			}
+//		} catch (TwitterException e) {
+//			e.printStackTrace();
+//		}
 		timeline.updateTimelineUp(downloadedList);
+		
+		int size = downloadedList.size();
 		Log.i("DEBUG", "finished updating");
-		return downloadedList.size();
+		return size;
 	}
 
 	@Override
@@ -36,14 +50,19 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 
 		if (result == 0) {
 			Toast.makeText(mActivity, "No new tweets", Toast.LENGTH_LONG)
-			.show();
-			
+					.show();
+
 		} else {
-			if(result < (Timeline.getTweetsPerPage() - 3) ) {
+			if (result < (Timeline.getTweetsPerPage() - 3)) {
 				Toast.makeText(mActivity, "New tweets: " + result,
 						Toast.LENGTH_LONG).show();
 			} else {
-				Toast.makeText(mActivity, "New tweets: " + result + "\n There are unloaded new tweets, you can make right swipe one more time", Toast.LENGTH_LONG).show();
+				Toast.makeText(
+						mActivity,
+						"New tweets: "
+								+ result
+								+ "\n There are unloaded new tweets, you can make right swipe one more time",
+						Toast.LENGTH_LONG).show();
 			}
 		}
 

@@ -51,5 +51,13 @@ public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.i("DEBUG", "onUpgrade");
 	}
+	
+	public static String getDbName() {
+		return DB_NAME;
+	}
+	
+//	public void dropTable(SQLiteDatabase db, String tableName) {
+//		db.execSQL("DROP TABLE " + tableName);
+//	}
 
 }

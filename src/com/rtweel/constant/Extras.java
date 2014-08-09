@@ -2,6 +2,8 @@ package com.rtweel.constant;
 
 public class Extras {
 
+	public static final String TIMELINE = "timeline";
+	
 	public static final String USER = "user";
 	public static final String TEXT = "text";
 	public static final String LOCATION = "location";

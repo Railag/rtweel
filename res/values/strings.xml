@@ -37,5 +37,5 @@
     <string name="reload_user_timeline">Update user timeline</string>
     <string name="authors_picture_description_content">Author\'s picture</string>
     <string name="introduction_text">Welcome to Rtweel! \n\n Now you\'re gonna be brought to the login window, so wait a bit... </string>
-
+<string name="logout_button">Logout</string>
 </resources>

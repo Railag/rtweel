@@ -9,12 +9,10 @@ import java.util.Locale;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 public class Photo extends Activity {
@@ -62,7 +60,7 @@ public class Photo extends Activity {
 
 		Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
 		photo.setImageBitmap(bitmap);
-		int orientation = getOrientationFromExif(mCurrentPhotoPath);
+//		int orientation = getOrientationFromExif(mCurrentPhotoPath);
 		// imageView.ROTATION.set(imageView, (float) orientation);
 //		View.ROTATION.set(photo, (float) orientation);
 		// imageView.setImageBitmap(rotatedBitmap);

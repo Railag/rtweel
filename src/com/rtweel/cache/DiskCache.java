@@ -14,6 +14,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -24,6 +25,8 @@ public class DiskCache {
 	private int mCompressQuality = 70;
 	private static final int APP_VERSION = 1;
 	private static final int VALUE_COUNT = 1;
+
+	public static final int IO_BUFFER_SIZE = 8 * 1024;
 
 	public DiskCache(Context context, String uniqueName, int diskCacheSize,
 			CompressFormat compressFormat, int quality) {
@@ -43,7 +46,7 @@ public class DiskCache {
 		OutputStream out = null;
 		try {
 			out = new BufferedOutputStream(editor.newOutputStream(0),
-					Utils.IO_BUFFER_SIZE);
+					IO_BUFFER_SIZE);
 			return bitmap.compress(mCompressFormat, mCompressQuality, out);
 		} finally {
 			if (out != null) {
@@ -58,10 +61,9 @@ public class DiskCache {
 		// external cache dir
 		// otherwise use internal cache dir
 		final String cachePath = Environment.MEDIA_MOUNTED.equals(Environment
-				.getExternalStorageState())
-				|| !Utils.isExternalStorageRemovable() ? Utils
-				.getExternalCacheDir(context).getPath() : context.getCacheDir()
-				.getPath();
+				.getExternalStorageState()) || !isExternalStorageRemovable() ? getExternalCacheDir(
+				context).getPath()
+				: context.getCacheDir().getPath();
 
 		return new File(cachePath + File.separator + uniqueName);
 	}
@@ -116,7 +118,7 @@ public class DiskCache {
 			final InputStream in = snapshot.getInputStream(0);
 			if (in != null) {
 				final BufferedInputStream buffIn = new BufferedInputStream(in,
-						Utils.IO_BUFFER_SIZE);
+						IO_BUFFER_SIZE);
 				bitmap = BitmapFactory.decodeStream(buffIn);
 			}
 		} catch (IOException e) {
@@ -168,5 +170,28 @@ public class DiskCache {
 
 	public File getCacheFolder() {
 		return mDiskCache.getDirectory();
+	}
+
+	public static boolean isExternalStorageRemovable() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			return Environment.isExternalStorageRemovable();
+		}
+		return true;
+	}
+
+	public static File getExternalCacheDir(Context context) {
+		if (hasExternalCacheDir()) {
+			return context.getExternalCacheDir();
+		}
+
+		// Before Froyo we need to construct the external cache dir ourselves
+		final String cacheDir = "/Android/data/" + context.getPackageName()
+				+ "/cache/";
+		return new File(Environment.getExternalStorageDirectory().getPath()
+				+ cacheDir);
+	}
+
+	public static boolean hasExternalCacheDir() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
 	}
 }

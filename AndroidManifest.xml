@@ -59,6 +59,10 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light" />
 
+        <service
+            android:name="com.rtweel.services.TweetService"
+            android:exported="false"/>
+        
         <provider
             android:name="com.rtweel.sqlite.TweetContentProvider"
             android:authorities="com.rtweel.sqlite.TweetContentProvider"
