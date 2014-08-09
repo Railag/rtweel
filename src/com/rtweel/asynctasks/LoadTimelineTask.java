@@ -21,7 +21,7 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 	protected Void doInBackground(Timeline... params) {
 		mTimeline = params[0];
 		mTimeline.loadTimeline();
-		Log.i("DEBUG", "finished updating");
+		Log.i("DEBUG", "Finished loading timeline task");
 		return null;
 	}
 

@@ -2,8 +2,6 @@ package com.rtweel.asynctasks;
 
 import java.util.List;
 
-import twitter4j.TwitterException;
-
 import com.rtweel.activities.MainActivity;
 import com.rtweel.tweet.Timeline;
 
@@ -37,7 +35,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 		timeline.updateTimelineUp(downloadedList);
 		
 		int size = downloadedList.size();
-		Log.i("DEBUG", "finished updating");
+		Log.i("DEBUG", "Finished downloading down task");
 		return size;
 	}
 

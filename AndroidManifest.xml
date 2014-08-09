@@ -61,13 +61,20 @@
 
         <service
             android:name="com.rtweel.services.TweetService"
-            android:exported="false"/>
-        
+            android:exported="false" />
+
+        <receiver
+            android:name="com.rtweel.services.TweetReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.rtweel.services.TweetReceiver.BROADCAST_ACTION" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="com.rtweel.sqlite.TweetContentProvider"
             android:authorities="com.rtweel.sqlite.TweetContentProvider"
-            android:exported="false"
-            />
+            android:exported="false" />
     </application>
 
 </manifest>

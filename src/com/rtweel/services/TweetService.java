@@ -16,11 +16,14 @@ import android.net.NetworkInfo;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.rtweel.constant.Broadcast;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.tweet.Timeline;
 
 public class TweetService extends IntentService {
+
+	public static final String MESSAGE = "message";
+
+	public static final String TITLE = "title";
 
 	private Timeline mTimeline;
 
@@ -56,10 +59,11 @@ public class TweetService extends IntentService {
 		Log.i("DEBUG", message);
 		String title = "Tweet checking";
 
-		Intent localIntent = new Intent(Broadcast.BROADCAST_ACTION).putExtra(
-				Broadcast.MESSAGE, message);
-		localIntent.putExtra(Broadcast.TITLE, title);
-		LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+		Intent localIntent = new Intent(TweetReceiver.BROADCAST_ACTION)
+				.putExtra(MESSAGE, message);
+		localIntent.putExtra(TITLE, title);
+	//	LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+	sendBroadcast(localIntent);
 	}
 
 	// private int load() {

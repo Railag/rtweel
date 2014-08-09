@@ -1,8 +1,6 @@
 package com.rtweel.tweet;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,12 +62,12 @@ public class Timeline implements Iterable<Status> {
 				inputBytes = new byte[inputStream.available()];
 				inputStream.read(inputBytes);
 				inputString = new String(inputBytes);
-				Log.i("DEBUG", inputString);
+		//		Log.i("DEBUG", inputString);
 				int position = inputString.indexOf(' ');
 				accessTokenString = inputString.substring(0, position);
 				accessTokenSecret = inputString.substring(position + 1, inputString.length());
-				Log.i("DEBUG", "String: " + accessTokenString);
-				Log.i("DEBUG", "Secret: " + accessTokenSecret);
+		//		Log.i("DEBUG", "String: " + accessTokenString);
+		//		Log.i("DEBUG", "Secret: " + accessTokenSecret);
 				inputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -100,7 +98,7 @@ public class Timeline implements Iterable<Status> {
 				Log.i("DEBUG", "No network in loadTimeline()");
 				return;
 			}
-			Log.i("DEBUG", "loading timeline");
+			Log.i("DEBUG", "loading timeline..");
 			list.addAll(downloadTimeline(mTweetsCount, mTweetsPerPage,
 					Timeline.INITIALIZATION_TWEETS));
 
@@ -141,7 +139,7 @@ public class Timeline implements Iterable<Status> {
 
 	public List<twitter4j.Status> downloadTimeline(int tweetsCount,
 			int tweetsPerPage, int flag) {
-		Log.i("DEBUG", "downloading down");
+		Log.i("DEBUG", "downloading timeline..");
 
 		List<twitter4j.Status> downloadedList = null;
 

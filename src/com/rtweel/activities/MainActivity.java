@@ -7,14 +7,12 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -38,7 +36,6 @@ import com.rtweel.asynctasks.LoadTimelineTask;
 import com.rtweel.asynctasks.TimelineDownTask;
 import com.rtweel.asynctasks.TimelineUpTask;
 import com.rtweel.cache.App;
-import com.rtweel.constant.Broadcast;
 import com.rtweel.constant.Extras;
 import com.rtweel.services.TweetReceiver;
 import com.rtweel.services.TweetService;
@@ -81,12 +78,6 @@ public class MainActivity extends ActionBarActivity { // implements
 
 		getSupportActionBar().hide();
 
-		String[] fileList = this.fileList();
-		Log.i("DEBUG", "File list:");
-		for(String s : fileList) {
-			Log.i("DEBUG", s);
-		}
-		
 		/*
 		 * Login Check
 		 */
@@ -283,20 +274,20 @@ public class MainActivity extends ActionBarActivity { // implements
 
 	private void initialize() {
 
-		Log.i("DEBUG", "Initialize...");
-		Log.i("DEBUG", "YES AUTH");
+		Log.i("DEBUG", "Initializing...");
+		// Log.i("DEBUG", "YES AUTH");
 
 		mTimeline = new Timeline(getApplicationContext());
 
 		Timeline.setDefaultTimeline(mTimeline);
-
-		IntentFilter filter = new IntentFilter(Broadcast.BROADCAST_ACTION);
-
-		TweetReceiver mReceiver = new TweetReceiver();
-
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				mReceiver, filter);
-
+		/*
+		 * IntentFilter filter = new IntentFilter(Broadcast.BROADCAST_ACTION);
+		 * 
+		 * mReceiver = new TweetReceiver();
+		 * 
+		 * LocalBroadcastManager.getInstance(this).registerReceiver( mReceiver,
+		 * filter);
+		 */
 		// Intent intent = new Intent(this, TweetService.class);
 		// intent.putExtra("TEST", "Messageeeee!");
 
@@ -311,7 +302,7 @@ public class MainActivity extends ActionBarActivity { // implements
 				SystemClock.elapsedRealtime()
 						+ AlarmManager.INTERVAL_FIFTEEN_MINUTES,
 				AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
-		Log.i("DEBUG", "AlarmManager is set");
+		// Log.i("DEBUG", "AlarmManager is set");
 
 		LoadTimelineTask task = new LoadTimelineTask(this);
 		task.execute(mTimeline);
@@ -542,21 +533,42 @@ public class MainActivity extends ActionBarActivity { // implements
 		mAdapter = list;
 	}
 
-	@Override
-	protected void onDestroy() {
-//		unregisterReceiver(mReceiver);
-		super.onDestroy();
-	}
-
 	public Timeline getTimeline() {
 		return mTimeline;
 	}
-	
-	@Override
-		protected void onResume() {
-			super.onResume();
-			IntentFilter filter = new IntentFilter(Broadcast.BROADCAST_ACTION);    
-		    LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
-		}
 
+	@Override
+	protected void onDestroy() {
+		// unregisterReceiver(mReceiver);
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// IntentFilter filter = new IntentFilter(Broadcast.BROADCAST_ACTION);
+		// LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,
+		// filter);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		// IntentFilter filter = new
+		// IntentFilter(TweetReceiver.BROADCAST_ACTION);
+
+		// mReceiver = new TweetReceiver();
+
+		// LocalBroadcastManager.getInstance(this).registerReceiver(
+		// mReceiver, filter);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		// IntentFilter filter = new
+		// IntentFilter(TweetReceiver.BROADCAST_ACTION);
+		// LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,
+		// filter);
+	}
 }

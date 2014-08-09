@@ -19,7 +19,8 @@ public class TweetContentProvider extends ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-		Log.i("DEBUG", "query " + uri.toString());
+//		Log.i("DEBUG", "query " + uri.toString());
+		Log.i("DEBUG", "DB select..");
 		App app = (App) getContext();
 		SQLiteDatabase db = app.getDB();
 		Cursor cur = db.query(uri.getPath().replace('/', ' '), projection,

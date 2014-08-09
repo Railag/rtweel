@@ -42,7 +42,7 @@ public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.i("DEBUG", "onCreate");
+		Log.i("DEBUG", "onCreate DB");
 		db.execSQL(CREATE_TABLE_HOME);
 		db.execSQL(CREATE_TABLE_USER);
 	}
