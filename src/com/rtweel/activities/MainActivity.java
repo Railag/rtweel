@@ -11,9 +11,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +21,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -37,7 +40,7 @@ import com.rtweel.asynctasks.TimelineDownTask;
 import com.rtweel.asynctasks.TimelineUpTask;
 import com.rtweel.cache.App;
 import com.rtweel.constant.Extras;
-import com.rtweel.services.TweetReceiver;
+import com.rtweel.parsers.DateParser;
 import com.rtweel.services.TweetService;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.tweet.Timeline;
@@ -49,10 +52,6 @@ import com.rtweel.twitteroauth.TwitterUtil;
 public class MainActivity extends ActionBarActivity { // implements
 														// ActionBar.OnNavigationListener
 														// {
-
-	public static int lastPosition = 0;
-
-	private ActionBar sActionBar;
 
 	private static final int EDIT_REQUEST = 0;
 	private static final int ADD_DEL_REQUEST = 1;
@@ -68,8 +67,6 @@ public class MainActivity extends ActionBarActivity { // implements
 	private ProgressBar mLoadingBar;
 
 	private boolean mContentLoaded;
-
-	private TweetReceiver mReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +89,8 @@ public class MainActivity extends ActionBarActivity { // implements
 
 		if (requestCode == EDIT_REQUEST) {
 			if (requestResult == RESULT_OK) {
-				Status tweet = mTimeline.get(intent.getExtras().getInt(
-						Extras.TWEET_POSITION));
+				// Status tweet = mTimeline.get(intent.getExtras().getInt(
+				// Extras.TWEET_POSITION));
 				/*
 				 * tweet.setText(intent.getExtras().getString(Extras.TEXT));
 				 * tweet.setName(intent.getExtras().getString(Extras.USER));
@@ -160,9 +157,9 @@ public class MainActivity extends ActionBarActivity { // implements
 				}
 
 				else if (intent.getExtras().getBoolean(Extras.ADD_CHECK) == false) {
-					mTimeline.remove(intent.getExtras().getInt(
-							Extras.TWEET_POSITION));
-					lastPosition--;
+					// mTimeline.remove(intent.getExtras().getInt(
+					// Extras.TWEET_POSITION));
+					// lastPosition--;
 
 					// newtweets.clear();
 					for (Status tw : mTimeline) {
@@ -203,8 +200,9 @@ public class MainActivity extends ActionBarActivity { // implements
 			list.setVisibility(View.GONE);
 			crossfade();
 			Log.i("DEBUG", "Updating home timeline...");
-			LoadTimelineTask task = new LoadTimelineTask(this);
-			task.execute(mTimeline);
+			// LoadTimelineTask task = new LoadTimelineTask(this);
+			// task.execute(mTimeline);
+			new LoadTimelineTask(this).execute(mTimeline);
 			break;
 		}
 		case R.id.reload_user_timeline: {
@@ -223,8 +221,9 @@ public class MainActivity extends ActionBarActivity { // implements
 			Log.i("DEBUG", "Updating user timeline...");
 
 			// TimelineUpTask task = new TimelineUpTask(MainActivity.this);
-			LoadTimelineTask task = new LoadTimelineTask(this);
-			task.execute(mTimeline);
+			// LoadTimelineTask task = new LoadTimelineTask(this);
+			// task.execute(mTimeline);
+			new LoadTimelineTask(this).execute(mTimeline);
 			break;
 		}
 		case R.id.tweet_send_open: {
@@ -295,17 +294,14 @@ public class MainActivity extends ActionBarActivity { // implements
 		Intent serviceIntent = new Intent(this, TweetService.class);
 		PendingIntent alarmIntent = PendingIntent.getService(this, 0,
 				serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		// Handler handler = new Handler();
-		// handler.postDelayed(new Runnable() {
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-				SystemClock.elapsedRealtime()
-						+ AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-				AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
-		// Log.i("DEBUG", "AlarmManager is set");
+		alarmManager
+				.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+						SystemClock.elapsedRealtime()
+								+ AlarmManager.INTERVAL_HALF_HOUR,
+						AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
 
-		LoadTimelineTask task = new LoadTimelineTask(this);
-		task.execute(mTimeline);
+		new LoadTimelineTask(this).execute(mTimeline);
 
 		// getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
@@ -341,7 +337,10 @@ public class MainActivity extends ActionBarActivity { // implements
 
 					float distance = x2 - x1;
 
-					if (distance > 125) { // Right swipe
+					if (distance > 150) { // Right swipe
+						//	AnimationSet set = new AnimationSet(false);
+						//	set.
+						rotate();
 						App app = (App) getApplication();
 						if (!app.isOnline()) {
 							Log.i("DEBUG", "Right swipe NO NETWORK");
@@ -351,13 +350,12 @@ public class MainActivity extends ActionBarActivity { // implements
 									Toast.LENGTH_LONG).show();
 							return false;
 						}
-						list.setVisibility(View.GONE);
-						crossfade();
+						// list.setVisibility(View.GONE);
+						// crossfade();
 						Log.i("DEBUG", "SWIPE RIGHT");
-						// mTimeline.updateTimelineUp();
-						TimelineUpTask task = new TimelineUpTask(
-								MainActivity.this);
-						task.execute(mTimeline);
+
+						new TimelineUpTask(MainActivity.this)
+								.execute(mTimeline);
 
 						// TODO Some scrolling up
 
@@ -366,7 +364,10 @@ public class MainActivity extends ActionBarActivity { // implements
 						// scroller.startScroll((int)x2, (int)event.getY(), 0,
 						// -800);
 					}
-					if (distance < -125) { // Left Swipe
+					if (distance < -150) { // Left Swipe
+						//	AnimationSet set = new AnimationSet(false);
+						//	set.
+						rotate();
 						App app = (App) getApplication();
 						if (!app.isOnline()) {
 							Log.i("DEBUG", "Left swipe NO NETWORK");
@@ -376,35 +377,13 @@ public class MainActivity extends ActionBarActivity { // implements
 									Toast.LENGTH_LONG).show();
 							return false;
 						}
-						list.setVisibility(View.GONE);
-						crossfade();
+						// list.setVisibility(View.GONE);
+						// crossfade();
 						Log.i("DEBUG", "SWIPE LEFT");
 
-						TimelineDownTask task = new TimelineDownTask(
-								MainActivity.this);
-						task.execute(mTimeline);
-
+						new TimelineDownTask(MainActivity.this)
+								.execute(mTimeline);
 						// TODO Some scrolling up
-
-						mAdapter.setOnItemClickListener(new OnItemClickListener() {
-
-							@Override
-							public void onItemClick(AdapterView<?> parent,
-									View view, int position, long id) {
-								Intent intent = new Intent(MainActivity.this,
-										DetailActivity.class);
-								twitter4j.Status tweet = (twitter4j.Status) adapter
-										.getItem(position);
-
-								intent.putExtra(Extras.USER, tweet.getUser()
-										.getName());
-								intent.putExtra(Extras.TEXT, tweet.getText());
-								intent.putExtra(Extras.LOCATION, tweet
-										.getUser().getLocation());
-
-								startActivityForResult(intent, EDIT_REQUEST);
-							}
-						});
 					}
 					break;
 				}
@@ -426,12 +405,19 @@ public class MainActivity extends ActionBarActivity { // implements
 					int position, long id) {
 				Intent intent = new Intent(MainActivity.this,
 						DetailActivity.class);
-				Status tweet = (Status) adapter.getItem(position);
+				twitter4j.Status tweet = (twitter4j.Status) adapter
+						.getItem(position);
 
-				intent.putExtra(Extras.USER, tweet.getUser().getName());
+				intent.putExtra(Extras.USER_NAME, tweet.getUser().getName());
 				intent.putExtra(Extras.TEXT, tweet.getText());
 				intent.putExtra(Extras.LOCATION, tweet.getUser().getLocation());
-
+				intent.putExtra(Extras.FAVORITES_COUNT,
+						tweet.getFavoriteCount());
+				intent.putExtra(Extras.RETWEETS_COUNT, tweet.getRetweetCount());
+				intent.putExtra(Extras.PICTURE_URL, tweet.getUser()
+						.getProfileImageURL());// getMiniProfileImageURL());
+				intent.putExtra(Extras.DATE,
+						DateParser.parse(tweet.getCreatedAt().toString()));
 				startActivityForResult(intent, EDIT_REQUEST);
 			}
 		});
@@ -451,15 +437,13 @@ public class MainActivity extends ActionBarActivity { // implements
 								ConstantValues.TWITTER_CALLBACK_URL)) {
 					String verifier = uri
 							.getQueryParameter(ConstantValues.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
-					Log.i("DEBUG", "ACCESS TOKEN2");
-					Log.i("DEBUG", "Verifier: " + verifier);
+					Log.i("DEBUG", "Verification..");
 					new TwitterGetAccessTokenTask(getApplicationContext())
 							.execute(verifier).get();
 					initialize();
 				} else {
 					Log.i("DEBUG", "Browser authentification...");
-					TwitterAuthenticateTask task = new TwitterAuthenticateTask();
-					task.execute();
+					new TwitterAuthenticateTask().execute();
 				}
 			} catch (Exception e) {
 				Log.i("DEBUG", e.toString());
@@ -490,11 +474,12 @@ public class MainActivity extends ActionBarActivity { // implements
 		final View showView = mContentLoaded ? mLoadingBar : list;
 		final View hideView = mContentLoaded ? list : mLoadingBar;
 
-		// Set the content view to 0% opacity but visible, so that it is visible
+			// Set the content view to 0% opacity but visible, so that it is visible
 		// (but fully transparent) during the animation.
 		ViewHelper.setAlpha(list, 0f);
 		// showView.setAlpha(0f);
 		showView.setVisibility(View.VISIBLE);
+
 
 		int mShortAnimationDuration = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
@@ -503,7 +488,6 @@ public class MainActivity extends ActionBarActivity { // implements
 		// showView.animate()
 		animate(showView).alpha(1f).setDuration(mShortAnimationDuration)
 				.setListener(null);
-
 		// Animate the loading view to 0% opacity. After the animation ends,
 		// set its visibility to GONE as an optimization step (it won't
 		// participate in layout passes, etc.)
@@ -516,7 +500,32 @@ public class MainActivity extends ActionBarActivity { // implements
 					}
 				});
 	}
-
+	
+	private void rotate() {
+		//	AnimationSet set = new AnimationSet(false);
+		//	set.
+			RotateAnimation anim = new RotateAnimation(0, 360, 0, 0);
+			anim.startNow();
+		//	anim.setRepeatCount(0);
+			anim.setDuration(4000);
+			anim.setInterpolator(new AccelerateDecelerateInterpolator());
+			list.setAnimation(anim);
+	/*		Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				
+				@Override
+				public void run() {
+					RotateAnimation anima = new RotateAnimation(0, -360, 0, 0);
+					anima.startNow();
+					anima.setRepeatCount(1);
+					anima.setDuration();
+					anima.setInterpolator(new AccelerateDecelerateInterpolator());
+					list.setAnimation(anima);
+				}
+			}, 4000);
+	*/
+	}
+	
 	public ListView getList() {
 		return list;
 	}

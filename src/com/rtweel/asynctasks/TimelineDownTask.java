@@ -2,14 +2,7 @@ package com.rtweel.asynctasks;
 
 import java.util.List;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.media.RingtoneManager;
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.appcompat.R;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,7 +31,7 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 				Timeline.DOWN_TWEETS);
 		timeline.updateTimelineDown(downloadedList);
 		Log.i("DEBUG", "finished updating");
-		return downloadedList.size();
+		return downloadedList != null ? downloadedList.size() : 0;
 	}
 
 	@Override
@@ -46,7 +39,7 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 
 		mActivity.getAdapter().notifyDataSetChanged();
 
-		mActivity.crossfade();
+//		mActivity.crossfade();
 
 		if (result != 0) {
 			Toast.makeText(mActivity, "New tweets: " + result,

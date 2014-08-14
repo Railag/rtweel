@@ -82,48 +82,59 @@ public class TweetAdapter extends BaseAdapter {
 
 		String imageUri = tweet.getUser().getMiniProfileImageURL();
 
-		LogoTask task = new LogoTask();
+		String cacheName = tweet.getUser().getName().replace(' ', '_')
+				+ "_mini";
+		// LogoTask task = new LogoTask();
 
 		// DiskCache cache = //new DiskCache(mContext,"bitmap", 10*1024*1024,
 		// CompressFormat.JPEG, 70);
 		// mDiskLruCache = cache;
 
-		App apps = (App) mContext;
-		DiskCache cache = apps.getDiskCache();
+		App app = (App) mContext;
+		DiskCache cache = app.getDiskCache();
 		// Bitmap bitmap = getBitmapFromDiskCache(tweet.getUser().getName());
-		Bitmap bitmap = cache.getBitmap(tweet.getUser().getName()
-				.replace(' ', '_'));
+		Bitmap bitmap = cache.getBitmap(cacheName);
 
 		// Bitmap bitmap = MemoryCache.getBitmap(tweet.getUser().getName());
 		if (bitmap == null) {
-			App app = (App) mContext;
 			if (!app.isOnline()) {
 				Log.i("DEBUG", "picture task tweet adapter NO NETWORK");
 				Options opts = new Options();
 				opts.outHeight = 24;
 				opts.outWidth = 24;
 				opts.inScaled = true;
-		//		TODO: valid picture size
-				
+				// TODO: valid picture size
+
 				bitmap = BitmapFactory.decodeResource(mContext.getResources(),
-						R.drawable.ic_launcher, opts); // mContext.getResources().getDrawable(R.drawable.ic_launcher));
+						R.drawable.ic_launcher, opts); 
 			} else {
 				try {
-					bitmap = task.execute(imageUri).get();
-					cache.put(tweet.getUser().getName().replace(' ', '_'),
-							bitmap);
+					bitmap = new LogoTask().execute(imageUri).get();
+					cache.put(cacheName, bitmap);
 					// MemoryCache.addBitmap(tweet.getUser().getName(), bitmap);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					e.printStackTrace();
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+					Options opts = new Options();
+					opts.outHeight = 24;
+					opts.outWidth = 24;
+					opts.inScaled = true;
+
+					bitmap = BitmapFactory.decodeResource(
+							mContext.getResources(), R.drawable.ic_launcher,
+							opts);
 				}
 			}
 		}
+
 		vh.getPictureView().setImageBitmap(bitmap);
-		
-	//	Log.i("DEBUG", "Width: "+vh.getPictureView().getDrawable().getMinimumWidth()
-	//	+ " Height: " +vh.getPictureView().getDrawable().getMinimumHeight());
+
+		// Log.i("DEBUG",
+		// "Width: "+vh.getPictureView().getDrawable().getMinimumWidth()
+		// + " Height: " +vh.getPictureView().getDrawable().getMinimumHeight());
 
 		vh.getAuthorView().setText(tweet.getUser().getName());
 
@@ -166,6 +177,6 @@ public class TweetAdapter extends BaseAdapter {
 			return mPictureView;
 		}
 
-	}	
+	}
 
 }

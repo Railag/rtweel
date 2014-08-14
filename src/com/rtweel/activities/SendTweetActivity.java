@@ -45,9 +45,10 @@ public class SendTweetActivity extends ActionBarActivity {
 				return false;
 			}
 			String tweet = mTweetEntry.getText().toString();
-			TwitterSendTweetTask task = new TwitterSendTweetTask(
-					getApplicationContext());
-			task.execute(tweet);
+	//		TwitterSendTweetTask task = new TwitterSendTweetTask(
+	//				getApplicationContext());
+	//		task.execute(tweet);
+			new TwitterSendTweetTask(getApplicationContext()).execute(tweet);
 			mTweetEntry.setText("");
 			break;
 		}

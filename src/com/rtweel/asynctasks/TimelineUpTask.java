@@ -22,19 +22,20 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 		Timeline timeline = params[0];
 		List<twitter4j.Status> downloadedList = timeline.downloadTimeline(0,
 				Timeline.getTweetsPerPage(), Timeline.UP_TWEETS);
-//		boolean available;
-//		try {
-//			available = timeline.searchCheckIsAvailable(timeline
-//					.getTwitter().getAccountSettings().getScreenName());
-//			if (available) {
-//				downloadedList.addAll(timeline.downloadTimeline(0, Timeline.getTweetsPerPage(), Timeline.UP_TWEETS));
-//			}
-//		} catch (TwitterException e) {
-//			e.printStackTrace();
-//		}
+		// boolean available;
+		// try {
+		// available = timeline.searchCheckIsAvailable(timeline
+		// .getTwitter().getAccountSettings().getScreenName());
+		// if (available) {
+		// downloadedList.addAll(timeline.downloadTimeline(0,
+		// Timeline.getTweetsPerPage(), Timeline.UP_TWEETS));
+		// }
+		// } catch (TwitterException e) {
+		// e.printStackTrace();
+		// }
 		timeline.updateTimelineUp(downloadedList);
-		
-		int size = downloadedList.size();
+
+		int size = downloadedList != null ? downloadedList.size() : 0;
 		Log.i("DEBUG", "Finished downloading down task");
 		return size;
 	}
@@ -43,7 +44,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 	protected void onPostExecute(Integer result) {
 		mActivity.getAdapter().notifyDataSetChanged();
 		// adapter.notifyDataSetInvalidated();
-		mActivity.crossfade();
+		// mActivity.crossfade();
 		// Toast.makeText(mActivity, "Finished", Toast.LENGTH_LONG).show();
 
 		if (result == 0) {

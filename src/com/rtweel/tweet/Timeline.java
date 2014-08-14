@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import twitter4j.Paging;
-import twitter4j.Query;
-import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -51,42 +49,33 @@ public class Timeline implements Iterable<Status> {
 		mContext = context;
 		String accessTokenString = null;
 		String accessTokenSecret = null;
-		
-	//	if (PreferenceManager.getDefaultSharedPreferences(mContext) == null) {
-			FileInputStream inputStream;
-			byte[] inputBytes;
 
-			String inputString = null;
-			try {
-				inputStream = new FileInputStream(Environment.getExternalStorageDirectory() + App.PATH);
-				inputBytes = new byte[inputStream.available()];
-				inputStream.read(inputBytes);
-				inputString = new String(inputBytes);
-		//		Log.i("DEBUG", inputString);
-				int position = inputString.indexOf(' ');
-				accessTokenString = inputString.substring(0, position);
-				accessTokenSecret = inputString.substring(position + 1, inputString.length());
-		//		Log.i("DEBUG", "String: " + accessTokenString);
-		//		Log.i("DEBUG", "Secret: " + accessTokenSecret);
-				inputStream.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	//	} else {
-	//	SharedPreferences sharedPreferences = PreferenceManager
-	//			.getDefaultSharedPreferences(mContext);
-	//	accessTokenString = sharedPreferences.getString(
-	//			ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
-	//	accessTokenSecret = sharedPreferences.getString(
-	//			ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
-	//	}
+		FileInputStream inputStream;
+		byte[] inputBytes;
+
+		String inputString = null;
+		try {
+			inputStream = new FileInputStream(
+					Environment.getExternalStorageDirectory() + App.PATH);
+			inputBytes = new byte[inputStream.available()];
+			inputStream.read(inputBytes);
+			inputString = new String(inputBytes);
+
+			int position = inputString.indexOf(' ');
+			accessTokenString = inputString.substring(0, position);
+			accessTokenSecret = inputString.substring(position + 1,
+					inputString.length());
+			inputStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		if (accessTokenString != null && accessTokenSecret != null) {
 			AccessToken accessToken = new AccessToken(accessTokenString,
 					accessTokenSecret);
 			mTwitter = TwitterUtil.getInstance().getTwitterFactory()
 					.getInstance(accessToken);
 		}
-			
 	}
 
 	public void loadTimeline() {
@@ -99,9 +88,9 @@ public class Timeline implements Iterable<Status> {
 				return;
 			}
 			Log.i("DEBUG", "loading timeline..");
+
 			list.addAll(downloadTimeline(mTweetsCount, mTweetsPerPage,
 					Timeline.INITIALIZATION_TWEETS));
-
 			mTweetsCount += list.size();
 			new DbWriteTask(mContext, list, mCurrentTimelineType).execute();
 		}
@@ -110,9 +99,9 @@ public class Timeline implements Iterable<Status> {
 
 	public void updateTimelineUp(List<Status> downloadedList) {
 
-		if (downloadedList.isEmpty()) {
-			// Toast.makeText(mContext, "No new tweets",
-			// Toast.LENGTH_LONG).show();
+		if (downloadedList == null) {
+			return;
+		} else if (downloadedList.isEmpty()) {
 			return;
 		}
 		Log.i("DEBUG", "downloading up");
@@ -125,6 +114,11 @@ public class Timeline implements Iterable<Status> {
 
 	public void updateTimelineDown(List<Status> downloadedList) {
 
+		if (downloadedList == null) {
+			return;
+		} else if (downloadedList.isEmpty()) {
+			return;
+		}
 		int prevSize = list.size();
 		list.addAll(downloadedList);
 		if (list.size() - prevSize != 0) {
@@ -138,65 +132,56 @@ public class Timeline implements Iterable<Status> {
 	}
 
 	public List<twitter4j.Status> downloadTimeline(int tweetsCount,
-			int tweetsPerPage, int flag) {
+			int tweetsPerPage, int flag) throws NullPointerException {
 		Log.i("DEBUG", "downloading timeline..");
 
 		List<twitter4j.Status> downloadedList = null;
 
-		try {
-			// SharedPreferences sharedPreferences = PreferenceManager
-			// .getDefaultSharedPreferences(mContext);
-			// String accessTokenString = sharedPreferences.getString(
-			// ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
-			// String accessTokenSecret = sharedPreferences.getString(
-			// ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
-			// Log.i("DEBUG", "1");
-			// if (accessTokenString != null && accessTokenSecret != null) {
-			// AccessToken accessToken = new AccessToken(accessTokenString,
-			// accessTokenSecret);
-			// Twitter twitter = TwitterUtil.getInstance().getTwitterFactory()
-			// .getInstance(accessToken);
-
-			Paging page = new Paging();
-			page.setCount(tweetsPerPage);
-			if (tweetsCount <= tweetsPerPage && tweetsCount != 0) {
-				tweetsCount = tweetsPerPage * 2;
-			}
-			if (tweetsCount == 0) {
-				page.setPage(1);
+		Paging page = new Paging();
+		page.setCount(tweetsPerPage);
+		if (tweetsCount <= tweetsPerPage && tweetsCount != 0) {
+			tweetsCount = tweetsPerPage * 2;
+		}
+		if (tweetsCount == 0) {
+			page.setPage(1);
+		} else {
+			if (tweetsCount % tweetsPerPage == 0) {
+				page.setPage(tweetsCount / tweetsPerPage);
 			} else {
-				if (tweetsCount % tweetsPerPage == 0) {
-					page.setPage(tweetsCount / tweetsPerPage);
-				} else {
-					Float f = (float) tweetsCount / tweetsPerPage;
-					page.setPage(f.intValue() + 1 + 1);
-				}
+				Float f = (float) tweetsCount / tweetsPerPage;
+				page.setPage(f.intValue() + 1 + 1);
 			}
-			switch (flag) {
-			case INITIALIZATION_TWEETS:
-				break;
-			case UP_TWEETS:
-				page.setSinceId(list.get(0).getId());
-				break;
-			case DOWN_TWEETS:
-				page.setMaxId(list.get(list.size() - 1).getId());
-				break;
-			}
+		}
+		switch (flag) {
+		case INITIALIZATION_TWEETS:
+			break;
+		case UP_TWEETS:
+			page.setSinceId(list.get(0).getId());
+			break;
+		case DOWN_TWEETS:
+			page.setMaxId(list.get(list.size() - 1).getId());
+			break;
+		}
 
-			switch (mCurrentTimelineType) {
-			case Timeline.HOME_TIMELINE: {
+		switch (mCurrentTimelineType) {
+		case Timeline.HOME_TIMELINE: {
+			try {
 				downloadedList = mTwitter.getHomeTimeline(page);
-				break;
+			} catch (TwitterException e) {
+				e.printStackTrace();
+				return null;
 			}
-			case Timeline.USER_TIMELINE: {
+			break;
+		}
+		case Timeline.USER_TIMELINE: {
+			try {
 				downloadedList = mTwitter.getUserTimeline(page);
-				break;
+			} catch (TwitterException e) {
+				e.printStackTrace();
+				return null;
 			}
-			}
-			// }
-
-		} catch (TwitterException e) {
-			e.printStackTrace();
+			break;
+		}
 		}
 		return downloadedList;
 	}
@@ -236,7 +221,9 @@ public class Timeline implements Iterable<Status> {
 				TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-				TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
+				TweetDatabaseOpenHelper.Tweets.COLUMN_ID,
+				TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT,
+				TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT };
 
 		ContentResolver resolver = mContext.getContentResolver();
 
@@ -262,11 +249,17 @@ public class Timeline implements Iterable<Status> {
 						.getColumnIndex(projection[3]));
 				long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
 
+				long retweets = cursor.getInt(cursor
+						.getColumnIndex(projection[5]));
+				int favorites = cursor.getInt(cursor
+						.getColumnIndex(projection[6]));
+
 				try {
 					String creation = "{text='" + text + "', id='" + id
-							+ "', created_at='" + date + "',user={name='"
-							+ author + "', profile_image_url='" + pictureUrl
-							+ "'}}";
+							+ "', created_at='" + date + "', retweet_count='"
+							+ retweets + "', favorite_count='" + favorites
+							+ "',user={name='" + author
+							+ "', profile_image_url='" + pictureUrl + "'}}";
 
 					Status insert = TwitterObjectFactory.createStatus(creation);
 					list.add(insert);
@@ -284,23 +277,18 @@ public class Timeline implements Iterable<Status> {
 
 	}
 
-	public boolean searchCheckIsAvailable(String queryString) {
-		Query query = new Query();
-		query.setResultType(Query.RECENT);
-		query.setQuery(queryString);
-		query.setCount(1);
-		query.setSinceId(list.get(0).getId());
-
-		QueryResult result = null;
-		try {
-			result = mTwitter.search(query);
-		} catch (TwitterException e) {
-			e.printStackTrace();
-		}
-
-		return !result.getTweets().isEmpty();
-	}
-
+	// TODO: Implementation
+	/*
+	 * public boolean searchCheckIsAvailable(String queryString) { Query query =
+	 * new Query(); query.setResultType(Query.RECENT);
+	 * query.setQuery(queryString); query.setCount(1);
+	 * query.setSinceId(list.get(0).getId());
+	 * 
+	 * QueryResult result = null; try { result = mTwitter.search(query); } catch
+	 * (TwitterException e) { e.printStackTrace(); }
+	 * 
+	 * return !result.getTweets().isEmpty(); }
+	 */
 	public static int getTweetsPerPage() {
 		return mTweetsPerPage;
 	}

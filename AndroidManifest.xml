@@ -68,6 +68,7 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.rtweel.services.TweetReceiver.BROADCAST_ACTION" />
+           		<action android:name="com.rtweel.services.TweetReceiver.CANCEL_NOTIFICATION_ACTION" />
             </intent-filter>
         </receiver>
 

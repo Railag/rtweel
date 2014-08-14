@@ -32,7 +32,6 @@ public class TwitterSendTweetTask extends AsyncTask<String, String, Boolean> {
 			if (accessTokenString != null && accessTokenSecret != null) {
 				AccessToken accessToken = new AccessToken(accessTokenString,
 						accessTokenSecret);
-				// twitter4j.Status status = TwitterUtil.getInstance()
 				TwitterUtil.getInstance().getTwitterFactory()
 						.getInstance(accessToken).updateStatus(params[0]);
 				return true;

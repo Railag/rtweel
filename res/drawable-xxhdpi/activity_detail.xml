@@ -13,24 +13,44 @@
     <TextView
         android:id="@+id/detail_name"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/detail_profile_picture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/content_description" />
+
+    <Button
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="44dp"
+        android:text="не делает ничего" />
+
+    <TextView
+        android:id="@+id/detail_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edit_button"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/detail_date"
         android:layout_width="100dp"
         android:layout_height="58dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignTop="@+id/photo_view" />
 
     <TextView
         android:id="@+id/detail_text"
         android:layout_width="match_parent"
         android:layout_height="152dp"
-        android:layout_alignRight="@+id/detail_date"
-        android:layout_below="@+id/detail_date"
-        android:layout_marginTop="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/detail_name"
+        android:layout_marginTop="55dp"
         android:gravity="fill_horizontal"
         android:orientation="horizontal"
         android:textColor="#008080"
@@ -40,35 +60,16 @@
         android:id="@+id/detail_retweet_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/detail_text"
-        android:layout_marginTop="26dp" />
+        android:layout_above="@+id/edit_button"
+        android:layout_alignLeft="@+id/detail_text"
+        android:layout_marginLeft="14dp" />
 
     <TextView
         android:id="@+id/detail_favorited_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/detail_retweet_count"
-        android:layout_alignBottom="@+id/detail_retweet_count"
-        android:layout_marginLeft="34dp"
-        android:layout_toRightOf="@+id/detail_retweet_count" />
-
-    <TextView
-        android:id="@+id/detail_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/detail_retweet_count"
-        android:layout_marginTop="30dp"
-        android:layout_toLeftOf="@+id/detail_favorited_count"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:id="@+id/detail_profile_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/detail_name"
-        android:layout_marginTop="5dp"
-        android:contentDescription="@string/content_description" />
+        android:layout_above="@+id/edit_button"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/detail_name" />
 
 </RelativeLayout>

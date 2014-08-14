@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
@@ -24,6 +23,8 @@ public class TweetService extends IntentService {
 	public static final String MESSAGE = "message";
 
 	public static final String TITLE = "title";
+
+	private static int sNewTweets = 0;
 
 	private Timeline mTimeline;
 
@@ -39,50 +40,49 @@ public class TweetService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent data) {
+		if (!isOnline()) {
+			return;
+		}
+		String message = null;
 		Log.i("DEBUG", "onHandleIntent");
 		if (Timeline.getDefaultTimeline() != null) {
 			mTimeline = Timeline.getDefaultTimeline();
 		} else {
 			loadFromDB();
 		}
-		List<twitter4j.Status> downloadedList = mTimeline.downloadTimeline(0,
-				Timeline.getTweetsPerPage(), Timeline.UP_TWEETS);
-		mTimeline.updateTimelineUp(downloadedList);
+		try {
+			List<twitter4j.Status> downloadedList = mTimeline.downloadTimeline(
+					0, Timeline.getTweetsPerPage(), Timeline.UP_TWEETS);
+			mTimeline.updateTimelineUp(downloadedList);
 
-		int size = downloadedList.size();
-		String message = null;
-		if (size > 0) {
-			message = "Tweets downloaded: " + size;
-		} else {
-			message = "No new tweets";
+			int size = downloadedList.size();
+
+			if (size > 0) {
+				if (sNewTweets != 0) {
+					sNewTweets += size;
+					size = sNewTweets;
+				} else {
+					sNewTweets = size;
+				}
+				message = "Tweets downloaded: " + size;
+				String title = "Tweet checking";
+
+				Intent localIntent = new Intent(TweetReceiver.BROADCAST_ACTION)
+						.putExtra(MESSAGE, message);
+				localIntent.putExtra(TITLE, title);
+				// LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+				sendBroadcast(localIntent);
+
+			} else {
+				message = "No new tweets";
+			}
+			Log.i("DEBUG", message);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			Log.i("DEBUG", "NPE in service");
 		}
-		Log.i("DEBUG", message);
-		String title = "Tweet checking";
 
-		Intent localIntent = new Intent(TweetReceiver.BROADCAST_ACTION)
-				.putExtra(MESSAGE, message);
-		localIntent.putExtra(TITLE, title);
-	//	LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-	sendBroadcast(localIntent);
 	}
-
-	// private int load() {
-	// loadFromDB();
-
-	/*
-	 * if (mTimeline.getTweets().isEmpty()) { if (!isOnline()) { Log.i("DEBUG",
-	 * "No network in TweetService"); return 0; } Log.i("DEBUG",
-	 * "Loading timeline in service.."); mTimeline.getTweets().addAll(
-	 * mTimeline.downloadTimeline(Timeline.getTweetsCount(),
-	 * Timeline.getTweetsPerPage(), Timeline.INITIALIZATION_TWEETS));
-	 * 
-	 * Timeline.setTweetsCount(Timeline.getTweetsCount() +
-	 * mTimeline.getTweets().size()); new DbWriteTask(this,
-	 * mTimeline.getTweets(), mTimeline.getCurrentTimelineType()).execute();
-	 * return mTimeline.getTweets().size(); }
-	 */
-	// return -1;
-	// }
 
 	private void loadFromDB() {
 		Log.i("DEBUG", "loading from DB started..");
@@ -146,5 +146,9 @@ public class TweetService extends IntentService {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		return (networkInfo != null && networkInfo.isConnected());
+	}
+
+	public static void setNewTweets(int count) {
+		sNewTweets = count;
 	}
 }

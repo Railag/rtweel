@@ -21,20 +21,28 @@ public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
 		public static final String COLUMN_PICTURE = "picture_url";
 		public static final String COLUMN_DATE = "created_at";
 		public static final String COLUMN_ID = "id";
+		public static final String COLUMN_RETWEET_COUNT = "retweet_count";
+		public static final String COLUMN_FAVORITE_COUNT = "favorite_count";
 	}
 
 	private static final String DB_NAME = "tweets.db";
 	private static final int VERSION = 1;
 	private static final String CREATE_TABLE_HOME = "CREATE TABLE "
-			+ Tweets.TABLE_NAME_HOME + "(" + Tweets._ID + " INTEGER PRIMARY KEY, "
-			+ Tweets.COLUMN_AUTHOR + " TEXT, " + Tweets.COLUMN_TEXT + " TEXT, "
-			+ Tweets.COLUMN_PICTURE + " TEXT, " + Tweets.COLUMN_DATE
-			+ " TEXT, " + Tweets.COLUMN_ID + " INTEGER)";
+			+ Tweets.TABLE_NAME_HOME + "(" + Tweets._ID
+			+ " INTEGER PRIMARY KEY, " + Tweets.COLUMN_AUTHOR + " TEXT, "
+			+ Tweets.COLUMN_TEXT + " TEXT, " + Tweets.COLUMN_PICTURE
+			+ " TEXT, " + Tweets.COLUMN_DATE + " TEXT, "
+			+ Tweets.COLUMN_RETWEET_COUNT + " INTEGER, "
+			+ Tweets.COLUMN_FAVORITE_COUNT + " INTEGER, " + Tweets.COLUMN_ID
+			+ " INTEGER)";
 	private static final String CREATE_TABLE_USER = "CREATE TABLE "
-			+ Tweets.TABLE_NAME_USER + "(" + Tweets._ID + " INTEGER PRIMARY KEY, "
-			+ Tweets.COLUMN_AUTHOR + " TEXT, " + Tweets.COLUMN_TEXT + " TEXT, "
-			+ Tweets.COLUMN_PICTURE + " TEXT, " + Tweets.COLUMN_DATE
-			+ " TEXT, " + Tweets.COLUMN_ID + " INTEGER)";
+			+ Tweets.TABLE_NAME_USER + "(" + Tweets._ID
+			+ " INTEGER PRIMARY KEY, " + Tweets.COLUMN_AUTHOR + " TEXT, "
+			+ Tweets.COLUMN_TEXT + " TEXT, " + Tweets.COLUMN_PICTURE
+			+ " TEXT, " + Tweets.COLUMN_DATE + " TEXT, "
+			+ Tweets.COLUMN_RETWEET_COUNT + " INTEGER, "
+			+ Tweets.COLUMN_FAVORITE_COUNT + " INTEGER, " + Tweets.COLUMN_ID
+			+ " INTEGER)";
 
 	public TweetDatabaseOpenHelper(Context context) {
 		super(context, DB_NAME, null, VERSION);
@@ -51,13 +59,13 @@ public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.i("DEBUG", "onUpgrade");
 	}
-	
+
 	public static String getDbName() {
 		return DB_NAME;
 	}
-	
-//	public void dropTable(SQLiteDatabase db, String tableName) {
-//		db.execSQL("DROP TABLE " + tableName);
-//	}
+
+	// public void dropTable(SQLiteDatabase db, String tableName) {
+	// db.execSQL("DROP TABLE " + tableName);
+	// }
 
 }

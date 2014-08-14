@@ -38,15 +38,12 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE, s
 					.getUser().getProfileImageURL());
 
-			// String date = DateParser.parse(s.getCreatedAt().toString());
-			// values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_DATE, date);
-
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_DATE, s
 					.getCreatedAt().toString());
 
-			// values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-			// s.getCreatedAt().getTime());//.toString());
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_ID, s.getId());
+			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT, s.getRetweetCount());
+			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT, s.getFavoriteCount());
 			if(mTimelineType == Timeline.HOME_TIMELINE) {
 				resolver.insert(TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
 					values);
