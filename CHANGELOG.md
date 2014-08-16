@@ -1,3 +1,14 @@
+v0.18-0.20:
+======
+- Notifications, LED effect, cool black square icon
+- Timeline mechanism improving
+- Some visual effects on timeline and special rotating animation on it's update
+- Logout button
+- Detail tweet activity fully updated, now got exclusively retweets count, favorites count and bigger-then-in-timeline profile picture, yeah
+- Broadcast receiver for notifications and for it's counting based on read/unread notification status
+- Some improved DB things
+- And maany other fixes, as usual
+
 v0.17:
 ======
 - Date parsing
