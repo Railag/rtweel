@@ -31,12 +31,13 @@
         android:layout_alignRight="@+id/detail_date"
         android:layout_below="@+id/detail_date"
         android:layout_marginTop="24dp"
+        android:autoLink="web"
         android:gravity="fill_horizontal"
         android:orientation="horizontal"
         android:textColor="#008080"
         android:textSize="18sp" />
 
-    <TextView
+    <Button
         android:id="@+id/detail_retweet_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,7 +45,7 @@
         android:layout_below="@+id/detail_text"
         android:layout_marginTop="26dp" />
 
-    <TextView
+    <Button
         android:id="@+id/detail_favorited_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,9 +59,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/detail_retweet_count"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:layout_toLeftOf="@+id/detail_favorited_count"
-        android:layout_centerHorizontal="true" />
+        android:layout_toLeftOf="@+id/detail_favorited_count" />
 
     <ImageView
         android:id="@+id/detail_profile_picture"

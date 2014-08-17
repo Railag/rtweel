@@ -32,8 +32,8 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 		ContentValues values = new ContentValues();
 		for (twitter4j.Status s : mList) {
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR, s
-					.getUser().getName());
-			String text = s.getText().replace('\'', ' ').replace('\n', ' ');
+					.getUser().getName().replace("'", "\'"));
+			String text = s.getText().replace('\'', ' ').replace('\n', ' ').replace("'", "\'");
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT, text);
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE, s
 					.getUser().getProfileImageURL());
@@ -42,8 +42,8 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 					.getCreatedAt().toString());
 
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_ID, s.getId());
-			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT, s.getRetweetCount());
-			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT, s.getFavoriteCount());
+	//		values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT, s.getRetweetCount());
+	//		values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT, s.getFavoriteCount());
 			if(mTimelineType == Timeline.HOME_TIMELINE) {
 				resolver.insert(TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
 					values);

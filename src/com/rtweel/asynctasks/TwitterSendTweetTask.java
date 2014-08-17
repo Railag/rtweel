@@ -1,14 +1,19 @@
 package com.rtweel.asynctasks;
 
+import java.io.File;
+import com.rtweel.cache.App;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
 
+import twitter4j.StatusUpdate;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.widget.Toast;
 
 public class TwitterSendTweetTask extends AsyncTask<String, String, Boolean> {
@@ -32,8 +37,18 @@ public class TwitterSendTweetTask extends AsyncTask<String, String, Boolean> {
 			if (accessTokenString != null && accessTokenSecret != null) {
 				AccessToken accessToken = new AccessToken(accessTokenString,
 						accessTokenSecret);
+				StatusUpdate update = new StatusUpdate(params[0]);
+				// File file = new
+				// File(Environment.getExternalStorageDirectory()
+				// + App.PHOTO_PATH + ".png");
+				File file = new File(Environment.getExternalStorageDirectory()
+						+ App.PHOTO_PATH + ".jpg");
+				if (file.exists()) {
+					update.setMedia(file);
+				}
+
 				TwitterUtil.getInstance().getTwitterFactory()
-						.getInstance(accessToken).updateStatus(params[0]);
+						.getInstance(accessToken).updateStatus(update);
 				return true;
 			}
 
@@ -46,10 +61,16 @@ public class TwitterSendTweetTask extends AsyncTask<String, String, Boolean> {
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		if (result)
-			Toast.makeText(sContext, "Tweet successfully", Toast.LENGTH_SHORT)
-					.show();
-		else
-			Toast.makeText(sContext, "Tweet failed", Toast.LENGTH_SHORT).show();
+		if (result) {
+			Toast toast = Toast.makeText(sContext, "Tweet successfully sended",
+					Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.show();
+		} else {
+			Toast toast = Toast.makeText(sContext, "Tweet sending failed",
+					Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.show();
+		}
 	}
 }

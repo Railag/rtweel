@@ -8,7 +8,12 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="20" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -65,10 +70,10 @@
 
         <receiver
             android:name="com.rtweel.services.TweetReceiver"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.rtweel.services.TweetReceiver.BROADCAST_ACTION" />
-           		<action android:name="com.rtweel.services.TweetReceiver.CANCEL_NOTIFICATION_ACTION" />
+                <action android:name="com.rtweel.services.TweetReceiver.CANCEL_NOTIFICATION_ACTION" />
             </intent-filter>
         </receiver>
 

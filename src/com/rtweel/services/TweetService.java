@@ -52,11 +52,12 @@ public class TweetService extends IntentService {
 		}
 		try {
 			List<twitter4j.Status> downloadedList = mTimeline.downloadTimeline(
-					0, Timeline.getTweetsPerPage(), Timeline.UP_TWEETS);
+			// 0, Timeline.getTweetsPerPage(),
+					Timeline.UP_TWEETS);
 			mTimeline.updateTimelineUp(downloadedList);
 
 			int size = downloadedList.size();
-
+			Log.i("DEBUG", "Size: " + String.valueOf(size));
 			if (size > 0) {
 				if (sNewTweets != 0) {
 					sNewTweets += size;
@@ -81,7 +82,6 @@ public class TweetService extends IntentService {
 			e.printStackTrace();
 			Log.i("DEBUG", "NPE in service");
 		}
-
 	}
 
 	private void loadFromDB() {
@@ -92,6 +92,8 @@ public class TweetService extends IntentService {
 				TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
+		//		TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT,
+		//		TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT };
 
 		ContentResolver resolver = getContentResolver();
 
@@ -99,11 +101,11 @@ public class TweetService extends IntentService {
 		if (mTimeline.getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
 			cursor = resolver.query(
 					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-					projection, null, null, null);
+					projection, null, null, "LIMIT 1");
 		} else if (mTimeline.getCurrentTimelineType() == Timeline.USER_TIMELINE) {
 			cursor = resolver.query(
 					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-					projection, null, null, null);
+					projection, null, null, "LIMIT 1");
 		}
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
@@ -117,12 +119,17 @@ public class TweetService extends IntentService {
 						.getColumnIndex(projection[3]));
 				long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
 
+	//			long retweets = cursor.getInt(cursor
+	//					.getColumnIndex(projection[5]));
+	//			int favorites = cursor.getInt(cursor
+	//					.getColumnIndex(projection[6]));
+
 				try {
 					String creation = "{text='" + text + "', id='" + id
-							+ "', created_at='" + date + "',user={name='"
-							+ author + "', profile_image_url='" + pictureUrl
-							+ "'}}";
-
+							+ "', created_at='" + date //+ "', retweet_count='"
+		//					+ retweets + "', favorite_count='" + favorites
+							+ "',user={name='" + author
+							+ "', profile_image_url='" + pictureUrl + "'}}";
 					Status insert = TwitterObjectFactory.createStatus(creation);
 					mTimeline.getTweets().add(insert);
 				} catch (TwitterException e1) {
@@ -130,8 +137,8 @@ public class TweetService extends IntentService {
 				}
 
 			}
-			Timeline.setTweetsCount(Timeline.getTweetsCount()
-					+ mTimeline.getTweets().size());
+			// Timeline.setTweetsCount(Timeline.getTweetsCount()
+			// + mTimeline.getTweets().size());
 			if (cursor != null) {
 				cursor.close();
 			}

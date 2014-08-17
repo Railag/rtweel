@@ -12,6 +12,7 @@ import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 public class App extends Application {
 
 	public static final String PATH = "/Android/data/com.rtweel/sp";
+	public static final String PHOTO_PATH = "/Android/data/com.rtweel/photo";
 	
 	private static DiskCache sDiskCache;
 

@@ -26,12 +26,19 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 	@Override
 	protected Integer doInBackground(Timeline... params) {
 		Timeline timeline = params[0];
-		List<twitter4j.Status> downloadedList = timeline.downloadTimeline(
-				Timeline.getTweetsCount(), Timeline.getTweetsPerPage(),
-				Timeline.DOWN_TWEETS);
-		timeline.updateTimelineDown(downloadedList);
+		List<twitter4j.Status> downloadedList = null;
+		int size = timeline.updateFromDb();
+		if (size == 0) {
+			downloadedList = timeline.downloadTimeline(
+				//	Timeline.getTweetsCount(), Timeline.getTweetsPerPage(),
+					Timeline.DOWN_TWEETS);
+			timeline.updateTimelineDown(downloadedList);
+		
 		Log.i("DEBUG", "finished updating");
-		return downloadedList != null ? downloadedList.size() : 0;
+		return downloadedList.size();
+		} else {
+			return size;
+		}
 	}
 
 	@Override
@@ -39,7 +46,7 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 
 		mActivity.getAdapter().notifyDataSetChanged();
 
-//		mActivity.crossfade();
+		// mActivity.crossfade();
 
 		if (result != 0) {
 			Toast.makeText(mActivity, "New tweets: " + result,

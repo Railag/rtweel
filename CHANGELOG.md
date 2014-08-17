@@ -28,4 +28,3 @@ before v0.16:
     Some screens for tweet posting, for detail tweet view.
     Using support library, 2.3 > version support.
     1 Mb apk file weight, 2.8 Mb installed app size.
-

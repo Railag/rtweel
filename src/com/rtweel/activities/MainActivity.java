@@ -1,7 +1,11 @@
 package com.rtweel.activities;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
+import java.util.concurrent.ExecutionException;
+
 import twitter4j.Status;
+import twitter4j.api.TweetsResources;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,7 +15,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -22,7 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -36,6 +38,7 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import com.rtweel.R;
 import com.rtweel.asynctasks.LoadTimelineTask;
+import com.rtweel.asynctasks.RefreshTweetTask;
 import com.rtweel.asynctasks.TimelineDownTask;
 import com.rtweel.asynctasks.TimelineUpTask;
 import com.rtweel.cache.App;
@@ -403,21 +406,23 @@ public class MainActivity extends ActionBarActivity { // implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				Status tweet = (twitter4j.Status) adapter
+						.getItem(position);
+				Log.i("DEBUG", "tweet retweets: " + tweet.getRetweetCount());
+				Status actualTweet = null;
+				try {
+					actualTweet = new RefreshTweetTask().execute(tweet.getId()).get();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					actualTweet = tweet;
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+					actualTweet = tweet;
+				}
+				Log.i("DEBUG", "actualTweet retweets: " + actualTweet.getRetweetCount());
 				Intent intent = new Intent(MainActivity.this,
 						DetailActivity.class);
-				twitter4j.Status tweet = (twitter4j.Status) adapter
-						.getItem(position);
-
-				intent.putExtra(Extras.USER_NAME, tweet.getUser().getName());
-				intent.putExtra(Extras.TEXT, tweet.getText());
-				intent.putExtra(Extras.LOCATION, tweet.getUser().getLocation());
-				intent.putExtra(Extras.FAVORITES_COUNT,
-						tweet.getFavoriteCount());
-				intent.putExtra(Extras.RETWEETS_COUNT, tweet.getRetweetCount());
-				intent.putExtra(Extras.PICTURE_URL, tweet.getUser()
-						.getProfileImageURL());// getMiniProfileImageURL());
-				intent.putExtra(Extras.DATE,
-						DateParser.parse(tweet.getCreatedAt().toString()));
+				intent.putExtra(Extras.TWEET, actualTweet);
 				startActivityForResult(intent, EDIT_REQUEST);
 			}
 		});

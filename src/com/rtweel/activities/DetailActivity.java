@@ -2,31 +2,41 @@ package com.rtweel.activities;
 
 import java.util.concurrent.ExecutionException;
 
+import twitter4j.Status;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rtweel.R;
+import com.rtweel.asynctasks.FavoriteTask;
 import com.rtweel.asynctasks.LogoTask;
+import com.rtweel.asynctasks.RetweetTask;
 import com.rtweel.cache.App;
 import com.rtweel.cache.DiskCache;
 import com.rtweel.camera.Photo;
 import com.rtweel.constant.Extras;
+import com.rtweel.parsers.DateParser;
+import com.rtweel.tweet.Timeline;
 
 public class DetailActivity extends ActionBarActivity {
 
-	private EditText editName;
-	private EditText editText;
-	private EditText editLocation;
 	private ImageView photo;
+
+	private Boolean mIsRetweeted;
+	private Boolean mIsFavorited;
+	private Long mRetweetId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +50,35 @@ public class DetailActivity extends ActionBarActivity {
 		TextView textView = (TextView) findViewById(R.id.detail_text);
 		TextView locationView = (TextView) findViewById(R.id.detail_location);
 		TextView dateView = (TextView) findViewById(R.id.detail_date);
-		TextView retweetsCountView = (TextView) findViewById(R.id.detail_retweet_count);
-		TextView favsCountView = (TextView) findViewById(R.id.detail_favorited_count);
+		final Button retweetsCountButton = (Button) findViewById(R.id.detail_retweet_count);
+		final Button favsCountButton = (Button) findViewById(R.id.detail_favorited_count);
 		ImageView profilePictureView = (ImageView) findViewById(R.id.detail_profile_picture);
 
 		Bundle start = getIntent().getExtras();
+		Status tweet = (Status) start.getSerializable(Extras.TWEET);
+		final String name = tweet.getUser().getName();
+		String text = tweet.getText();
+		String location = tweet.getUser().getLocation();
+		String date = DateParser.parse(tweet.getCreatedAt().toString());
+		int retweetsCount = tweet.getRetweetCount();
+		int favsCount = tweet.getFavoriteCount();
+		String imageUri = tweet.getUser().getBiggerProfileImageURL();
+		final long id = tweet.getId();
+		mIsFavorited = tweet.isFavorited();
+		mIsRetweeted = tweet.isRetweetedByMe();
+		mRetweetId = tweet.getCurrentUserRetweetId();
 
-		String name = start.getString(Extras.USER_NAME);
-		String text = start.getString(Extras.TEXT);
-		String location = start.getString(Extras.LOCATION);
-		String date = start.getString(Extras.DATE);
-		int retweetsCount = start.getInt(Extras.RETWEETS_COUNT);
-		int favsCount = start.getInt(Extras.FAVORITES_COUNT);
-		String imageUri = start.getString(Extras.PICTURE_URL);
+		if (mIsRetweeted) {
+			retweetsCountButton.setBackgroundColor(Color.GREEN);
+		} else {
+			retweetsCountButton.setBackgroundColor(Color.DKGRAY);
+		}
+
+		if (mIsFavorited) {
+			favsCountButton.setBackgroundColor(Color.GREEN);
+		} else {
+			favsCountButton.setBackgroundColor(Color.DKGRAY);
+		}
 
 		String cacheName = name.replace(' ', '_') + "_normal";
 
@@ -97,8 +123,30 @@ public class DetailActivity extends ActionBarActivity {
 		textView.setText(text);
 		locationView.setText(location);
 		dateView.setText(date);
-		retweetsCountView.setText(String.valueOf(retweetsCount));
-		favsCountView.setText(String.valueOf(favsCount));
+		retweetsCountButton.setText(String.valueOf(retweetsCount));
+		retweetsCountButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (!name.equals(Timeline.getUserName())) {
+					new RetweetTask(DetailActivity.this, retweetsCountButton,
+							mIsRetweeted).execute(id, mRetweetId);
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"You can't retweet your own tweet",
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		favsCountButton.setText(String.valueOf(favsCount));
+		favsCountButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				new FavoriteTask(DetailActivity.this, favsCountButton,
+						mIsFavorited).execute(id);
+			}
+		});
 		/*
 		 * try { cache.put(name.replace(' ', '_'), task.get()); } catch
 		 * (InterruptedException e) { e.printStackTrace(); } catch
@@ -151,10 +199,11 @@ public class DetailActivity extends ActionBarActivity {
 
 				Intent data = getIntent();
 
-				data.putExtra(Extras.USER_NAME, editName.getText().toString());
-				data.putExtra(Extras.TEXT, editText.getText().toString());
-				data.putExtra(Extras.LOCATION, editLocation.getText()
-						.toString());
+				// data.putExtra(Extras.USER_NAME,
+				// editName.getText().toString());
+				// data.putExtra(Extras.TEXT, editText.getText().toString());
+				// data.putExtra(Extras.LOCATION, editLocation.getText()
+				// .toString());
 				// data.putExtra(Extras.IMAGE_PATH, Photo.mCurrentPhotoPath);
 
 				setResult(RESULT_OK, data);
@@ -182,6 +231,18 @@ public class DetailActivity extends ActionBarActivity {
 
 			}
 		}
+	}
+
+	public void changeIsRetweeted() {
+		mIsRetweeted = !mIsRetweeted;
+	}
+
+	public void changeIsFavorited() {
+		mIsFavorited = !mIsFavorited;
+	}
+
+	public void setRetweetId(Long id) {
+		mRetweetId = id;
 	}
 
 }

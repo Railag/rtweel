@@ -10,16 +10,16 @@
     <string name="add_button">Add</string>
     <string name="delete_button">Delete</string>
     <string name="tweet_button">Tweets</string>
-    <string name="spinner">Spinner</string>
+    <!-- <string name="spinner">Spinner</string> -->
     <string name="hint_name">Name</string>
     <string name="hint_text">Text</string>
     <string name="hint_location">Location</string>
 
     <string-array name="titles">
         <item>All tweets</item>
-        <item>BSUIR [UNIVERSITY]</item>
-        <item>ksisportal</item>
-        <item>БРСМ БГУИР</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 
     <string name="content_description">Photo</string>
@@ -37,5 +37,7 @@
     <string name="reload_user_timeline">Update user timeline</string>
     <string name="authors_picture_description_content">Author\'s picture</string>
     <string name="introduction_text">Welcome to Rtweel! \n\n Now you\'re gonna be brought to the login window, so wait a bit... </string>
-<string name="logout_button">Logout</string>
+    <string name="logout_button">Logout</string>
+    <string name="tweet_send_add_photo_button">Add photo</string>
+
 </resources>

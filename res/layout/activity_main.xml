@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
     />
-     <!--   android:layout_weight="1"  />  -->
     
      <ProgressBar
          android:id="@+id/loading"

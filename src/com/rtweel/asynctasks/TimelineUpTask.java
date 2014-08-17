@@ -20,8 +20,9 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 	@Override
 	protected Integer doInBackground(Timeline... params) {
 		Timeline timeline = params[0];
-		List<twitter4j.Status> downloadedList = timeline.downloadTimeline(0,
-				Timeline.getTweetsPerPage(), Timeline.UP_TWEETS);
+		List<twitter4j.Status> downloadedList = timeline.downloadTimeline(//0,
+	//			Timeline.getTweetsPerPage(),
+				Timeline.UP_TWEETS);
 		// boolean available;
 		// try {
 		// available = timeline.searchCheckIsAvailable(timeline
@@ -35,7 +36,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 		// }
 		timeline.updateTimelineUp(downloadedList);
 
-		int size = downloadedList != null ? downloadedList.size() : 0;
+		int size = downloadedList.size();
 		Log.i("DEBUG", "Finished downloading down task");
 		return size;
 	}
@@ -52,7 +53,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 					.show();
 
 		} else {
-			if (result < (Timeline.getTweetsPerPage() - 3)) {
+			if (result < (100 - 3)) {
 				Toast.makeText(mActivity, "New tweets: " + result,
 						Toast.LENGTH_LONG).show();
 			} else {
