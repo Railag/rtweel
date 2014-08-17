@@ -1,3 +1,10 @@
+v0.21:
+======
+- Simple photo add button for tweet media uploading
+- Colored tweet length control
+- Some small improvements of tweent sending activity
+- Detail tweet screen got new, bigger user icon, retweet and favorite buttons
+
 v0.18-0.20:
 ======
 - Notifications, LED effect, cool black square icon
