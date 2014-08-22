@@ -1,9 +1,12 @@
 package com.rtweel.activities;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -27,7 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rtweel.R;
-import com.rtweel.asynctasks.TwitterSendTweetTask;
+import com.rtweel.asynctasks.tweet.TwitterSendTweetTask;
 import com.rtweel.cache.App;
 
 public class SendTweetActivity extends ActionBarActivity {
@@ -72,7 +75,6 @@ public class SendTweetActivity extends ActionBarActivity {
 					}
 				}
 
-				
 			}
 
 			@Override
@@ -84,17 +86,13 @@ public class SendTweetActivity extends ActionBarActivity {
 			public void afterTextChanged(Editable s) {
 			}
 		});
-		
+
 		mGetPictureButton = (Button) findViewById(R.id.tweet_add_photo_button);
 		mGetPictureButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(
-						MediaStore.ACTION_IMAGE_CAPTURE);
-				// File thumbnail = new
-				// File(Environment.getExternalStorageDirectory()
-				// + App.PHOTO_PATH + ".jpg");
+				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 				String uri = Environment.getExternalStorageDirectory()
 						+ App.PHOTO_PATH + ".jpg";
 				File file = new File(uri);
@@ -103,18 +101,63 @@ public class SendTweetActivity extends ActionBarActivity {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				intent.putExtra(MediaStore.EXTRA_OUTPUT,
-						Uri.fromFile(file));
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 				if (intent.resolveActivity(getPackageManager()) != null) {
 					startActivityForResult(intent, PHOTO_REQUEST_CODE);
 				}
 			}
 		});
-		
+
 		if (savedInstanceState != null) {
 			mTweetEntry.setText(savedInstanceState.getString(SAVE_TWEET_ENTRY));
 			mTweetLengthCounter.setText(savedInstanceState
 					.getString(SAVE_TWEET_ENTRY_COUNTER));
+		}
+		if (getIntent().getAction() != null) {
+			if (getIntent().getAction().equals(Intent.ACTION_SEND)) {
+				Intent data = getIntent();
+				if (data.hasExtra(Intent.EXTRA_TEXT)) {
+					mTweetEntry.setText(data.getExtras().getString(
+							Intent.EXTRA_TEXT));
+				} else if (data.hasExtra(Intent.EXTRA_STREAM)) {
+					// String uri =
+					// data.getExtras().getString(Intent.EXTRA_STREAM);
+					Uri uri = (Uri) getIntent().getExtras().getParcelable(
+							Intent.EXTRA_STREAM);
+					Cursor cursor = null;
+					String path = null;
+					try {
+						String[] projection = { MediaStore.Images.Media.DATA };
+						cursor = getContentResolver().query(uri, projection,
+								null, null, null);
+						int column_index = cursor
+								.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+						cursor.moveToFirst();
+						path = cursor.getString(column_index);
+					} finally {
+						if (cursor != null) {
+							cursor.close();
+						}
+					}
+					Bitmap bitmap = BitmapFactory.decodeFile(path);
+					mTweetPicture.setImageBitmap(bitmap);
+					FileOutputStream stream = null;
+					File file = new File(
+							Environment.getExternalStorageDirectory()
+									+ App.PHOTO_PATH + ".jpg");
+					try {
+						stream = new FileOutputStream(file);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+					try {
+						stream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 	}
 
@@ -150,6 +193,9 @@ public class SendTweetActivity extends ActionBarActivity {
 						Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.CENTER, 0, 0);
 				toast.show();
+				if (getIntent().getAction().equals(Intent.ACTION_SEND)) {
+					finish();
+				}
 			}
 			break;
 		}
@@ -173,32 +219,11 @@ public class SendTweetActivity extends ActionBarActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == PHOTO_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				// Bitmap bitmap = (Bitmap) data.getExtras().get("data");
 				Bitmap bitmap = BitmapFactory.decodeFile(Environment
 						.getExternalStorageDirectory()
 						+ App.PHOTO_PATH
 						+ ".jpg");
 				mTweetPicture.setImageBitmap(bitmap);
-				// FileOutputStream outputStream = null;
-
-				// File thumbnail = new
-				// File(Environment.getExternalStorageDirectory()
-				// + App.PHOTO_PATH + ".jpg");
-				// try {
-				// outputStream = new FileOutputStream(thumbnail);
-				// bitmap.compress(Bitmap.CompressFormat.PNG, 100,
-				// outputStream);
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// } finally {
-				// try {
-				// if (outputStream != null) {
-				// outputStream.close();
-				// }
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
-				// }
 
 			} else if (resultCode == RESULT_CANCELED) {
 				Toast.makeText(getApplicationContext(),

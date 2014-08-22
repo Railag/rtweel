@@ -1,4 +1,4 @@
-package com.rtweel.asynctasks;
+package com.rtweel.asynctasks.tweet;
 
 import java.io.File;
 import com.rtweel.cache.App;
@@ -38,9 +38,6 @@ public class TwitterSendTweetTask extends AsyncTask<String, String, Boolean> {
 				AccessToken accessToken = new AccessToken(accessTokenString,
 						accessTokenSecret);
 				StatusUpdate update = new StatusUpdate(params[0]);
-				// File file = new
-				// File(Environment.getExternalStorageDirectory()
-				// + App.PHOTO_PATH + ".png");
 				File file = new File(Environment.getExternalStorageDirectory()
 						+ App.PHOTO_PATH + ".jpg");
 				if (file.exists()) {

@@ -1,4 +1,4 @@
-package com.rtweel.asynctasks;
+package com.rtweel.asynctasks.tweet;
 
 import java.io.IOException;
 import java.io.InputStream;

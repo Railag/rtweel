@@ -1,4 +1,4 @@
-package com.rtweel.asynctasks;
+package com.rtweel.asynctasks.tweet;
 
 import twitter4j.TwitterException;
 

@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutionException;
 import twitter4j.Status;
 
 import com.rtweel.R;
-import com.rtweel.asynctasks.LogoTask;
+import com.rtweel.asynctasks.tweet.LogoTask;
 import com.rtweel.cache.App;
 import com.rtweel.cache.DiskCache;
 import com.rtweel.parsers.DateParser;
@@ -84,6 +84,7 @@ public class TweetAdapter extends BaseAdapter {
 
 		String cacheName = tweet.getUser().getName().replace(' ', '_')
 				+ "_mini";
+		Log.i("DEBUG", "TweetAdapter: " +cacheName);
 		// LogoTask task = new LogoTask();
 
 		// DiskCache cache = //new DiskCache(mContext,"bitmap", 10*1024*1024,

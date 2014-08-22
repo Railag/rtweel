@@ -2,6 +2,7 @@ package com.rtweel.tweet;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,8 +18,8 @@ import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
 
-import com.rtweel.asynctasks.DbWriteTask;
-import com.rtweel.asynctasks.GetScreenNameTask;
+import com.rtweel.asynctasks.db.DbWriteTask;
+import com.rtweel.asynctasks.tweet.GetScreenNameTask;
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.twitteroauth.TwitterUtil;
@@ -32,10 +33,7 @@ public class Timeline implements Iterable<Status> {
 	public static final int DOWN_TWEETS = 1;
 	public static final int INITIALIZATION_TWEETS = 2;
 
-	public static final int TWEETS_PER_PAGE = 50;
-
-	// private static int mTweetsCount = 0;
-	// private static int mTweetsPerPage = 100;
+	public static final int TWEETS_PER_PAGE = 30;
 
 	private List<twitter4j.Status> list;
 
@@ -82,11 +80,17 @@ public class Timeline implements Iterable<Status> {
 			mTwitter = TwitterUtil.getInstance().getTwitterFactory()
 					.getInstance(accessToken);
 			new GetScreenNameTask().execute(mTwitter);
+			Log.i("DEBUG", "timeline construction finished");
 		}
 	}
 
 	public void loadTimeline() {
+		Log.i("DEBUG", "loadtimeline started");
+		Date t1 = new Date();
 		preparingUpdate();
+		Log.i("DEBUG",
+				"preparing update time: "
+						+ (new Date().getTime() - t1.getTime()));
 
 		if (list.isEmpty()) {
 			App app = (App) mContext;
@@ -95,12 +99,16 @@ public class Timeline implements Iterable<Status> {
 				return;
 			}
 			Log.i("DEBUG", "loading timeline..");
-
-			list.addAll(downloadTimeline(// mTweetsCount, mTweetsPerPage,
-			Timeline.INITIALIZATION_TWEETS));
-			// mTweetsCount += list.size();
+			t1 = new Date();
+			list.addAll(downloadTimeline(Timeline.INITIALIZATION_TWEETS));
+			Date t2 = new Date();
+			Log.i("DEBUG",
+					"downloadTimeline time: " + (t2.getTime() - t1.getTime()));
 			new DbWriteTask(mContext, list, mCurrentTimelineType).execute();
+			Log.i("DEBUG", "dbwritetask start time: "
+					+ (new Date().getTime() - t2.getTime()));
 		}
+		Log.i("DEBUG", "loadTimeline finished");
 
 	}
 
@@ -126,14 +134,13 @@ public class Timeline implements Iterable<Status> {
 		} else if (downloadedList.isEmpty()) {
 			return;
 		}
-		int prevSize = list.size();
+		// int prevSize = list.size();
 		list.addAll(downloadedList);
-		if (list.size() - prevSize != 0) {
-			// mTweetsCount += list.size() - prevSize;
-		} else {
-			// Toast.makeText(mContext, "No old tweets", Toast.LENGTH_LONG)
-			// .show();
-		}
+		// if (list.size() - prevSize != 0) {
+		// } else {
+		// Toast.makeText(mContext, "No old tweets", Toast.LENGTH_LONG)
+		// .show();
+		// }
 		new DbWriteTask(mContext, downloadedList, mCurrentTimelineType)
 				.execute();
 	}
@@ -147,19 +154,6 @@ public class Timeline implements Iterable<Status> {
 
 		Paging page = new Paging();
 		page.setCount(TWEETS_PER_PAGE);
-		// if (tweetsCount <= tweetsPerPage && tweetsCount != 0) {
-		// tweetsCount = tweetsPerPage * 2;
-		// }
-		// if (tweetsCount == 0) {
-		// page.setPage(1);
-		// } else {
-		// if (tweetsCount % tweetsPerPage == 0) {
-		// page.setPage(tweetsCount / tweetsPerPage);
-		// } else {
-		// Float f = (float) tweetsCount / tweetsPerPage;
-		// page.setPage(f.intValue() + 1 + 1);
-		// }
-		// }
 		switch (flag) {
 		case INITIALIZATION_TWEETS:
 			page.setPage(1);
@@ -178,6 +172,8 @@ public class Timeline implements Iterable<Status> {
 				downloadedList = mTwitter.getHomeTimeline(page);
 			} catch (TwitterException e) {
 				e.printStackTrace();
+			} catch (NullPointerException e) {
+				e.printStackTrace();
 			}
 			break;
 		}
@@ -185,6 +181,8 @@ public class Timeline implements Iterable<Status> {
 			try {
 				downloadedList = mTwitter.getUserTimeline(page);
 			} catch (TwitterException e) {
+				e.printStackTrace();
+			} catch (NullPointerException e) {
 				e.printStackTrace();
 			}
 			break;
@@ -208,7 +206,6 @@ public class Timeline implements Iterable<Status> {
 
 	public void clear() {
 		list.clear();
-		// mTweetsCount = 0;
 	}
 
 	public void addAll(List<Status> tweets) {
@@ -229,21 +226,20 @@ public class Timeline implements Iterable<Status> {
 				TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
-		// TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT,
-		// TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT };
-
+		Log.i("DEBUG", "1");
 		ContentResolver resolver = mContext.getContentResolver();
-
+		
 		Cursor cursor = null;
 		if (mCurrentTimelineType == HOME_TIMELINE) {
 			cursor = resolver.query(
 					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-					projection, null, null, "LIMIT 100");
+					projection, null, null, "LIMIT 30");
 		} else if (mCurrentTimelineType == USER_TIMELINE) {
 			cursor = resolver.query(
 					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-					projection, null, null, "LIMIT 100");
+					projection, null, null, "LIMIT 30");
 		}
+		Log.i("DEBUG", "2");
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
 				String author = cursor.getString(cursor
@@ -256,27 +252,35 @@ public class Timeline implements Iterable<Status> {
 						.getColumnIndex(projection[3]));
 				long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
 
-				// long retweets = cursor.getInt(cursor
-				// .getColumnIndex(projection[5]));
-				// int favorites = cursor.getInt(cursor
-				// .getColumnIndex(projection[6]));
-
 				try {
-					String creation = "{text='" + text + "', id='" + id
-							+ "', created_at='"
-							+ date // + "', retweet_count='"
-							// + retweets + "', favorite_count='" + favorites
-							+ "',user={name='" + author
-							+ "', profile_image_url='" + pictureUrl + "'}}";
-					// Log.i("DEBUG", creation);
-					Status insert = TwitterObjectFactory.createStatus(creation);
+		//			Log.i("DEBUG", author);
+					/*
+					 * String creation = "{text='" + text + "', id='" + id +
+					 * "', created_at='" + date // + "', retweet_count='" // +
+					 * retweets + "', favorite_count='" + favorites +
+					 * "',user={name='" + author + "', profile_image_url='" +
+					 * pictureUrl + "'}}"; // Log.i("DEBUG", creation);
+					 */
+					StringBuilder builder = new StringBuilder();
+					builder.append("{text='");
+					builder.append(text);
+					builder.append("', id='");
+					builder.append(id);
+					builder.append("', created_at='");
+					builder.append(date);
+					builder.append("',user={name='");
+					builder.append(author);
+					builder.append("', profile_image_url='");
+					builder.append(pictureUrl);
+					builder.append("'}}");
+					Status insert = TwitterObjectFactory.createStatus(builder
+							.toString());
 					list.add(insert);
 				} catch (TwitterException e1) {
 					e1.printStackTrace();
 				}
 
 			}
-			// mTweetsCount += list.size();
 			if (cursor != null) {
 				cursor.close();
 			}
@@ -292,8 +296,6 @@ public class Timeline implements Iterable<Status> {
 				TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
-		// TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT,
-		// TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT };
 
 		ContentResolver resolver = mContext.getContentResolver();
 
@@ -324,26 +326,36 @@ public class Timeline implements Iterable<Status> {
 						.getColumnIndex(projection[3]));
 				long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
 
-				// long retweets = cursor.getInt(cursor
-				// .getColumnIndex(projection[5]));
-				// int favorites = cursor.getInt(cursor
-				// .getColumnIndex(projection[6]));
-
 				try {
-					String creation = "{text='" + text + "', id='" + id
-							+ "', created_at='"
-							+ date // + "', retweet_count='"
-							// + retweets + "', favorite_count='" + favorites
-							+ "',user={name='" + author
-							+ "', profile_image_url='" + pictureUrl + "'}}";
-					Status insert = TwitterObjectFactory.createStatus(creation);
+			//		Log.i("DEBUG", author);
+					/*
+					 * String creation = "{text='" + text + "', id='" + id +
+					 * "', created_at='" + date // + "', retweet_count='" // +
+					 * retweets + "', favorite_count='" + favorites +
+					 * "',user={name='" + author + "', profile_image_url='" +
+					 * pictureUrl + "'}}"; Status insert =
+					 * TwitterObjectFactory.createStatus(creation);
+					 */
+					StringBuilder builder = new StringBuilder();
+					builder.append("{text='");
+					builder.append(text);
+					builder.append("', id='");
+					builder.append(id);
+					builder.append("', created_at='");
+					builder.append(date);
+					builder.append("',user={name='");
+					builder.append(author);
+					builder.append("', profile_image_url='");
+					builder.append(pictureUrl);
+					builder.append("'}}");
+					Status insert = TwitterObjectFactory.createStatus(builder
+							.toString());
 					list.add(insert);
 				} catch (TwitterException e1) {
 					e1.printStackTrace();
 				}
 
 			}
-			// mTweetsCount += list.size();
 			if (cursor != null) {
 				cursor.close();
 			}

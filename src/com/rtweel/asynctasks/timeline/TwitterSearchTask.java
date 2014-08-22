@@ -1,4 +1,4 @@
-package com.rtweel.asynctasks;
+package com.rtweel.asynctasks.timeline;
 
 import com.rtweel.tweet.Timeline;
 

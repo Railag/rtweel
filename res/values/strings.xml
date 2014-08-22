@@ -39,5 +39,6 @@
     <string name="introduction_text">Welcome to Rtweel! \n\n Now you\'re gonna be brought to the login window, so wait a bit... </string>
     <string name="logout_button">Logout</string>
     <string name="tweet_send_add_photo_button">Add photo</string>
+    <string name="tweet_share">Share tweet</string>
 
 </resources>
