@@ -42,4 +42,14 @@
         android:contentDescription="@string/hint_text"
         android:src="@drawable/abc_ab_share_pack_holo_dark" />
 
+    <Button
+        android:id="@+id/tweet_send_file_choose_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tweet_input"
+        android:layout_marginLeft="43dp"
+        android:layout_marginTop="32dp"
+        android:layout_toRightOf="@+id/tweet_add_photo_button"
+        android:text="@string/select_file" />
+
 </RelativeLayout>

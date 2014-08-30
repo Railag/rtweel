@@ -61,8 +61,17 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/detail_retweet_count"
         android:layout_alignBottom="@+id/detail_retweet_count"
-        android:layout_marginLeft="34dp"
+        android:layout_marginLeft="25dp"
         android:layout_toRightOf="@+id/detail_retweet_count" />
+    
+     <Button
+        android:id="@+id/detail_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/detail_favorited_count"
+        android:layout_alignBottom="@+id/detail_favorited_count"
+        android:layout_marginLeft="25dp"
+        android:layout_toRightOf="@+id/detail_favorited_count" />
 
     <TextView
         android:id="@+id/detail_location"

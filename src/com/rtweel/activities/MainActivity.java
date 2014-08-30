@@ -29,6 +29,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ import com.rtweel.R;
 import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
+import com.rtweel.asynctasks.tweet.DeleteTweetTask;
 import com.rtweel.asynctasks.tweet.RefreshTweetTask;
 import com.rtweel.cache.App;
 import com.rtweel.constant.Extras;
@@ -56,12 +58,11 @@ public class MainActivity extends ActionBarActivity { // implements
 														// {
 
 	private static final int EDIT_REQUEST = 0;
-	private static final int ADD_DEL_REQUEST = 1;
+	private static final int DELETE_REQUEST = 1;
 
 	private BaseAdapter adapter;
 
-	@SuppressWarnings("rawtypes")
-	private AdapterView mAdapter;
+	private AdapterView<ListAdapter> mAdapter;
 
 	private Timeline mTimeline;
 
@@ -91,94 +92,12 @@ public class MainActivity extends ActionBarActivity { // implements
 
 		if (requestCode == EDIT_REQUEST) {
 			if (requestResult == RESULT_OK) {
-				// Status tweet = mTimeline.get(intent.getExtras().getInt(
-				// Extras.TWEET_POSITION));
-				/*
-				 * tweet.setText(intent.getExtras().getString(Extras.TEXT));
-				 * tweet.setName(intent.getExtras().getString(Extras.USER));
-				 * tweet
-				 * .setLocation(intent.getExtras().getString(Extras.LOCATION));
-				 * tweet
-				 * .setImagePath(intent.getExtras().getString(Extras.IMAGE_PATH
-				 * ));
-				 */
-				// for (Status tw : newtweets) {
-
-				/*
-				 * if (true) tw.getPosition() ==
-				 * intent.getExtras().getInt(Extras.TWEET_POSITION)) {
-				 * tw.setText(intent.getExtras().getString(Extras.TEXT ));
-				 * tw.setName(intent.getExtras().getString(Extras .USER));
-				 * tw.setLocation(intent.getExtras().getString
-				 * (Extras.LOCATION));
-				 */
-				// break;
-				// }
-				// }
 				adapter.notifyDataSetChanged();
-
-				adapter.notifyDataSetInvalidated();
 			}
 		}
-		if (requestCode == ADD_DEL_REQUEST) {
+		if (requestCode == DELETE_REQUEST) {
 			if (requestResult == RESULT_OK) {
-				if (intent.getExtras().getBoolean(Extras.ADD_CHECK) == true) {
-					/*
-					 * Gson gson = new Gson(); String result = null; try {
-					 * InputStream stream =
-					 * getResources().getAssets().open("0.json");
-					 * InputStreamReader reader = new InputStreamReader(stream);
-					 * BufferedReader bReader = new BufferedReader(reader);
-					 * StringBuilder builder = new StringBuilder(); String
-					 * singleLine = null; while ((singleLine =
-					 * bReader.readLine()) != null) {
-					 * builder.append(singleLine); } bReader.close(); result =
-					 * builder.toString(); Tweet tweet = gson.fromJson(result,
-					 * Tweet.class); tweet.setPosition(lastPosition++);
-					 * tweet.setText(intent.getExtras().getString(Extras.TEXT));
-					 * tweet.setName(intent.getExtras().getString(Extras.USER));
-					 * tweet
-					 * .setLocation(intent.getExtras().getString(Extras.LOCATION
-					 * ));
-					 * tweet.setImagePath(intent.getExtras().getString(Extras
-					 * .IMAGE_PATH)); tweets.add(tweet);
-					 * 
-					 * if (SPINNER_STATE != 0) { String mName = null; switch
-					 * (SPINNER_STATE) { case 1: mName = "BSUIR [UNIVERSITY]";
-					 * break; case 2: mName = "ksisportal"; break; case 3: mName
-					 * = "БРСМ БГУИР"; break; }
-					 * 
-					 * if
-					 * (mName.equals(intent.getExtras().getString(Extras.USER)))
-					 * { newtweets.add(tweet); } } } catch (IOException e) {
-					 * e.printStackTrace(); }
-					 */
-					adapter.notifyDataSetChanged();
-
-					adapter.notifyDataSetInvalidated();
-				}
-
-				else if (intent.getExtras().getBoolean(Extras.ADD_CHECK) == false) {
-					// mTimeline.remove(intent.getExtras().getInt(
-					// Extras.TWEET_POSITION));
-					// lastPosition--;
-
-					// newtweets.clear();
-					for (Status tw : mTimeline) {
-						try {
-
-							// if (tw.getUser().getName().equals(mName))
-							// newtweets.add(tw);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-					}
-
-					adapter.notifyDataSetChanged();
-
-					adapter.notifyDataSetInvalidated();
-				}
+				adapter.notifyDataSetChanged();
 			}
 		}
 	}
@@ -186,7 +105,7 @@ public class MainActivity extends ActionBarActivity { // implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.reload_home_timeline: {
+		case R.id.switch_home_timeline: {
 
 			App app = (App) getApplication();
 			if (!app.isOnline()) {
@@ -194,17 +113,16 @@ public class MainActivity extends ActionBarActivity { // implements
 				Toast.makeText(getApplicationContext(),
 						"No network connection, couldn't load tweets!",
 						Toast.LENGTH_LONG).show();
-				return true;
+				break;
 			}
 			if (mTimeline.getCurrentTimelineType() != Timeline.HOME_TIMELINE) {
+
 				mTimeline.clear();
 
 				mTimeline.setTimelineType(Timeline.HOME_TIMELINE);
 				list.setVisibility(View.GONE);
 				crossfade();
 				Log.i("DEBUG", "Updating home timeline...");
-				// LoadTimelineTask task = new LoadTimelineTask(this);
-				// task.execute(mTimeline);
 				new LoadTimelineTask(this).execute(mTimeline);
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -213,14 +131,14 @@ public class MainActivity extends ActionBarActivity { // implements
 			}
 			break;
 		}
-		case R.id.reload_user_timeline: {
+		case R.id.switch_user_timeline: {
 			App app = (App) getApplication();
 			if (!app.isOnline()) {
 				Log.i("DEBUG", "user timeline button onClick NO NETWORK");
 				Toast.makeText(getApplicationContext(),
 						"No network connection, couldn't load tweets!",
 						Toast.LENGTH_LONG).show();
-				return true;
+				break;
 			}
 			if (mTimeline.getCurrentTimelineType() != Timeline.USER_TIMELINE) {
 				mTimeline.clear();
@@ -229,8 +147,6 @@ public class MainActivity extends ActionBarActivity { // implements
 				list.setVisibility(View.GONE);
 				crossfade();
 				Log.i("DEBUG", "Updating user timeline...");
-				// LoadTimelineTask task = new LoadTimelineTask(this);
-				// task.execute(mTimeline);
 				new LoadTimelineTask(this).execute(mTimeline);
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -269,8 +185,6 @@ public class MainActivity extends ActionBarActivity { // implements
 			break;
 		}
 		}
-		// Intent intent = new Intent(MainActivity.this, TweetActivity.class);
-		// startActivityForResult(intent, ADD_DEL_REQUEST);
 		return true;
 	}
 
@@ -288,23 +202,11 @@ public class MainActivity extends ActionBarActivity { // implements
 		Date date = new Date();
 
 		Log.i("DEBUG", "Initializing...");
-		// Log.i("DEBUG", "YES AUTH");
 
 		mTimeline = new Timeline(getApplicationContext());
 
 		Timeline.setDefaultTimeline(mTimeline);
-		/*
-		 * IntentFilter filter = new IntentFilter(Broadcast.BROADCAST_ACTION);
-		 * 
-		 * mReceiver = new TweetReceiver();
-		 * 
-		 * LocalBroadcastManager.getInstance(this).registerReceiver( mReceiver,
-		 * filter);
-		 */
-		// Intent intent = new Intent(this, TweetService.class);
-		// intent.putExtra("TEST", "Messageeeee!");
 
-		// startService(intent);
 		Intent serviceIntent = new Intent(this, TweetService.class);
 		PendingIntent alarmIntent = PendingIntent.getService(this, 0,
 				serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -317,17 +219,7 @@ public class MainActivity extends ActionBarActivity { // implements
 		Date t1 = new Date();
 		Log.i("DEBUG", "Before loadtimelinetask: " + 0);
 		new LoadTimelineTask(this).execute(mTimeline);
-	//	new Thread(new Runnable() {
-			
-	//		@Override
-	//		public void run() {
-		//		Looper.prepare();
-	//			mTimeline.loadTimeline();
-	//			getAdapter().notifyDataSetChanged();
-//				crossfade();
-		//		Looper.loop();
-	//		}
-	//	}).start();
+
 		Log.i("DEBUG",
 				"After loadtimelinetask started: "
 						+ String.valueOf(new Date().getTime() - t1.getTime()));
@@ -353,9 +245,9 @@ public class MainActivity extends ActionBarActivity { // implements
 			@SuppressLint("ClickableViewAccessibility")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-
 				int action = event.getAction();
 				switch (action) {
+
 				case MotionEvent.ACTION_DOWN: {
 					x1 = event.getX();
 					break;
@@ -376,10 +268,8 @@ public class MainActivity extends ActionBarActivity { // implements
 									getApplicationContext(),
 									"No network connection, couldn't load tweets!",
 									Toast.LENGTH_LONG).show();
-							return false;
+							return true;
 						}
-						// list.setVisibility(View.GONE);
-						// crossfade();
 						Log.i("DEBUG", "SWIPE RIGHT");
 
 						new TimelineUpTask(MainActivity.this)
@@ -393,8 +283,6 @@ public class MainActivity extends ActionBarActivity { // implements
 						// -800);
 					}
 					if (distance < -150) { // Left Swipe
-						// AnimationSet set = new AnimationSet(false);
-						// set.
 						rotate();
 						App app = (App) getApplication();
 						if (!app.isOnline()) {
@@ -403,10 +291,8 @@ public class MainActivity extends ActionBarActivity { // implements
 									getApplicationContext(),
 									"No network connection, couldn't load tweets!",
 									Toast.LENGTH_LONG).show();
-							return false;
+							return true;
 						}
-						// list.setVisibility(View.GONE);
-						// crossfade();
 						Log.i("DEBUG", "SWIPE LEFT");
 
 						new TimelineDownTask(MainActivity.this)
@@ -446,13 +332,20 @@ public class MainActivity extends ActionBarActivity { // implements
 					e.printStackTrace();
 					actualTweet = tweet;
 				}
-				Log.i("DEBUG",
-						"actualTweet retweets: "
-								+ actualTweet.getRetweetCount());
-				Intent intent = new Intent(MainActivity.this,
-						DetailActivity.class);
-				intent.putExtra(Extras.TWEET, actualTweet);
-				startActivityForResult(intent, EDIT_REQUEST);
+				if (actualTweet != null) {
+					Log.i("DEBUG",
+							"actualTweet retweets: "
+									+ actualTweet.getRetweetCount());
+					Intent intent = new Intent(MainActivity.this,
+							DetailActivity.class);
+					intent.putExtra(Extras.TWEET, actualTweet);
+					intent.putExtra(Extras.POSITION, position);
+					startActivityForResult(intent, DELETE_REQUEST);
+				} else {
+					new DeleteTweetTask(MainActivity.this,
+							DeleteTweetTask.MAIN, position).execute(tweet
+							.getId());
+				}
 			}
 		});
 		Log.i("DEBUG",
@@ -510,23 +403,16 @@ public class MainActivity extends ActionBarActivity { // implements
 		final View showView = mContentLoaded ? mLoadingBar : list;
 		final View hideView = mContentLoaded ? list : mLoadingBar;
 
-		// Set the content view to 0% opacity but visible, so that it is visible
-		// (but fully transparent) during the animation.
 		ViewHelper.setAlpha(list, 0f);
-		// showView.setAlpha(0f);
+
 		showView.setVisibility(View.VISIBLE);
 
 		int mShortAnimationDuration = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
-		// Animate the content view to 100% opacity, and clear any animation
-		// listener set on the view.
-		// showView.animate()
+
 		animate(showView).alpha(1f).setDuration(mShortAnimationDuration)
 				.setListener(null);
-		// Animate the loading view to 0% opacity. After the animation ends,
-		// set its visibility to GONE as an optimization step (it won't
-		// participate in layout passes, etc.)
-		// hideView.animate()
+
 		animate(hideView).alpha(0f).setDuration(mShortAnimationDuration)
 				.setListener(new AnimatorListenerAdapter() {
 					@Override
@@ -537,23 +423,11 @@ public class MainActivity extends ActionBarActivity { // implements
 	}
 
 	private void rotate() {
-		// AnimationSet set = new AnimationSet(false);
-		// set.
 		RotateAnimation anim = new RotateAnimation(0, 360, 0, 0);
 		anim.startNow();
-		// anim.setRepeatCount(0);
 		anim.setDuration(4000);
 		anim.setInterpolator(new AccelerateDecelerateInterpolator());
 		list.setAnimation(anim);
-		/*
-		 * Handler handler = new Handler(); handler.postDelayed(new Runnable() {
-		 * 
-		 * @Override public void run() { RotateAnimation anima = new
-		 * RotateAnimation(0, -360, 0, 0); anima.startNow();
-		 * anima.setRepeatCount(1); anima.setDuration();
-		 * anima.setInterpolator(new AccelerateDecelerateInterpolator());
-		 * list.setAnimation(anima); } }, 4000);
-		 */
 	}
 
 	public ListView getList() {
@@ -564,7 +438,7 @@ public class MainActivity extends ActionBarActivity { // implements
 		return adapter;
 	}
 
-	public AdapterView getAdapterView() {
+	public AdapterView<ListAdapter> getAdapterView() {
 		return mAdapter;
 	}
 

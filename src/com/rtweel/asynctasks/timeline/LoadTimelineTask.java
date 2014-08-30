@@ -16,13 +16,7 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 	private Timeline mTimeline;
 
 	public LoadTimelineTask(MainActivity mainActivity) {
-		Log.i("DEBUG", "construction");
 		mActivity = mainActivity;
-	}
-	
-	@Override
-	protected void onPreExecute() {
-		Log.i("DEBUG", "onPreExecute");
 	}
 
 	@Override
@@ -32,7 +26,8 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 		mTimeline = params[0];
 		mTimeline.loadTimeline();
 		Date t2 = new Date();
-		Log.i("DEBUG", "Finished timeline task in " + (t2.getTime() - t1.getTime()));
+		Log.i("DEBUG",
+				"Finished timeline task in " + (t2.getTime() - t1.getTime()));
 		return null;
 	}
 
@@ -45,7 +40,6 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 					"No network connection, couldn't load tweets!",
 					Toast.LENGTH_LONG).show();
 		} else {
-
 			mActivity.getAdapter().notifyDataSetChanged();
 
 			mActivity.crossfade();

@@ -32,6 +32,8 @@ import android.widget.Toast;
 import com.rtweel.R;
 import com.rtweel.asynctasks.tweet.TwitterSendTweetTask;
 import com.rtweel.cache.App;
+import com.rtweel.constant.Extras;
+import com.rtweel.filechooser.FileActivity;
 
 public class SendTweetActivity extends ActionBarActivity {
 
@@ -39,11 +41,13 @@ public class SendTweetActivity extends ActionBarActivity {
 	public final static String SAVE_TWEET_ENTRY_COUNTER = "save_tweet_entry_counter";
 
 	public final static int PHOTO_REQUEST_CODE = 1;
+	public final static int REQUEST_FILE_SELECT = 2;
 
 	private EditText mTweetEntry;
 	private TextView mTweetLengthCounter;
 	private ImageView mTweetPicture;
 	private Button mGetPictureButton;
+	private Button mFileSelectButton;
 
 	private boolean mIsValidTweetSize = true;
 
@@ -105,6 +109,17 @@ public class SendTweetActivity extends ActionBarActivity {
 				if (intent.resolveActivity(getPackageManager()) != null) {
 					startActivityForResult(intent, PHOTO_REQUEST_CODE);
 				}
+			}
+		});
+
+		mFileSelectButton = (Button) findViewById(R.id.tweet_send_file_choose_button);
+		mFileSelectButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SendTweetActivity.this,
+						FileActivity.class);
+				startActivityForResult(intent, REQUEST_FILE_SELECT);
 			}
 		});
 
@@ -228,6 +243,19 @@ public class SendTweetActivity extends ActionBarActivity {
 			} else if (resultCode == RESULT_CANCELED) {
 				Toast.makeText(getApplicationContext(),
 						"Image capturing failed", Toast.LENGTH_LONG).show();
+			}
+		} else if (requestCode == REQUEST_FILE_SELECT) {
+			if (resultCode == RESULT_OK) {
+				Uri file = Uri.fromFile(new File(data
+						.getStringExtra(Extras.FILE_URI)));
+				Log.i("DEBUG", file.toString());
+				Bitmap bitmap = BitmapFactory.decodeFile(data
+						.getStringExtra(Extras.FILE_URI));
+				Log.i("DEBUG", data.getStringExtra(Extras.FILE_URI));
+				mTweetPicture.setImageBitmap(bitmap);
+			} else if (resultCode == RESULT_CANCELED) {
+				Toast.makeText(getApplicationContext(), "File choosing failed",
+						Toast.LENGTH_LONG).show();
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);

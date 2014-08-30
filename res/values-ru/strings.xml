@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Rtweel</string>
-    <string name="title_activity_detail">Просмотр</string>
-    <string name="title_activity_tweet">Твиты</string>
-    
-    
+  	<string name="app_name">Rtweel</string>
+    <string name="title_activity_detail">Твит</string>
     <string name="home_button">Назад</string>
-    <string name="edit_button">Изменить</string>
-    <string name="done_button">Готово</string>
+    <string name="done_button">Отправить</string>
     <string name="add_button">Добавить</string>
     <string name="delete_button">Удалить</string>
     <string name="tweet_button">Твиты</string>
-    
-    <string name="spinner">Спиннер</string>
-    
-    <string name="hint_name">Имя</string>
+    <string name="hint_name">Автор</string>
     <string name="hint_text">Текст</string>
-    <string name="hint_location">Местоположение</string>
-    
-    <string-array name="titles">
-       <item >Все твиты</item>
-       <item >BSUIR [UNIVERSITY]</item>
-       <item >ksisportal</item> 
-       <item >БРСМ БГУИР</item>
-    </string-array>
-    
+    <string name="hint_location">Расположение</string>
+    <string name="content_description">Фото</string>
+    <string name="tweet_media_description">Медиа</string>
+    <string name="make_photo">Сделать снимок</string>
+    <string name="tweet_hint">Расскажите, что происходит</string>
+    <string name="tweet">Твит</string>
+    <string name="logout">Выйти из аккаунта</string>
+    <string name="tweet_send_open">Написать</string>
+    <string name="tweet_send_ok">Отправить</string>
+    <string name="tweet_send_back">Назад</string>
+    <string name="tweet_send_hint">Расскажите, что происходит</string>
+    <string name="switch_home_timeline">Переключиться на домашнюю ленту</string>
+    <string name="switch_user_timeline">Переключиться на ленту своего профиля</string>
+    <string name="authors_picture_description_content">Картинка автора</string>
+    <string name="introduction_text">Добро пожаловать в Rtweel. Подождите несколько секунд, и авторизация начнётся... </string>
+    <string name="logout_button">Выйти из аккаунта</string>
+    <string name="tweet_send_add_photo_button">Сделать снимок</string>
+    <string name="tweet_share">Поделиться твитом</string>
+    <string name="select_file">Выбрать фото с диска</string>
 </resources>

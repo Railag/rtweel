@@ -1,13 +1,11 @@
 package com.rtweel.activities;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.http.protocol.HTTP;
 
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rtweel.R;
+import com.rtweel.asynctasks.tweet.DeleteTweetTask;
 import com.rtweel.asynctasks.tweet.FavoriteTask;
 import com.rtweel.asynctasks.tweet.LogoTask;
 import com.rtweel.asynctasks.tweet.RetweetTask;
@@ -59,6 +58,7 @@ public class DetailActivity extends ActionBarActivity {
 		TextView dateView = (TextView) findViewById(R.id.detail_date);
 		final Button retweetsCountButton = (Button) findViewById(R.id.detail_retweet_count);
 		final Button favsCountButton = (Button) findViewById(R.id.detail_favorited_count);
+		final Button deleteButton = (Button) findViewById(R.id.detail_delete);
 		ImageView profilePictureView = (ImageView) findViewById(R.id.detail_profile_picture);
 
 		Bundle start = getIntent().getExtras();
@@ -74,6 +74,21 @@ public class DetailActivity extends ActionBarActivity {
 		mIsFavorited = mTweet.isFavorited();
 		mIsRetweeted = mTweet.isRetweetedByMe();
 		mRetweetId = mTweet.getCurrentUserRetweetId();
+		MediaEntity[] entities = mTweet.getMediaEntities();
+		String[] url = new String[entities.length];
+		if (entities != null) {
+			for (int i = 0; i < entities.length; i++) {
+				url[i] = entities[i].getMediaURL();
+
+				Log.i("DEBUG",
+						"Dp Url " + entities[i].getDisplayURL() + " URL "
+								+ entities[i].getURL() + " start "
+								+ entities[i].getStart() + " end "
+								+ entities[i].getEnd());
+			}
+		}
+
+		final int position = start.getInt(Extras.POSITION);
 
 		if (mIsRetweeted) {
 			retweetsCountButton.setBackgroundColor(Color.GREEN);
@@ -105,7 +120,7 @@ public class DetailActivity extends ActionBarActivity {
 						R.drawable.ic_launcher, opts);
 			} else {
 				try {
-					bitmap = new LogoTask().execute(imageUri).get();
+					bitmap = new LogoTask().execute(imageUri).get();// url).get();
 					cache.put(cacheName, bitmap);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -125,20 +140,14 @@ public class DetailActivity extends ActionBarActivity {
 		}
 
 		profilePictureView.setImageBitmap(bitmap);
-		FileOutputStream stream = null;
-		File file = new File(getExternalCacheDir() + " tmp.jpg");
-		try {
-			stream = new FileOutputStream(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-		try {
-			stream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		/*
+		 * FileOutputStream stream = null; File file = new
+		 * File(getExternalCacheDir() + " tmp.jpg"); try { stream = new
+		 * FileOutputStream(file); } catch (FileNotFoundException e) {
+		 * e.printStackTrace(); } bitmap.compress(Bitmap.CompressFormat.JPEG,
+		 * 100, stream); try { stream.close(); } catch (IOException e) {
+		 * e.printStackTrace(); }
+		 */
 		nameView.setText(name);
 		textView.setText(text);
 		locationView.setText(location);
@@ -167,32 +176,48 @@ public class DetailActivity extends ActionBarActivity {
 						mIsFavorited).execute(id);
 			}
 		});
+
+		if (name.equals(Timeline.getUserName())) {
+			deleteButton.setText(getString(R.string.delete_button));
+			deleteButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					new DeleteTweetTask(DetailActivity.this,
+							DeleteTweetTask.DETAIL, position).execute(id);
+				}
+			});
+		} else {
+			deleteButton.setVisibility(View.GONE);
+		}
+
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.detail_tweet_share: {
-			Intent shareIntent = new Intent(Intent.ACTION_SEND);//_MULTIPLE);
-			 shareIntent.setType(HTTP.PLAIN_TEXT_TYPE);
-			//shareIntent.setType("image/*");
+			Intent shareIntent = new Intent(Intent.ACTION_SEND);// _MULTIPLE);
+			shareIntent.setType(HTTP.PLAIN_TEXT_TYPE);
+			// shareIntent.setType("image/*");
 			// shareIntent.addCategory(Intent.CATEGORY_APP_MESSAGING);
 			// shareIntent.addCategory(Intent.CATEGORY_APP_EMAIL);
-		//	ArrayList<CharSequence> text = new ArrayList<CharSequence>();
-		//	text.add(mTweet.getText());
+			// ArrayList<CharSequence> text = new ArrayList<CharSequence>();
+			// text.add(mTweet.getText());
 			shareIntent
 					.putExtra(Intent.EXTRA_TITLE, mTweet.getUser().getName());
-	//		shareIntent.putCharSequenceArrayListExtra(Intent.EXTRA_TEXT, text);
+			// shareIntent.putCharSequenceArrayListExtra(Intent.EXTRA_TEXT,
+			// text);
 			shareIntent.putExtra(Intent.EXTRA_TEXT, mTweet.getText());
 			shareIntent.putExtra(Intent.EXTRA_SUBJECT, mTweet.getUser()
 					.getName() + "'s tweet");
 			File file = new File(getExternalCacheDir() + " tmp.jpg");
-	//		Log.i("DEBUG", getExternalCacheDir() + " tmp.jpg");
-	//		ArrayList<Uri> imageUris = new ArrayList<Uri>();
-	//		imageUris.add(Uri.fromFile(file));
-	//		shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,
-	//				imageUris);// Uri.fromFile(file));//("content://" +
-								// getExternalCacheDir() + "tmp.jpg"));
+			// Log.i("DEBUG", getExternalCacheDir() + " tmp.jpg");
+			// ArrayList<Uri> imageUris = new ArrayList<Uri>();
+			// imageUris.add(Uri.fromFile(file));
+			// shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,
+			// imageUris);// Uri.fromFile(file));//("content://" +
+			// getExternalCacheDir() + "tmp.jpg"));
 			shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 			String title = "Choose an app to share the tweet";
 			Intent chooser = Intent.createChooser(shareIntent, title);

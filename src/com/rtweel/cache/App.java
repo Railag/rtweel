@@ -3,7 +3,10 @@ package com.rtweel.cache;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory.Options;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -20,6 +23,8 @@ public class App extends Application {
 
 	private static TweetDatabaseOpenHelper sHelper;
 	
+	private static Bitmap sBitmap;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -32,6 +37,10 @@ public class App extends Application {
 		new MemoryCache();
 		sDiskCache = new DiskCache(getApplicationContext(), "thumbnails",
 				10 * 1024 * 1024, CompressFormat.JPEG, 100);
+		Options opts = new Options();
+		opts.inSampleSize = 4;
+		setBitmap(BitmapFactory.decodeResource(getResources(),
+				com.rtweel.R.drawable.ic_launcher, opts));
 	}
 
 	public DiskCache getDiskCache() {
@@ -52,5 +61,15 @@ public class App extends Application {
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		return (networkInfo != null && networkInfo.isConnected());
 	}
+
+	public static Bitmap getBitmap() {
+		return sBitmap;
+	}
+
+	public static void setBitmap(Bitmap sBitmap) {
+		App.sBitmap = sBitmap;
+	}
+	
+	
 
 }

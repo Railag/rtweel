@@ -3,29 +3,17 @@
 
     <string name="app_name">Rtweel</string>
     <string name="title_activity_detail">DetailActivity</string>
-    <string name="title_activity_tweet">Tweets</string>
     <string name="home_button">Home</string>
-    <string name="edit_button">Edit</string>
     <string name="done_button">Done</string>
     <string name="add_button">Add</string>
     <string name="delete_button">Delete</string>
     <string name="tweet_button">Tweets</string>
-    <!-- <string name="spinner">Spinner</string> -->
     <string name="hint_name">Name</string>
     <string name="hint_text">Text</string>
     <string name="hint_location">Location</string>
-
-    <string-array name="titles">
-        <item>All tweets</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
     <string name="content_description">Photo</string>
+    <string name="tweet_media_description">Media</string>
     <string name="make_photo">Make Photo</string>
-    <string name="twitter_login">Login to Twitter</string>
-    <string name="update_status">Update status</string>
     <string name="tweet_hint">Input tweet here</string>
     <string name="tweet">Tweet</string>
     <string name="logout">Logout</string>
@@ -33,12 +21,13 @@
     <string name="tweet_send_ok">Send</string>
     <string name="tweet_send_back">Back</string>
     <string name="tweet_send_hint">Input text of your new tweet here</string>
-    <string name="reload_home_timeline">Update home timeline</string>
-    <string name="reload_user_timeline">Update user timeline</string>
+    <string name="switch_home_timeline">Switch to home timeline</string>
+    <string name="switch_user_timeline">Switch to user timeline</string>
     <string name="authors_picture_description_content">Author\'s picture</string>
     <string name="introduction_text">Welcome to Rtweel! \n\n Now you\'re gonna be brought to the login window, so wait a bit... </string>
     <string name="logout_button">Logout</string>
     <string name="tweet_send_add_photo_button">Add photo</string>
     <string name="tweet_share">Share tweet</string>
+    <string name="select_file">Select file</string>
 
 </resources>

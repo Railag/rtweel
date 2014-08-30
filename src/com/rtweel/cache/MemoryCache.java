@@ -12,12 +12,6 @@ public final class MemoryCache {
 		final int cacheSize = maxMemory / 8;
 
 		sBitmapCache = new LruCache<String, Bitmap>(cacheSize);
-		/*
-		 * {
-		 * 
-		 * @Override protected int sizeOf(String key, Bitmap bitmap) { return
-		 * bitmap.getByteCount() / 1024; } };
-		 */
 	}
 
 	public static void addBitmap(String key, Bitmap bitmap) {

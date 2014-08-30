@@ -5,7 +5,6 @@ import twitter4j.TwitterException;
 import com.rtweel.activities.DetailActivity;
 import com.rtweel.tweet.Timeline;
 
-import android.R.color;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;

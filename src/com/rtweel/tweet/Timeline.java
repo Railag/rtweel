@@ -134,20 +134,13 @@ public class Timeline implements Iterable<Status> {
 		} else if (downloadedList.isEmpty()) {
 			return;
 		}
-		// int prevSize = list.size();
 		list.addAll(downloadedList);
-		// if (list.size() - prevSize != 0) {
-		// } else {
-		// Toast.makeText(mContext, "No old tweets", Toast.LENGTH_LONG)
-		// .show();
-		// }
 		new DbWriteTask(mContext, downloadedList, mCurrentTimelineType)
 				.execute();
 	}
 
-	public List<twitter4j.Status> downloadTimeline(// int tweetsCount,
-			// int tweetsPerPage,
-			int flag) throws NullPointerException {
+	public List<twitter4j.Status> downloadTimeline(int flag)
+			throws NullPointerException {
 		Log.i("DEBUG", "downloading timeline..");
 
 		List<twitter4j.Status> downloadedList = new ArrayList<Status>();
@@ -225,10 +218,11 @@ public class Timeline implements Iterable<Status> {
 				TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-				TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
-		Log.i("DEBUG", "1");
+				TweetDatabaseOpenHelper.Tweets.COLUMN_ID,
+				TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA };
+
 		ContentResolver resolver = mContext.getContentResolver();
-		
+
 		Cursor cursor = null;
 		if (mCurrentTimelineType == HOME_TIMELINE) {
 			cursor = resolver.query(
@@ -239,7 +233,6 @@ public class Timeline implements Iterable<Status> {
 					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
 					projection, null, null, "LIMIT 30");
 		}
-		Log.i("DEBUG", "2");
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
 				String author = cursor.getString(cursor
@@ -251,16 +244,9 @@ public class Timeline implements Iterable<Status> {
 				String date = cursor.getString(cursor
 						.getColumnIndex(projection[3]));
 				long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
-
+				String media = cursor.getString(cursor
+						.getColumnIndex(projection[5]));
 				try {
-		//			Log.i("DEBUG", author);
-					/*
-					 * String creation = "{text='" + text + "', id='" + id +
-					 * "', created_at='" + date // + "', retweet_count='" // +
-					 * retweets + "', favorite_count='" + favorites +
-					 * "',user={name='" + author + "', profile_image_url='" +
-					 * pictureUrl + "'}}"; // Log.i("DEBUG", creation);
-					 */
 					StringBuilder builder = new StringBuilder();
 					builder.append("{text='");
 					builder.append(text);
@@ -268,11 +254,26 @@ public class Timeline implements Iterable<Status> {
 					builder.append(id);
 					builder.append("', created_at='");
 					builder.append(date);
-					builder.append("',user={name='");
+					Log.i("DEBUG", "media: " + media);
+					if (!"".equals(media)) {
+					//	builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
+						builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"");
+						builder.append(media);
+						builder.append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]}");
+					//	builder.append("'}]}");
+					} else {
+						builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[]}");
+					}
+				//	"entities":{"hashtags":[],"symbols":[],"urls":[],"user_mentions":[],"media":[{"indices":[-1],"media_url":"http:\/\/pbs.twimg.com\/media\/BwOgUtuIQAAvPUJ.png","type":"photo","sizes":{"large":{"w":1024,"h":575,"resize":"fit"},"small":{"w":340,"h":191,"resize":"fit"},"thumb":{"w":150,"h":150,"resize":"crop"},"medium":{"w":600,"h":337,"resize":"fit"}}}]}
+					
+					
+					
+					builder.append(",user={name='");
 					builder.append(author);
 					builder.append("', profile_image_url='");
 					builder.append(pictureUrl);
 					builder.append("'}}");
+			//		Log.i("DEBUG", "BBB: " + builder.toString());
 					Status insert = TwitterObjectFactory.createStatus(builder
 							.toString());
 					list.add(insert);
@@ -295,7 +296,8 @@ public class Timeline implements Iterable<Status> {
 				TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-				TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
+				TweetDatabaseOpenHelper.Tweets.COLUMN_ID,
+				TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA };
 
 		ContentResolver resolver = mContext.getContentResolver();
 
@@ -325,17 +327,10 @@ public class Timeline implements Iterable<Status> {
 				String date = cursor.getString(cursor
 						.getColumnIndex(projection[3]));
 				long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
+				String media = cursor.getString(cursor
+						.getColumnIndex(projection[5]));
 
 				try {
-			//		Log.i("DEBUG", author);
-					/*
-					 * String creation = "{text='" + text + "', id='" + id +
-					 * "', created_at='" + date // + "', retweet_count='" // +
-					 * retweets + "', favorite_count='" + favorites +
-					 * "',user={name='" + author + "', profile_image_url='" +
-					 * pictureUrl + "'}}"; Status insert =
-					 * TwitterObjectFactory.createStatus(creation);
-					 */
 					StringBuilder builder = new StringBuilder();
 					builder.append("{text='");
 					builder.append(text);
@@ -343,7 +338,17 @@ public class Timeline implements Iterable<Status> {
 					builder.append(id);
 					builder.append("', created_at='");
 					builder.append(date);
-					builder.append("',user={name='");
+					Log.i("DEBUG", "media: " + media);
+					if (!"".equals(media)) {
+//						builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
+						builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"");
+						builder.append(media);
+						builder.append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]}");
+					//	builder.append("'}]}");
+					} else {
+						builder.append("'");
+					}
+					builder.append(",user={name='");
 					builder.append(author);
 					builder.append("', profile_image_url='");
 					builder.append(pictureUrl);
@@ -376,13 +381,6 @@ public class Timeline implements Iterable<Status> {
 	 * 
 	 * return !result.getTweets().isEmpty(); }
 	 */
-	// public static int getTweetsPerPage() {
-	// return mTweetsPerPage;
-	// }
-
-	// public static int getTweetsCount() {
-	// return mTweetsCount;
-	// }
 
 	public Twitter getTwitter() {
 		return mTwitter;

@@ -8,16 +8,16 @@
         android:title="@string/tweet_send_open"/>
 
  	<item
-        android:id="@+id/reload_home_timeline"
+        android:id="@+id/switch_home_timeline"
         android:orderInCategory="500"
         ActionBar:showAsAction="ifRoom"
-        android:title="@string/reload_home_timeline"/>
+        android:title="@string/switch_home_timeline"/>
  	
  	<item
-        android:id="@+id/reload_user_timeline"
+        android:id="@+id/switch_user_timeline"
         android:orderInCategory="500"
         ActionBar:showAsAction="ifRoom"
-        android:title="@string/reload_user_timeline"/>
+        android:title="@string/switch_user_timeline"/>
  	<item android:id="@+id/logout_button"
  	    android:orderInCategory="1000"
  	    ActionBar:showAsAction="never"

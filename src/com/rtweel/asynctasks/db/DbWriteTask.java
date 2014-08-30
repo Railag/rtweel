@@ -2,13 +2,15 @@ package com.rtweel.asynctasks.db;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.rtweel.sqlite.TweetDatabaseOpenHelper;
-import com.rtweel.tweet.Timeline;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.rtweel.sqlite.TweetDatabaseOpenHelper;
+import com.rtweel.tweet.Timeline;
 
 public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 
@@ -33,7 +35,8 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 		for (twitter4j.Status s : mList) {
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR, s
 					.getUser().getName().replace("'", "\'"));
-			String text = s.getText().replace('\'', ' ').replace('\n', ' ').replace("'", "\'");
+			String text = s.getText().replace('\'', ' ').replace('\n', ' ')
+					.replace("'", "\'");
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT, text);
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE, s
 					.getUser().getProfileImageURL());
@@ -42,13 +45,21 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 					.getCreatedAt().toString());
 
 			values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_ID, s.getId());
-	//		values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT, s.getRetweetCount());
-	//		values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT, s.getFavoriteCount());
-			if(mTimelineType == Timeline.HOME_TIMELINE) {
-				resolver.insert(TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-					values);
+			Log.i("DEBUG", "stage1");
+			if (s.getMediaEntities().length > 0) {
+				String media = s.getMediaEntities()[0].getMediaURL();
+				Log.i("DEBUG", s.getUser().getName() +  ":" + media);
+				values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA, media);
+			} else {
+				values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA, "");
+			}
+			if (mTimelineType == Timeline.HOME_TIMELINE) {
+				resolver.insert(
+						TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
+						values);
 			} else if (mTimelineType == Timeline.USER_TIMELINE) {
-				resolver.insert(TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
+				resolver.insert(
+						TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
 						values);
 			}
 		}

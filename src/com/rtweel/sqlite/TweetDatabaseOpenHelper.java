@@ -14,19 +14,14 @@ public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
 				.parse("content://com.rtweel.sqlite.TweetContentProvider/home_timeline");
 		public static final Uri CONTENT_URI_USER_DB = Uri
 				.parse("content://com.rtweel.sqlite.TweetContentProvider/user_timeline");
-		public static final Uri CONTENT_URI_RETWEETS_DB = Uri
-				.parse("content://com.rtweel.sqlite.TweetContentProvider/retweets");
 		public static final String TABLE_NAME_HOME = "home_timeline";
 		public static final String TABLE_NAME_USER = "user_timeline";
-		public static final String TABLE_NAME_RETWEETS = "retweets";
 		public static final String COLUMN_AUTHOR = "author";
 		public static final String COLUMN_TEXT = "text";
 		public static final String COLUMN_PICTURE = "picture_url";
 		public static final String COLUMN_DATE = "created_at";
 		public static final String COLUMN_ID = "id";
-
-		// public static final String COLUMN_RETWEET_COUNT = "retweet_count";
-		// public static final String COLUMN_FAVORITE_COUNT = "favorite_count";
+		public static final String COLUMN_MEDIA = "media";
 	}
 
 	private static final String DB_NAME = "tweets.db";
@@ -35,19 +30,15 @@ public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
 			+ Tweets.TABLE_NAME_HOME + "(" + Tweets._ID
 			+ " INTEGER PRIMARY KEY, " + Tweets.COLUMN_AUTHOR + " TEXT, "
 			+ Tweets.COLUMN_TEXT + " TEXT, " + Tweets.COLUMN_PICTURE
-			+ " TEXT, " + Tweets.COLUMN_DATE + " TEXT, "
-			// + Tweets.COLUMN_RETWEET_COUNT + " INTEGER, "
-			// + Tweets.COLUMN_FAVORITE_COUNT + " INTEGER, "
-			+ Tweets.COLUMN_ID + " INTEGER)";
+			+ " TEXT, " + Tweets.COLUMN_DATE + " TEXT, " + Tweets.COLUMN_MEDIA
+			+ " TEXT, " + Tweets.COLUMN_ID + " INTEGER)";
 	private static final String CREATE_TABLE_USER = "CREATE TABLE "
 			+ Tweets.TABLE_NAME_USER + "(" + Tweets._ID
 			+ " INTEGER PRIMARY KEY, " + Tweets.COLUMN_AUTHOR + " TEXT, "
 			+ Tweets.COLUMN_TEXT + " TEXT, " + Tweets.COLUMN_PICTURE
-			+ " TEXT, " + Tweets.COLUMN_DATE + " TEXT, "
-			// + Tweets.COLUMN_RETWEET_COUNT + " INTEGER, "
-			// + Tweets.COLUMN_FAVORITE_COUNT + " INTEGER, "
-			+ Tweets.COLUMN_ID + " INTEGER)";
-	
+			+ " TEXT, " + Tweets.COLUMN_DATE + " TEXT, " + Tweets.COLUMN_MEDIA
+			+ " TEXT, " + Tweets.COLUMN_ID + " INTEGER)";
+
 	public TweetDatabaseOpenHelper(Context context) {
 		super(context, DB_NAME, null, VERSION);
 	}
