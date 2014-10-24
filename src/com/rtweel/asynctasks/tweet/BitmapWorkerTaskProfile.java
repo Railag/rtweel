@@ -1,4 +1,3 @@
-
 package com.rtweel.asynctasks.tweet;
 
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class BitmapWorkerTaskProfile extends AsyncTask<String, Void, Bitmap> {
 				// TODO: valid picture size
 
 				bitmap = BitmapFactory.decodeResource(mContext.getResources(),
-						R.drawable.ic_launcher, opts);
+						R.drawable.rtweel, opts);
 			} else {
 				try {
 					bitmap = downloadBitmap(params[0]);
@@ -72,8 +71,7 @@ public class BitmapWorkerTaskProfile extends AsyncTask<String, Void, Bitmap> {
 					opts.inScaled = true;
 
 					bitmap = BitmapFactory.decodeResource(
-							mContext.getResources(), R.drawable.ic_launcher,
-							opts);
+							mContext.getResources(), R.drawable.rtweel, opts);
 				}
 			}
 		}
@@ -96,15 +94,13 @@ public class BitmapWorkerTaskProfile extends AsyncTask<String, Void, Bitmap> {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(url);
 		Bitmap bitmap = null;
-		
+
 		try {
 			HttpResponse response = client.execute(request);
 
 			HttpEntity entity = response.getEntity();
-			
+
 			InputStream stream = entity.getContent();
-			
-		
 
 			bitmap = BitmapFactory.decodeStream(stream);
 
@@ -119,7 +115,7 @@ public class BitmapWorkerTaskProfile extends AsyncTask<String, Void, Bitmap> {
 		}
 		return bitmap;
 	}
-	
+
 	public String getUrl() {
 		return mUrl;
 	}

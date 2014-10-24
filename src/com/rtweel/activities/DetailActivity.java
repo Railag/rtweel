@@ -20,8 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +52,6 @@ public class DetailActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_detail);
 
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
 
 		TextView nameView = (TextView) findViewById(R.id.detail_name);
 		TextView textView = (TextView) findViewById(R.id.detail_text);
@@ -75,17 +76,55 @@ public class DetailActivity extends ActionBarActivity {
 		mIsRetweeted = mTweet.isRetweetedByMe();
 		mRetweetId = mTweet.getCurrentUserRetweetId();
 		MediaEntity[] entities = mTweet.getMediaEntities();
-		String[] url = new String[entities.length];
-		if (entities != null) {
+		String[] urls = new String[entities.length];
+		ImageView[] views = new ImageView[entities.length];
+		/*
+		 * if (entities != null) { for (int i = 0; i < entities.length; i++) {
+		 * url[i] = entities[i].getMediaURL();
+		 * 
+		 * Log.i("DEBUG", "Dp Url " + entities[i].getDisplayURL() + " URL " +
+		 * entities[i].getURL() + " start " + entities[i].getStart() + " end " +
+		 * entities[i].getEnd()); } }
+		 */
+		// AttributeSet attrs = new Attributes();
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.detail_layout);
+		if (entities.length > 0) {
+			Log.i("DEBUG", "Entities length: " + entities.length);
+			String cacheName = "entity_" + mTweet.getId();
 			for (int i = 0; i < entities.length; i++) {
-				url[i] = entities[i].getMediaURL();
+				urls[i] = entities[i].getMediaURL();
+				Log.i("DEBUG", urls[i]);
+				// entities[i].getSizes();
+				views[i] = new ImageView(this);
+				Bitmap bitmap = null;
+				bitmap = ((App) getApplication()).getDiskCache().getBitmap(
+						cacheName);
+				if (bitmap == null) {
+					try {
+						bitmap = new LogoTask().execute(urls[i]).get();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						e.printStackTrace();
+					}
+				}
+				views[i].setImageBitmap(bitmap);
+				RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
+						ViewGroup.LayoutParams.WRAP_CONTENT,
+						ViewGroup.LayoutParams.WRAP_CONTENT);
 
-				Log.i("DEBUG",
-						"Dp Url " + entities[i].getDisplayURL() + " URL "
-								+ entities[i].getURL() + " start "
-								+ entities[i].getStart() + " end "
-								+ entities[i].getEnd());
+				p.addRule(RelativeLayout.BELOW, R.id.detail_location);
+
+				views[i].setLayoutParams(p);
+				relativeLayout.addView(views[i]);
+				// views[i].setLayoutParams(new LayoutParams(300, 300));
 			}
+			// LayoutParams params = vh.getMediaView().getLayoutParams();
+			// params.height = 175;
+			// params.width = 250;
+			// vh.getMediaView().setLayoutParams(params);
+			// vh.loadBitmapMedia(url, vh.getMediaView(), cacheName);
+
 		}
 
 		final int position = start.getInt(Extras.POSITION);
@@ -117,7 +156,7 @@ public class DetailActivity extends ActionBarActivity {
 				opts.inScaled = true;
 
 				bitmap = BitmapFactory.decodeResource(getResources(),
-						R.drawable.ic_launcher, opts);
+						R.drawable.rtweel, opts);
 			} else {
 				try {
 					bitmap = new LogoTask().execute(imageUri).get();// url).get();
@@ -134,7 +173,7 @@ public class DetailActivity extends ActionBarActivity {
 					opts.inScaled = true;
 
 					bitmap = BitmapFactory.decodeResource(getResources(),
-							R.drawable.ic_launcher, opts);
+							R.drawable.rtweel, opts);
 				}
 			}
 		}

@@ -16,15 +16,15 @@ public class App extends Application {
 
 	public static final String PATH = "/Android/data/com.rtweel/sp";
 	public static final String PHOTO_PATH = "/Android/data/com.rtweel/photo";
-	
+
 	private static DiskCache sDiskCache;
 
 	private static SQLiteDatabase sDb;
 
 	private static TweetDatabaseOpenHelper sHelper;
-	
+
 	private static Bitmap sBitmap;
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -40,7 +40,7 @@ public class App extends Application {
 		Options opts = new Options();
 		opts.inSampleSize = 4;
 		setBitmap(BitmapFactory.decodeResource(getResources(),
-				com.rtweel.R.drawable.ic_launcher, opts));
+				com.rtweel.R.drawable.rtweel, opts));
 	}
 
 	public DiskCache getDiskCache() {
@@ -50,7 +50,7 @@ public class App extends Application {
 	public SQLiteDatabase getDB() {
 		return sDb;
 	}
-	
+
 	public void createDb() {
 		sHelper = new TweetDatabaseOpenHelper(this);
 		sDb = sHelper.getWritableDatabase();
@@ -69,7 +69,5 @@ public class App extends Application {
 	public static void setBitmap(Bitmap sBitmap) {
 		App.sBitmap = sBitmap;
 	}
-	
-	
 
 }

@@ -46,6 +46,7 @@ import com.rtweel.asynctasks.tweet.RefreshTweetTask;
 import com.rtweel.cache.App;
 import com.rtweel.constant.Extras;
 import com.rtweel.services.TweetService;
+import com.rtweel.settings.SettingActivity;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.tweet.Timeline;
 import com.rtweel.tweet.TweetAdapter;
@@ -184,6 +185,11 @@ public class MainActivity extends ActionBarActivity { // implements
 			finish();
 			break;
 		}
+		case R.id.settings_button: {
+			Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+			startActivity(intent);
+			break;
+		}
 		}
 		return true;
 	}
@@ -227,8 +233,6 @@ public class MainActivity extends ActionBarActivity { // implements
 
 		setContentView(R.layout.activity_main);
 
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().show();
 
 		list = (ListView) findViewById(R.id.list);
@@ -353,6 +357,7 @@ public class MainActivity extends ActionBarActivity { // implements
 	}
 
 	private boolean loginCheck() {
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 		if (!sharedPreferences.getBoolean(

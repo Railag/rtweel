@@ -30,10 +30,10 @@ public class DateParser {
 			day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 		}
 
-		if (calendar.get(Calendar.MONTH) < 10) {
+		if (calendar.get(Calendar.MONTH) < 9) {
 			month = "0" + (calendar.get(Calendar.MONTH) + 1);
 		} else {
-			month = String.valueOf(calendar.get(Calendar.MONTH));
+			month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
 		}
 
 		String date = day + "." + month + "." + calendar.get(Calendar.YEAR);
@@ -60,7 +60,7 @@ public class DateParser {
 		String time = hours + ":" + minutes + ":" + seconds;
 
 		String finalDate = date + " " + time;
-		
+
 		return finalDate;
 	}
 

@@ -4,6 +4,20 @@ import java.util.List;
 
 import twitter4j.MediaEntity;
 import twitter4j.Status;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.rtweel.R;
 import com.rtweel.asynctasks.tweet.BitmapWorkerTaskMedia;
@@ -12,20 +26,6 @@ import com.rtweel.cache.App;
 import com.rtweel.cache.AsyncDrawable;
 import com.rtweel.cache.DiskCache;
 import com.rtweel.parsers.DateParser;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class TweetAdapter extends BaseAdapter {
 
@@ -87,42 +87,48 @@ public class TweetAdapter extends BaseAdapter {
 		ViewHolder vh = (ViewHolder) convertView.getTag();
 
 		Status tweet = mData.get(position);
-		
-	//	Log.i("DEBUG", tweet.toString());
+
+		// Log.i("DEBUG", tweet.toString());
 
 		String imageUri = tweet.getUser().getProfileImageURL();// getMiniProfileImageURL();
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		if (preferences.getBoolean("images_shown", false)) {
+			MediaEntity[] entities = tweet.getMediaEntities();
+			String url = null;
 
-		MediaEntity[] entities = tweet.getMediaEntities();
-		String url = null;
+			if (entities.length > 0) {
+				url = entities[0].getMediaURL();
 
-		if (entities.length > 0) {
-			url = entities[0].getMediaURL();
-
-			String cacheName = "entity_" + tweet.getId();
-	//		LayoutParams params = vh.getMediaView().getLayoutParams();
-	//		params.height = 175;
-	//		params.width = 250;
-	//		vh.getMediaView().setLayoutParams(params);
-			vh.loadBitmapMedia(url, vh.getMediaView(), cacheName);
-		} else {
-			App app = (App) mContext;
-			DiskCache cache = app.getDiskCache();
-			// Drawable standart = mContext.getResources().getDrawable(
-			// R.drawable.standart_image);
-			// Canvas canvas = new Canvas();
-			// standart.draw(canvas);
-			if (!cache.containsKey("standart")) {
-				Bitmap bitmap = Bitmap.createBitmap(2, 2, Config.ARGB_8888);
-				bitmap.eraseColor(Color.WHITE);
-				cache.put("standart_white", bitmap);
+				String cacheName = "entity_" + tweet.getId();
+				// LayoutParams params = vh.getMediaView().getLayoutParams();
+				// params.height = 175;
+				// params.width = 250;
+				// vh.getMediaView().setLayoutParams(params);
+				vh.loadBitmapMedia(url, vh.getMediaView(), cacheName);
+				vh.getMediaView().setVisibility(View.VISIBLE);
+			} else {
+				App app = (App) mContext;
+				DiskCache cache = app.getDiskCache();
+				// Drawable standart = mContext.getResources().getDrawable(
+				// R.drawable.standart_image);
+				// Canvas canvas = new Canvas();
+				// standart.draw(canvas);
+				if (!cache.containsKey("standart")) {
+					Bitmap bitmap = Bitmap.createBitmap(2, 2, Config.ARGB_8888);
+					bitmap.eraseColor(Color.WHITE);
+					cache.put("standart_white", bitmap);
+				}
+				LayoutParams params = vh.getMediaView().getLayoutParams();
+				params.height = 2;
+				params.width = 2;
+				vh.getMediaView().setLayoutParams(params);
+				vh.loadBitmapMedia("standart", vh.getMediaView(),
+						"standart_white");
 			}
-	//		LayoutParams params = vh.getMediaView().getLayoutParams();
-	//		params.height = 2;
-	//		params.width = 2;
-	//		vh.getMediaView().setLayoutParams(params);
-			vh.loadBitmapMedia("standart", vh.getMediaView(), "standart_white");
+		} else {
+			vh.getMediaView().setVisibility(View.GONE);
 		}
-
 		String cacheName = tweet.getUser().getName().replace(' ', '_')
 				+ "_mini";
 
@@ -139,7 +145,8 @@ public class TweetAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	private static BitmapWorkerTaskMedia getBitmapWorkerTaskMedia(ImageView imageView) {
+	private static BitmapWorkerTaskMedia getBitmapWorkerTaskMedia(
+			ImageView imageView) {
 		if (imageView != null) {
 			final Drawable drawable = imageView.getDrawable();
 			if (drawable instanceof AsyncDrawable) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  	<string name="app_name">Rtweel</string>
+    <string name="app_name">Rtweel</string>
     <string name="title_activity_detail">Твит</string>
     <string name="home_button">Назад</string>
     <string name="done_button">Отправить</string>
@@ -21,12 +21,16 @@
     <string name="tweet_send_ok">Отправить</string>
     <string name="tweet_send_back">Назад</string>
     <string name="tweet_send_hint">Расскажите, что происходит</string>
-    <string name="switch_home_timeline">Переключиться на домашнюю ленту</string>
-    <string name="switch_user_timeline">Переключиться на ленту своего профиля</string>
+    <string name="switch_home_timeline">Домашняя лента</string>
+    <string name="switch_user_timeline">Своя лента</string>
     <string name="authors_picture_description_content">Картинка автора</string>
     <string name="introduction_text">Добро пожаловать в Rtweel. Подождите несколько секунд, и авторизация начнётся... </string>
     <string name="logout_button">Выйти из аккаунта</string>
     <string name="tweet_send_add_photo_button">Сделать снимок</string>
     <string name="tweet_share">Поделиться твитом</string>
     <string name="select_file">Выбрать фото с диска</string>
+    <string name="pref_images_shown">Превью картинок</string>
+    <string name="pref_images_shown_summary">Отображение в ленте</string>
+    <string name="settings">Настройки</string>
+
 </resources>
