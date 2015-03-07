@@ -14,6 +14,7 @@ android {
         compile 'com.android.support:appcompat-v7:21.0.3'
         compile 'org.twitter4j:twitter4j-core:4.0.2'
         compile 'com.nineoldandroids:library:2.4.0'
+        compile 'com.squareup.picasso:picasso:2.5.0'
     }
 
     buildTypes {

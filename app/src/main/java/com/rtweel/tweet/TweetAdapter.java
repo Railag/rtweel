@@ -1,297 +1,188 @@
 package com.rtweel.tweet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import twitter4j.MediaEntity;
 import twitter4j.Status;
+
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.rtweel.R;
-import com.rtweel.asynctasks.tweet.BitmapWorkerTaskMedia;
-import com.rtweel.asynctasks.tweet.BitmapWorkerTaskProfile;
-import com.rtweel.cache.App;
-import com.rtweel.cache.AsyncDrawable;
-import com.rtweel.cache.DiskCache;
 import com.rtweel.parsers.DateParser;
+import com.squareup.picasso.Picasso;
 
 public class TweetAdapter extends BaseAdapter {
 
-	private final List<Status> mData;
-	private final Context mContext;
+    private final List<Status> mData;
+    private final Context mContext;
 
-	boolean mIsMediaAvailable;
+    private static ArrayList<String> sLoadedUris = new ArrayList<String>();
 
-	public TweetAdapter(List<Status> data, Context context) {
-		this.mData = data;
-		this.mContext = context;
-	}
+    boolean mIsMediaAvailable;
 
-	public TweetAdapter(Timeline timeline, Context context) {
-		this.mData = timeline.getTweets();
-		this.mContext = context;
-	}
+    public TweetAdapter(List<Status> data, Context context) {
+        this.mData = data;
+        this.mContext = context;
+    }
 
-	@Override
-	public int getCount() {
-		return mData.size();
-	}
+    public TweetAdapter(Timeline timeline, Context context) {
+        this.mData = timeline.getTweets();
+        this.mContext = context;
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return mData.get(position);
-	}
+    @Override
+    public int getCount() {
+        return mData.size();
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public Object getItem(int position) {
+        return mData.get(position);
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-		if (convertView == null) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-			convertView = LayoutInflater.from(mContext).inflate(
-					R.layout.list_item, parent, false);
+        Status tweet = mData.get(position);
 
-			TextView text = (TextView) convertView
-					.findViewById(R.id.tweet_text);
-			TextView author = (TextView) convertView
-					.findViewById(R.id.tweet_author);
-			TextView date = (TextView) convertView
-					.findViewById(R.id.tweet_date);
-			ImageView picture = (ImageView) convertView
-					.findViewById(R.id.tweet_author_picture);
-			ImageView media = (ImageView) convertView
-					.findViewById(R.id.tweet_media);
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(mContext);
 
-			ViewHolder vh = new ViewHolder(author, text, date, picture, media);
+        String url = null;
 
-			convertView.setTag(vh);
+        if (preferences.getBoolean("images_shown", false)) {
+            MediaEntity[] entities = tweet.getMediaEntities();
 
-		}
+            if (entities.length > 0)
+                url = entities[0].getMediaURL();
 
-		ViewHolder vh = (ViewHolder) convertView.getTag();
+        }
 
-		Status tweet = mData.get(position);
+        if (convertView == null) {
 
-		// Log.i("DEBUG", tweet.toString());
+            convertView = LayoutInflater.from(mContext).inflate(
+                    R.layout.list_item, parent, false);
 
-		String imageUri = tweet.getUser().getProfileImageURL();// getMiniProfileImageURL();
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(mContext);
-		if (preferences.getBoolean("images_shown", false)) {
-			MediaEntity[] entities = tweet.getMediaEntities();
-			String url = null;
+            TextView text = (TextView) convertView
+                    .findViewById(R.id.tweet_text);
+            TextView author = (TextView) convertView
+                    .findViewById(R.id.tweet_author);
+            TextView date = (TextView) convertView
+                    .findViewById(R.id.tweet_date);
+            ImageView picture = (ImageView) convertView
+                    .findViewById(R.id.tweet_author_picture);
 
-			if (entities.length > 0) {
-				url = entities[0].getMediaURL();
+            ImageView media = null;
 
-				String cacheName = "entity_" + tweet.getId();
-				// LayoutParams params = vh.getMediaView().getLayoutParams();
-				// params.height = 175;
-				// params.width = 250;
-				// vh.getMediaView().setLayoutParams(params);
-				vh.loadBitmapMedia(url, vh.getMediaView(), cacheName);
-				vh.getMediaView().setVisibility(View.VISIBLE);
-			} else {
-				App app = (App) mContext;
-				DiskCache cache = app.getDiskCache();
-				// Drawable standart = mContext.getResources().getDrawable(
-				// R.drawable.standart_image);
-				// Canvas canvas = new Canvas();
-				// standart.draw(canvas);
-				if (!cache.containsKey("standart")) {
-					Bitmap bitmap = Bitmap.createBitmap(2, 2, Config.ARGB_8888);
-					bitmap.eraseColor(Color.WHITE);
-					cache.put("standart_white", bitmap);
-				}
-				LayoutParams params = vh.getMediaView().getLayoutParams();
-				params.height = 2;
-				params.width = 2;
-				vh.getMediaView().setLayoutParams(params);
-				vh.loadBitmapMedia("standart", vh.getMediaView(),
-						"standart_white");
-			}
-		} else {
-			vh.getMediaView().setVisibility(View.GONE);
-		}
-		String cacheName = tweet.getUser().getName().replace(' ', '_')
-				+ "_mini";
+            if (!TextUtils.isEmpty(url)) {
+                media = new ImageView(mContext);
+                LinearLayout layout = (LinearLayout) convertView;
+                layout.addView(media);
+            }
 
-		vh.loadBitmapProfile(imageUri, vh.getPictureView(), cacheName);
+            ViewHolder vh = new ViewHolder(author, text, date, picture, media, url);
 
-		vh.getAuthorView().setText(tweet.getUser().getName());
+            convertView.setTag(vh);
 
-		vh.getTextView().setText(tweet.getText().replace('\n', ' '));
+        }
 
-		String date = DateParser.parse(tweet.getCreatedAt().toString());
+        ViewHolder vh = (ViewHolder) convertView.getTag();
 
-		vh.getDateView().setText(date);
 
-		return convertView;
-	}
+        if (!TextUtils.isEmpty(vh.getUrl())) {
+            Log.i("DEBUG", vh.getUrl() + " TRUE");
+            Picasso.with(mContext).load(url)
+                    .placeholder(R.drawable.placeholder).into(vh.getMediaView());
+        }
 
-	private static BitmapWorkerTaskMedia getBitmapWorkerTaskMedia(
-			ImageView imageView) {
-		if (imageView != null) {
-			final Drawable drawable = imageView.getDrawable();
-			if (drawable instanceof AsyncDrawable) {
-				final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-				return (BitmapWorkerTaskMedia) asyncDrawable
-						.getBitmapWorkerTask();
-			}
-		}
-		return null;
-	}
+        String imageUri = tweet.getUser().getProfileImageURL();// getMiniProfileImageURL();
 
-	private static BitmapWorkerTaskProfile getBitmapWorkerTaskProfile(
-			ImageView imageView) {
-		if (imageView != null) {
-			final Drawable drawable = imageView.getDrawable();
-			if (drawable instanceof AsyncDrawable) {
-				final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-				return (BitmapWorkerTaskProfile) asyncDrawable
-						.getBitmapWorkerTask();
-			}
-		}
-		return null;
-	}
+        String cacheName = tweet.getUser().getName().replace(' ', '_')
+                + "_mini";
 
-	public static boolean cancelPotentialWorkMedia(String url,
-			ImageView imageView) {
-		final BitmapWorkerTaskMedia bitmapWorkerTask = getBitmapWorkerTaskMedia(imageView);
+        //vh.loadBitmapProfile(imageUri, vh.getPictureView(), cacheName);
+        Picasso.with(mContext).load(imageUri)
+                .placeholder(R.drawable.rtweel).into(vh.getPictureView());
 
-		if (bitmapWorkerTask != null) {
-			final String bitmapData = bitmapWorkerTask.getUrl();
-			// If bitmapData is not yet set or it differs from the new data
-			if (bitmapData == null || bitmapData != url) {
-				// Cancel previous task
-				// String cache = bitmapWorkerTask.getCacheName();
-				bitmapWorkerTask.cancel(true);
-				/*
-				 * Log.i("DEBUG", "cancel2" + cache); if
-				 * (cache.startsWith("entity")) {
-				 * imageView.setImageDrawable(null);
-				 * imageView.setVisibility(View.GONE); Log.i("DEBUG", "cancel");
-				 * }
-				 */
-				// if (url.contains("entity")) {
-				// imageView.setVisibility(View.GONE);
-				// }
-			} else {
-				// The same work is already in progress
-				return false;
-			}
-		}
-		// No task associated with the ImageView, or an existing task was
-		// cancelled
-		return true;
-	}
+        vh.getAuthorView().setText(tweet.getUser().getName());
 
-	public static boolean cancelPotentialWorkProfile(String url,
-			ImageView imageView) {
-		final BitmapWorkerTaskProfile bitmapWorkerTask = getBitmapWorkerTaskProfile(imageView);
+        vh.getTextView().setText(tweet.getText().replace('\n', ' '));
 
-		if (bitmapWorkerTask != null) {
-			final String bitmapData = bitmapWorkerTask.getUrl();
-			// If bitmapData is not yet set or it differs from the new data
-			if (bitmapData == null || bitmapData != url) {
-				// Cancel previous task
-				// String cache = bitmapWorkerTask.getCacheName();
-				bitmapWorkerTask.cancel(true);
-				/*
-				 * Log.i("DEBUG", "cancel2" + cache); if
-				 * (cache.startsWith("entity")) {
-				 * imageView.setImageDrawable(null);
-				 * imageView.setVisibility(View.GONE); Log.i("DEBUG", "cancel");
-				 * }
-				 */
-				// if (url.contains("entity")) {
-				// imageView.setVisibility(View.GONE);
-				// }
-			} else {
-				// The same work is already in progress
-				return false;
-			}
-		}
-		// No task associated with the ImageView, or an existing task was
-		// cancelled
-		return true;
-	}
+        String date = DateParser.parse(tweet.getCreatedAt().toString());
 
-	private class ViewHolder {
-		private final TextView mAuthorView;
-		private final TextView mTextView;
-		private final TextView mDateView;
-		private final ImageView mPictureView;
-		private final ImageView mMediaView;
+        vh.getDateView().setText(date);
 
-		public ViewHolder(TextView user, TextView text, TextView date,
-				ImageView picture, ImageView media) {
-			this.mAuthorView = user;
-			this.mTextView = text;
-			this.mDateView = date;
-			this.mPictureView = picture;
-			this.mMediaView = media;
-		}
+        return convertView;
+    }
 
-		public TextView getAuthorView() {
-			return mAuthorView;
-		}
+    private class ViewHolder {
+        private final TextView mAuthorView;
+        private final TextView mTextView;
+        private final TextView mDateView;
+        private final ImageView mPictureView;
+        private final ImageView mMediaView;
+        private final String mUrl;
 
-		public TextView getTextView() {
-			return mTextView;
-		}
+        public ViewHolder(TextView user, TextView text, TextView date,
+                          ImageView picture, ImageView media, String url) {
+            this.mAuthorView = user;
+            this.mTextView = text;
+            this.mDateView = date;
+            this.mPictureView = picture;
+            this.mMediaView = media;
+            this.mUrl = url;
+        }
 
-		public TextView getDateView() {
-			return mDateView;
-		}
+        public TextView getAuthorView() {
+            return mAuthorView;
+        }
 
-		public ImageView getPictureView() {
-			return mPictureView;
-		}
+        public TextView getTextView() {
+            return mTextView;
+        }
 
-		public ImageView getMediaView() {
-			return mMediaView;
-		}
+        public TextView getDateView() {
+            return mDateView;
+        }
 
-		public void loadBitmapMedia(String url, ImageView image,
-				String cacheName) {
-			if (cancelPotentialWorkMedia(url, image)) {
-				final BitmapWorkerTaskMedia task = new BitmapWorkerTaskMedia(
-						image, mContext, cacheName);
-				final AsyncDrawable asyncDrawable = new AsyncDrawable(
-						mContext.getResources(), App.getBitmap(), task);
-				image.setImageDrawable(asyncDrawable);
-				task.execute(url);
-			}
-		}
+        public ImageView getPictureView() {
+            return mPictureView;
+        }
 
-		public void loadBitmapProfile(String url, ImageView image,
-				String cacheName) {
-			if (cancelPotentialWorkProfile(url, image)) {
-				final BitmapWorkerTaskProfile task = new BitmapWorkerTaskProfile(
-						image, mContext, cacheName);
-				final AsyncDrawable asyncDrawable = new AsyncDrawable(
-						mContext.getResources(), App.getBitmap(), task);
-				image.setImageDrawable(asyncDrawable);
-				task.execute(url);
-			}
-		}
-	}
+        public ImageView getMediaView() {
+            return mMediaView;
+        }
+
+        public String getUrl() {
+            return mUrl;
+        }
+    }
+
+    /*public static boolean isInList(String url) {
+        return sLoadedUris.contains(url);
+    }
+
+    public static void addToList(String url) {
+        sLoadedUris.add(url);
+    }
+    */
 
 }

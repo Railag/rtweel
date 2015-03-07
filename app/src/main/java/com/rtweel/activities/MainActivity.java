@@ -1,14 +1,9 @@
 package com.rtweel.activities;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
-
-import twitter4j.Status;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,9 +49,14 @@ import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterGetAccessTokenTask;
 import com.rtweel.twitteroauth.TwitterUtil;
 
-public class MainActivity extends ActionBarActivity { // implements
-														// ActionBar.OnNavigationListener
-														// {
+import java.util.Date;
+import java.util.concurrent.ExecutionException;
+
+import twitter4j.Status;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
+public class MainActivity extends ActionBarActivity {
 
 	private static final int EDIT_REQUEST = 0;
 	private static final int DELETE_REQUEST = 1;
@@ -72,10 +72,13 @@ public class MainActivity extends ActionBarActivity { // implements
 
 	private boolean mContentLoaded;
 
+    private ProgressDialog mLoadingDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+
+        setContentView(R.layout.activity_main);
 
 		getSupportActionBar().hide();
 
@@ -87,7 +90,18 @@ public class MainActivity extends ActionBarActivity { // implements
 		}
 	}
 
-	@Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isLoggedIn()) {
+            if (isLoading())
+                stopLoading();
+            if (loginCheck())
+                initialize();
+        }
+    }
+
+    @Override
 	protected void onActivityResult(int requestCode, int requestResult,
 			Intent intent) {
 
@@ -205,7 +219,10 @@ public class MainActivity extends ActionBarActivity { // implements
 	}
 
 	private void initialize() {
-		Date date = new Date();
+        if(isLoading())
+            stopLoading();
+
+        Date date = new Date();
 
 		Log.i("DEBUG", "Initializing...");
 
@@ -231,7 +248,7 @@ public class MainActivity extends ActionBarActivity { // implements
 						+ String.valueOf(new Date().getTime() - t1.getTime()));
 		// getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		setContentView(R.layout.activity_main);
+
 
 		getSupportActionBar().show();
 
@@ -325,14 +342,11 @@ public class MainActivity extends ActionBarActivity { // implements
 					int position, long id) {
 				Status tweet = (twitter4j.Status) adapter.getItem(position);
 				Log.i("DEBUG", "tweet retweets: " + tweet.getRetweetCount());
-				Status actualTweet = null;
+				Status actualTweet;
 				try {
 					actualTweet = new RefreshTweetTask().execute(tweet.getId())
 							.get();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					actualTweet = tweet;
-				} catch (ExecutionException e) {
+				} catch (InterruptedException | ExecutionException e) {
 					e.printStackTrace();
 					actualTweet = tweet;
 				}
@@ -362,8 +376,8 @@ public class MainActivity extends ActionBarActivity { // implements
 				.getDefaultSharedPreferences(getApplicationContext());
 		if (!sharedPreferences.getBoolean(
 				ConstantValues.PREFERENCE_TWITTER_IS_LOGGED_IN, false)) {
-			Toast.makeText(getApplicationContext(), "Logging in...",
-					Toast.LENGTH_LONG).show();
+            startLoading();
+
 			try {
 				Uri uri = getIntent().getData();
 				if (uri != null
@@ -374,6 +388,7 @@ public class MainActivity extends ActionBarActivity { // implements
 					Log.i("DEBUG", "Verification..");
 					new TwitterGetAccessTokenTask(getApplicationContext())
 							.execute(verifier).get();
+
 					initialize();
 				} else {
 					Log.i("DEBUG", "Browser authentification...");
@@ -435,6 +450,18 @@ public class MainActivity extends ActionBarActivity { // implements
 		list.setAnimation(anim);
 	}
 
+    private void startLoading() {
+        mLoadingDialog = ProgressDialog.show(this, "Авторизация, подождите..", "Загрузка...");
+    }
+
+    private void stopLoading() {
+        mLoadingDialog.dismiss();
+    }
+
+    private boolean isLoading() {
+        return mLoadingDialog != null && mLoadingDialog.isShowing();
+    }
+
 	public ListView getList() {
 		return list;
 	}
@@ -454,4 +481,8 @@ public class MainActivity extends ActionBarActivity { // implements
 	public Timeline getTimeline() {
 		return mTimeline;
 	}
+
+    public boolean isLoggedIn() {
+        return list != null;
+    }
 }
