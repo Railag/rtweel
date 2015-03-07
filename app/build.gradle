@@ -1,0 +1,25 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.rtweel"
+        minSdkVersion 9
+        targetSdkVersion 21
+    }
+
+    dependencies {
+        compile 'com.android.support:appcompat-v7:21.0.3'
+        compile 'org.twitter4j:twitter4j-core:4.0.2'
+        compile 'com.nineoldandroids:library:2.4.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+}
