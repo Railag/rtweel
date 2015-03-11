@@ -1,0 +1,6 @@
+app/build
+app/app.iml
+.idea
+.gradle
+build
+.idea/workspace.xml
