@@ -59,7 +59,7 @@ public class DateParser {
 
 		String time = hours + ":" + minutes + ":" + seconds;
 
-		String finalDate = date + " " + time;
+		String finalDate = date + "\n" + time;
 
 		return finalDate;
 	}

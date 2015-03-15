@@ -90,13 +90,14 @@ public class TweetAdapter extends BaseAdapter {
             ImageView picture = (ImageView) convertView
                     .findViewById(R.id.tweet_author_picture);
 
-            ImageView media = null;
+            ImageView media = (ImageView) convertView.findViewById(R.id.tweet_media);
+//            ImageView media = null;
 
-            if (!TextUtils.isEmpty(url)) {
-                media = new ImageView(mContext);
-                LinearLayout layout = (LinearLayout) convertView;
-                layout.addView(media);
-            }
+//            if (!TextUtils.isEmpty(url)) {
+//                media = new ImageView(mContext);
+//                LinearLayout layout = (LinearLayout) convertView;
+//                layout.addView(media);
+//            }
 
             ViewHolder vh = new ViewHolder(author, text, date, picture, media, url);
 
@@ -108,19 +109,14 @@ public class TweetAdapter extends BaseAdapter {
 
 
         if (!TextUtils.isEmpty(vh.getUrl())) {
-            Log.i("DEBUG", vh.getUrl() + " TRUE");
             Picasso.with(mContext).load(url)
                     .placeholder(R.drawable.placeholder).into(vh.getMediaView());
         }
 
-        String imageUri = tweet.getUser().getProfileImageURL();// getMiniProfileImageURL();
+        String imageUri = tweet.getUser().getProfileImageURL();
 
-        String cacheName = tweet.getUser().getName().replace(' ', '_')
-                + "_mini";
-
-        //vh.loadBitmapProfile(imageUri, vh.getPictureView(), cacheName);
         Picasso.with(mContext).load(imageUri)
-                .placeholder(R.drawable.rtweel).into(vh.getPictureView());
+                .placeholder(R.drawable.placeholder).into(vh.getPictureView());
 
         vh.getAuthorView().setText(tweet.getUser().getName());
 
@@ -175,14 +171,5 @@ public class TweetAdapter extends BaseAdapter {
             return mUrl;
         }
     }
-
-    /*public static boolean isInList(String url) {
-        return sLoadedUris.contains(url);
-    }
-
-    public static void addToList(String url) {
-        sLoadedUris.add(url);
-    }
-    */
 
 }

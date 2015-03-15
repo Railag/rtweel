@@ -37,6 +37,7 @@ import com.rtweel.cache.DiskCache;
 import com.rtweel.constant.Extras;
 import com.rtweel.parsers.DateParser;
 import com.rtweel.tweet.Timeline;
+import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -96,19 +97,20 @@ public class DetailActivity extends ActionBarActivity {
 				Log.i("DEBUG", urls[i]);
 				// entities[i].getSizes();
 				views[i] = new ImageView(this);
-				Bitmap bitmap = null;
-				bitmap = ((App) getApplication()).getDiskCache().getBitmap(
-						cacheName);
-				if (bitmap == null) {
-					try {
-						bitmap = new LogoTask().execute(urls[i]).get();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (ExecutionException e) {
-						e.printStackTrace();
-					}
-				}
-				views[i].setImageBitmap(bitmap);
+//				Bitmap bitmap = null;
+//				bitmap = ((App) getApplication()).getDiskCache().getBitmap(
+//						cacheName);
+//				if (bitmap == null) {
+//					try {
+//						bitmap = new LogoTask().execute(urls[i]).get();
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					} catch (ExecutionException e) {
+//						e.printStackTrace();
+//					}
+//				}
+                Picasso.with(getApplicationContext()).load(urls[0]).into(views[i]);
+                //views[i].setImageBitmap(bitmap);
 				RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
 						ViewGroup.LayoutParams.WRAP_CONTENT,
 						ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -141,44 +143,47 @@ public class DetailActivity extends ActionBarActivity {
 			favsCountButton.setBackgroundColor(Color.DKGRAY);
 		}
 
-		String cacheName = name.replace(' ', '_') + "_normal";
+//		String cacheName = name.replace(' ', '_') + "_normal";
+//
+//		App app = (App) getApplication();
+//		DiskCache cache = app.getDiskCache();
+//		Bitmap bitmap = cache.getBitmap(cacheName);
+//
+//		if (bitmap == null) {
+//			if (!app.isOnline()) {
+//				Log.i("DEBUG", "picture task tweet adapter NO NETWORK");
+//				Options opts = new Options();
+//				opts.outHeight = 24;
+//				opts.outWidth = 24;
+//				opts.inScaled = true;
+//
+//				bitmap = BitmapFactory.decodeResource(getResources(),
+//						R.drawable.rtweel, opts);
+//			} else {
+//				try {
+//					bitmap = new LogoTask().execute(imageUri).get();// url).get();
+//					cache.put(cacheName, bitmap);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				} catch (ExecutionException e) {
+//					e.printStackTrace();
+//				} catch (NullPointerException e) {
+//					e.printStackTrace();
+//					Options opts = new Options();
+//					opts.outHeight = 24;
+//					opts.outWidth = 24;
+//					opts.inScaled = true;
+//
+//					bitmap = BitmapFactory.decodeResource(getResources(),
+//							R.drawable.rtweel, opts);
+//				}
+//			}
+//		}
+//
+//		profilePictureView.setImageBitmap(bitmap);
 
-		App app = (App) getApplication();
-		DiskCache cache = app.getDiskCache();
-		Bitmap bitmap = cache.getBitmap(cacheName);
+        Picasso.with(getApplicationContext()).load(imageUri).into(profilePictureView);
 
-		if (bitmap == null) {
-			if (!app.isOnline()) {
-				Log.i("DEBUG", "picture task tweet adapter NO NETWORK");
-				Options opts = new Options();
-				opts.outHeight = 24;
-				opts.outWidth = 24;
-				opts.inScaled = true;
-
-				bitmap = BitmapFactory.decodeResource(getResources(),
-						R.drawable.rtweel, opts);
-			} else {
-				try {
-					bitmap = new LogoTask().execute(imageUri).get();// url).get();
-					cache.put(cacheName, bitmap);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-					Options opts = new Options();
-					opts.outHeight = 24;
-					opts.outWidth = 24;
-					opts.inScaled = true;
-
-					bitmap = BitmapFactory.decodeResource(getResources(),
-							R.drawable.rtweel, opts);
-				}
-			}
-		}
-
-		profilePictureView.setImageBitmap(bitmap);
 		/*
 		 * FileOutputStream stream = null; File file = new
 		 * File(getExternalCacheDir() + " tmp.jpg"); try { stream = new
