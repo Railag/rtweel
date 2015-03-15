@@ -4,6 +4,7 @@
     <CheckBoxPreference
         android:key="images_shown"
         android:summary="@string/pref_images_shown_summary"
-        android:title="@string/pref_images_shown" />
+        android:title="@string/pref_images_shown"
+        android:defaultValue="true"/>
 
 </PreferenceScreen>

@@ -68,7 +68,7 @@ public class TweetAdapter extends BaseAdapter {
 
         String url = null;
 
-        if (preferences.getBoolean("images_shown", false)) {
+        if (preferences.getBoolean("images_shown", true)) {
             MediaEntity[] entities = tweet.getMediaEntities();
 
             if (entities.length > 0)

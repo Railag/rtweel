@@ -352,7 +352,6 @@ public class MainActivity extends ActionBarActivity {
         Log.i("DEBUG",
                 "initialize time: " + (new Date().getTime() - date.getTime()));
     }
-
     private boolean loginCheck() {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         SharedPreferences sharedPreferences = PreferenceManager

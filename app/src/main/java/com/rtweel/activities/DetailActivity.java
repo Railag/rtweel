@@ -104,7 +104,7 @@ public class DetailActivity extends ActionBarActivity {
 		if (mIsRetweeted) {
             retweetsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
         }
-        
+
 		if (mIsFavorited) {
             favsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
         }

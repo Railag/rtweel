@@ -41,7 +41,7 @@ public class TweetReceiver extends BroadcastReceiver {
 			String message = data.getStringExtra(TweetService.MESSAGE);
 			String title = data.getStringExtra(TweetService.TITLE);
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(
-					context).setSmallIcon(R.drawable.abc_ab_share_pack_holo_dark)
+					context).setSmallIcon(com.rtweel.R.drawable.rtweel)
 					.setContentTitle(title).setContentText(message);
 			builder.setAutoCancel(true);
 			builder.setSound(RingtoneManager.getActualDefaultRingtoneUri(
