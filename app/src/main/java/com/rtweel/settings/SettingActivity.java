@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 public class SettingActivity extends PreferenceActivity {
-	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

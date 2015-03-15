@@ -135,7 +135,8 @@ public class TweetService extends IntentService {
 				} catch (TwitterException e1) {
 					e1.printStackTrace();
 				}
-
+                if(mTimeline.getAdapter() != null)
+                    mTimeline.getAdapter().notifyDataSetInvalidated();
 			}
 			// Timeline.setTweetsCount(Timeline.getTweetsCount()
 			// + mTimeline.getTweets().size());

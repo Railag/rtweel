@@ -24,7 +24,6 @@
     <string name="switch_home_timeline">Switch to home timeline</string>
     <string name="switch_user_timeline">Switch to user timeline</string>
     <string name="authors_picture_description_content">Author\'s picture</string>
-    <string name="introduction_text">Welcome to Rtweel! \n\n Now you\'re gonna be brought to the login window, so wait a bit... </string>
     <string name="logout_button">Logout</string>
     <string name="tweet_send_add_photo_button">Add photo</string>
     <string name="tweet_share">Share tweet</string>
@@ -32,5 +31,13 @@
     <string name="pref_images_shown">Images preview</string>
     <string name="pref_images_shown_summary">In timeline</string>
     <string name="settings">Settings</string>
+    <string name="loading">Loading..</string>
+    <string name="tweet_refreshing">Tweet refreshing..</string>
+    <string name="authorization">Authorization..</string>
+
+        <!--content descriptions-->
+    <string name="cd_retweet_btn">Retweet button</string>
+    <string name="cd_fav_btn">Favorite button</string>
+
 
 </resources>

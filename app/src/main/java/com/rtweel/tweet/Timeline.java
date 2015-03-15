@@ -17,6 +17,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.BaseAdapter;
 
 import com.rtweel.asynctasks.db.DbWriteTask;
 import com.rtweel.asynctasks.tweet.GetScreenNameTask;
@@ -38,6 +39,8 @@ public class Timeline implements Iterable<Status> {
 	private List<twitter4j.Status> list;
 
 	private Twitter mTwitter;
+
+    private BaseAdapter mAdapter;
 
 	private int mCurrentTimelineType;
 	private final Context mContext;
@@ -413,4 +416,12 @@ public class Timeline implements Iterable<Status> {
 	public static void setScreenUserName(String screenName) {
 		sScreenUserName = screenName;
 	}
+
+    public BaseAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    public void setAdapter(BaseAdapter mAdapter) {
+        this.mAdapter = mAdapter;
+    }
 }

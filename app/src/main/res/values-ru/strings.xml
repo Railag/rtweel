@@ -24,7 +24,6 @@
     <string name="switch_home_timeline">Домашняя лента</string>
     <string name="switch_user_timeline">Своя лента</string>
     <string name="authors_picture_description_content">Картинка автора</string>
-    <string name="introduction_text">Добро пожаловать в Rtweel. Подождите несколько секунд, и авторизация начнётся... </string>
     <string name="logout_button">Выйти из аккаунта</string>
     <string name="tweet_send_add_photo_button">Сделать снимок</string>
     <string name="tweet_share">Поделиться твитом</string>
@@ -32,5 +31,12 @@
     <string name="pref_images_shown">Превью картинок</string>
     <string name="pref_images_shown_summary">Отображение в ленте</string>
     <string name="settings">Настройки</string>
+    <string name="loading">Загрузка..</string>
+    <string name="tweet_refreshing">Открытие твита..</string>
+    <string name="authorization">Авторизация..</string>
+
+    <!--content descriptions-->
+    <string name="cd_retweet_btn">Кнопка для ретвита</string>
+    <string name="cd_fav_btn">Кнопка для избранного</string>
 
 </resources>

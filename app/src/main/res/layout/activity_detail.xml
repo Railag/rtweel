@@ -3,10 +3,10 @@
     android:id="@+id/scroll_detail_view"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:fadeScrollbars="false"
     android:fillViewport="true"
-    android:scrollbars="vertical"
-    android:background="@android:color/white">
+    android:scrollbars="vertical">
 
 
     <RelativeLayout
@@ -58,6 +58,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/detail_text"
             android:layout_marginTop="26dp"
+            android:contentDescription="@string/cd_retweet_btn"
             android:src="@drawable/retweet" />
 
         <TextView
@@ -79,6 +80,7 @@
             android:layout_marginStart="25dp"
             android:layout_toEndOf="@+id/detail_retweet_button"
             android:layout_toRightOf="@+id/detail_retweet_button"
+            android:contentDescription="@string/cd_fav_btn"
             android:src="@drawable/favor" />
 
         <TextView
@@ -94,12 +96,12 @@
 
         <ImageView
             android:id="@+id/detail_delete"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignBaseline="@+id/detail_favorited_button"
-            android:layout_alignBottom="@+id/detail_favorited_button"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/detail_text"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/detail_favorited_button"
             android:layout_toRightOf="@+id/detail_favorited_button"
             android:src="@drawable/delete" />
