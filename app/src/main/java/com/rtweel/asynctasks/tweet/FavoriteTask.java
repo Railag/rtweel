@@ -7,19 +7,24 @@ import com.rtweel.tweet.Timeline;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class FavoriteTask extends AsyncTask<Long, Void, Void> {
 
 	private final Context mContext;
-	private final Button mFavoriteButton;
+	private final ImageView mFavoriteButton;
+    private final TextView mCountView;
 	private Boolean mIsFavorited;
 
-	public FavoriteTask(Context context, Button button, Boolean isFavorited) {
+	public FavoriteTask(Context context, ImageView button, TextView countView, Boolean isFavorited) {
 		mContext = context;
 		mFavoriteButton = button;
+        mCountView = countView;
 		mIsFavorited = isFavorited;
 	}
 
@@ -45,15 +50,15 @@ public class FavoriteTask extends AsyncTask<Long, Void, Void> {
 		detailActivity.changeIsFavorited();
 		mIsFavorited = !mIsFavorited;
 		if (mIsFavorited) {
-			mFavoriteButton.setBackgroundColor(Color.GREEN);
-			mFavoriteButton.setText(String.valueOf(Long
-					.valueOf((String) mFavoriteButton.getText()) + 1));
+            mFavoriteButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
+			mCountView.setText(String.valueOf(Long
+					.valueOf((String) mCountView.getText()) + 1));
 			Toast.makeText(mContext, "Added to favorites", Toast.LENGTH_LONG)
 					.show();
 		} else {
-			mFavoriteButton.setBackgroundColor(Color.DKGRAY);
-			mFavoriteButton.setText(String.valueOf(Long
-					.valueOf((String) mFavoriteButton.getText()) - 1));
+            mFavoriteButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+			mCountView.setText(String.valueOf(Long
+					.valueOf((String) mCountView.getText()) - 1));
 			Toast.makeText(mContext, "Removed from favorites",
 					Toast.LENGTH_LONG).show();
 		}

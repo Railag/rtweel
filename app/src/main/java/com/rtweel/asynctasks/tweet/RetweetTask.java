@@ -7,19 +7,24 @@ import com.rtweel.tweet.Timeline;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class RetweetTask extends AsyncTask<Long, Void, Long> {
 
 	private final Context mContext;
-	private final Button mRetweetButton;
+	private final ImageView mRetweetButton;
+    private final TextView mCountView;
 	private Boolean mIsRetweeted;
 
-	public RetweetTask(Context context, Button button, Boolean isRetweeted) {
+	public RetweetTask(Context context, ImageView button, TextView countView, Boolean isRetweeted) {
 		mContext = context;
 		mRetweetButton = button;
+        mCountView = countView;
 		mIsRetweeted = isRetweeted;
 	}
 
@@ -48,14 +53,14 @@ public class RetweetTask extends AsyncTask<Long, Void, Long> {
 		detailActivity.setRetweetId(result);
 		mIsRetweeted = !mIsRetweeted;
 		if (mIsRetweeted) {
-			mRetweetButton.setBackgroundColor(Color.GREEN);
-			mRetweetButton.setText(String.valueOf(Long
-					.valueOf((String) mRetweetButton.getText()) + 1));
+            mRetweetButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
+			mCountView.setText(String.valueOf(Long
+					.valueOf((String) mCountView.getText()) + 1));
 			Toast.makeText(mContext, "Retweeted", Toast.LENGTH_LONG).show();
 		} else {
-			mRetweetButton.setBackgroundColor(Color.DKGRAY);
-			mRetweetButton.setText(String.valueOf(Long
-					.valueOf((String) mRetweetButton.getText()) - 1));
+            mRetweetButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+			mCountView.setText(String.valueOf(Long
+                    .valueOf((String) mCountView.getText()) - 1));
 			Toast.makeText(mContext, "Unretweeted", Toast.LENGTH_LONG).show();
 		}
 	}

@@ -33,7 +33,6 @@
             android:textColor="#008080"
             android:textSize="20sp"
             android:textStyle="bold" />
-
         <TextView
             android:id="@+id/tweet_date"
             android:layout_width="80dp"

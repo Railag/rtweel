@@ -1,17 +1,14 @@
 package com.rtweel.activities;
 
 import java.io.File;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.protocol.HTTP;
 
 import twitter4j.MediaEntity;
 import twitter4j.Status;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -30,10 +27,7 @@ import android.widget.Toast;
 import com.rtweel.R;
 import com.rtweel.asynctasks.tweet.DeleteTweetTask;
 import com.rtweel.asynctasks.tweet.FavoriteTask;
-import com.rtweel.asynctasks.tweet.LogoTask;
 import com.rtweel.asynctasks.tweet.RetweetTask;
-import com.rtweel.cache.App;
-import com.rtweel.cache.DiskCache;
 import com.rtweel.constant.Extras;
 import com.rtweel.parsers.DateParser;
 import com.rtweel.tweet.Timeline;
@@ -56,11 +50,12 @@ public class DetailActivity extends ActionBarActivity {
 
 		TextView nameView = (TextView) findViewById(R.id.detail_name);
 		TextView textView = (TextView) findViewById(R.id.detail_text);
-		TextView locationView = (TextView) findViewById(R.id.detail_location);
 		TextView dateView = (TextView) findViewById(R.id.detail_date);
-		final Button retweetsCountButton = (Button) findViewById(R.id.detail_retweet_count);
-		final Button favsCountButton = (Button) findViewById(R.id.detail_favorited_count);
-		final Button deleteButton = (Button) findViewById(R.id.detail_delete);
+		final ImageView retweetsButton = (ImageView) findViewById(R.id.detail_retweet_button);
+		final ImageView favsButton = (ImageView) findViewById(R.id.detail_favorited_button);
+		ImageView deleteButton = (ImageView) findViewById(R.id.detail_delete);
+        final TextView retweetsCountView = (TextView) findViewById(R.id.detail_retweet_count);
+        final TextView favsCountView = (TextView) findViewById(R.id.detail_favorited_count);
 		ImageView profilePictureView = (ImageView) findViewById(R.id.detail_profile_picture);
 
 		Bundle start = getIntent().getExtras();
@@ -79,130 +74,53 @@ public class DetailActivity extends ActionBarActivity {
 		MediaEntity[] entities = mTweet.getMediaEntities();
 		String[] urls = new String[entities.length];
 		ImageView[] views = new ImageView[entities.length];
-		/*
-		 * if (entities != null) { for (int i = 0; i < entities.length; i++) {
-		 * url[i] = entities[i].getMediaURL();
-		 * 
-		 * Log.i("DEBUG", "Dp Url " + entities[i].getDisplayURL() + " URL " +
-		 * entities[i].getURL() + " start " + entities[i].getStart() + " end " +
-		 * entities[i].getEnd()); } }
-		 */
-		// AttributeSet attrs = new Attributes();
+
 		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.detail_layout);
 		if (entities.length > 0) {
 			Log.i("DEBUG", "Entities length: " + entities.length);
 			String cacheName = "entity_" + mTweet.getId();
 			for (int i = 0; i < entities.length; i++) {
 				urls[i] = entities[i].getMediaURL();
-				Log.i("DEBUG", urls[i]);
-				// entities[i].getSizes();
+
+
 				views[i] = new ImageView(this);
-//				Bitmap bitmap = null;
-//				bitmap = ((App) getApplication()).getDiskCache().getBitmap(
-//						cacheName);
-//				if (bitmap == null) {
-//					try {
-//						bitmap = new LogoTask().execute(urls[i]).get();
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					} catch (ExecutionException e) {
-//						e.printStackTrace();
-//					}
-//				}
+
                 Picasso.with(getApplicationContext()).load(urls[0]).into(views[i]);
                 //views[i].setImageBitmap(bitmap);
 				RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
 						ViewGroup.LayoutParams.WRAP_CONTENT,
 						ViewGroup.LayoutParams.WRAP_CONTENT);
 
-				p.addRule(RelativeLayout.BELOW, R.id.detail_location);
+				p.addRule(RelativeLayout.BELOW, R.id.detail_retweet_count);
 
 				views[i].setLayoutParams(p);
 				relativeLayout.addView(views[i]);
-				// views[i].setLayoutParams(new LayoutParams(300, 300));
 			}
-			// LayoutParams params = vh.getMediaView().getLayoutParams();
-			// params.height = 175;
-			// params.width = 250;
-			// vh.getMediaView().setLayoutParams(params);
-			// vh.loadBitmapMedia(url, vh.getMediaView(), cacheName);
 
 		}
 
 		final int position = start.getInt(Extras.POSITION);
 
 		if (mIsRetweeted) {
-			retweetsCountButton.setBackgroundColor(Color.GREEN);
-		} else {
-			retweetsCountButton.setBackgroundColor(Color.DKGRAY);
-		}
+            retweetsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
+        }
 
 		if (mIsFavorited) {
-			favsCountButton.setBackgroundColor(Color.GREEN);
-		} else {
-			favsCountButton.setBackgroundColor(Color.DKGRAY);
-		}
-
-//		String cacheName = name.replace(' ', '_') + "_normal";
-//
-//		App app = (App) getApplication();
-//		DiskCache cache = app.getDiskCache();
-//		Bitmap bitmap = cache.getBitmap(cacheName);
-//
-//		if (bitmap == null) {
-//			if (!app.isOnline()) {
-//				Log.i("DEBUG", "picture task tweet adapter NO NETWORK");
-//				Options opts = new Options();
-//				opts.outHeight = 24;
-//				opts.outWidth = 24;
-//				opts.inScaled = true;
-//
-//				bitmap = BitmapFactory.decodeResource(getResources(),
-//						R.drawable.rtweel, opts);
-//			} else {
-//				try {
-//					bitmap = new LogoTask().execute(imageUri).get();// url).get();
-//					cache.put(cacheName, bitmap);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				} catch (ExecutionException e) {
-//					e.printStackTrace();
-//				} catch (NullPointerException e) {
-//					e.printStackTrace();
-//					Options opts = new Options();
-//					opts.outHeight = 24;
-//					opts.outWidth = 24;
-//					opts.inScaled = true;
-//
-//					bitmap = BitmapFactory.decodeResource(getResources(),
-//							R.drawable.rtweel, opts);
-//				}
-//			}
-//		}
-//
-//		profilePictureView.setImageBitmap(bitmap);
+            favsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
+        }
 
         Picasso.with(getApplicationContext()).load(imageUri).into(profilePictureView);
 
-		/*
-		 * FileOutputStream stream = null; File file = new
-		 * File(getExternalCacheDir() + " tmp.jpg"); try { stream = new
-		 * FileOutputStream(file); } catch (FileNotFoundException e) {
-		 * e.printStackTrace(); } bitmap.compress(Bitmap.CompressFormat.JPEG,
-		 * 100, stream); try { stream.close(); } catch (IOException e) {
-		 * e.printStackTrace(); }
-		 */
 		nameView.setText(name);
 		textView.setText(text);
-		locationView.setText(location);
 		dateView.setText(date);
-		retweetsCountButton.setText(String.valueOf(retweetsCount));
-		retweetsCountButton.setOnClickListener(new OnClickListener() {
+		retweetsCountView.setText(String.valueOf(retweetsCount));
+		retweetsButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				if (!name.equals(Timeline.getUserName())) {
-					new RetweetTask(DetailActivity.this, retweetsCountButton,
+					new RetweetTask(DetailActivity.this, retweetsButton, retweetsCountView,
 							mIsRetweeted).execute(id, mRetweetId);
 				} else {
 					Toast.makeText(getApplicationContext(),
@@ -211,18 +129,17 @@ public class DetailActivity extends ActionBarActivity {
 				}
 			}
 		});
-		favsCountButton.setText(String.valueOf(favsCount));
-		favsCountButton.setOnClickListener(new OnClickListener() {
+		favsCountView.setText(String.valueOf(favsCount));
+		favsButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				new FavoriteTask(DetailActivity.this, favsCountButton,
+				new FavoriteTask(DetailActivity.this, favsButton, favsCountView,
 						mIsFavorited).execute(id);
 			}
 		});
 
 		if (name.equals(Timeline.getUserName())) {
-			deleteButton.setText(getString(R.string.delete_button));
 			deleteButton.setOnClickListener(new OnClickListener() {
 
 				@Override
