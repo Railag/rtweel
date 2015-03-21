@@ -25,7 +25,7 @@
         <TextView
             android:id="@+id/tweet_author"
             android:layout_width="210dp"
-            android:layout_height="30dp"
+            android:layout_height="58dp"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:gravity="start|top"
@@ -33,6 +33,7 @@
             android:textColor="#008080"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <TextView
             android:id="@+id/tweet_date"
             android:layout_width="80dp"
@@ -63,7 +64,7 @@
     <TextView
         android:id="@+id/tweet_text"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
+        android:layout_height="wrap_content"
         android:gravity="fill_horizontal"
         android:orientation="horizontal"
         android:textColor="#008080"
@@ -71,6 +72,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"/>
 
 </LinearLayout>

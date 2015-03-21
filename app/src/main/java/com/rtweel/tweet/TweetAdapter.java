@@ -91,13 +91,6 @@ public class TweetAdapter extends BaseAdapter {
                     .findViewById(R.id.tweet_author_picture);
 
             ImageView media = (ImageView) convertView.findViewById(R.id.tweet_media);
-//            ImageView media = null;
-
-//            if (!TextUtils.isEmpty(url)) {
-//                media = new ImageView(mContext);
-//                LinearLayout layout = (LinearLayout) convertView;
-//                layout.addView(media);
-//            }
 
             ViewHolder vh = new ViewHolder(author, text, date, picture, media, url);
 
@@ -120,7 +113,8 @@ public class TweetAdapter extends BaseAdapter {
 
         vh.getAuthorView().setText(tweet.getUser().getName());
 
-        vh.getTextView().setText(tweet.getText().replace('\n', ' '));
+        //vh.getTextView().setText(tweet.getText().replace('\n', ' '));
+        vh.getTextView().setText(tweet.getText());
 
         String date = DateParser.parse(tweet.getCreatedAt().toString());
 

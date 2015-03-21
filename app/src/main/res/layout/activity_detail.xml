@@ -39,7 +39,7 @@
         <TextView
             android:id="@+id/detail_text"
             android:layout_width="match_parent"
-            android:layout_height="152dp"
+            android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/detail_date"
             android:layout_alignRight="@+id/detail_date"
             android:layout_below="@+id/detail_date"

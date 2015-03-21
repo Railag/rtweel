@@ -253,6 +253,8 @@ public class MainActivity extends ActionBarActivity {
 
         list = (ListView) findViewById(R.id.list);
 
+        list.setDivider(getResources().getDrawable(android.R.drawable.divider_horizontal_textfield));
+
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
         list.setVisibility(View.GONE);
@@ -430,6 +432,14 @@ public class MainActivity extends ActionBarActivity {
         anim.setDuration(4000);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         list.setAnimation(anim);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isLoading())
+            stopLoading();
+        else
+            super.onBackPressed();
     }
 
     public void startLoading(String loadingText) {
