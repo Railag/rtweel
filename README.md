@@ -1,6 +1,6 @@
 Rtweel
 ======
-Lightweight Twitter application available even for old android devices starting from android 2.3 version (GINGERBREAD). 
+Lightweight Twitter application available even for old android devices starting from android 3.0 version (HONEYCOMB). 
 
 Already done:
 - Twitter OAuth authentification through integrated twitter4j library, initial browser login
@@ -11,9 +11,11 @@ Already done:
 - Caching profile images, so the second and later launches will be faster.
 - Caching your downloaded timeline into SQLite DB and retrieving it from if there are any tweets cached.
 - Timeline updating animation (circle).
+- Using Picasso library for async image downloading & caching
+- Dialogs for loading moments
+- Icons
 - Some screens for tweet posting, for detail tweet view.
-- Using support library, 2.3 > version support.
-- 1 Mb apk file weight, 2.8 Mb installed app size.
+- Using support library, 3.0 > version support.
 
 TODO:
 - ~~Tweet UI (date parsing, text assignment)~~
@@ -28,13 +30,16 @@ TODO:
 - Mentions
 - Trends
 - ~~Paging system improvement~~
-- Tweet deletion
+- ~~Tweet deletion~~
 - Last tweet edition
 - ~~links~~ and pictures in tweets
 - ~~some effects~~
-- localization (EN/RU)
-And a lot of small fixes
+- ~~localization (EN/RU)~~
+- File choosing section improvements
+- Update token exception fix
+- Round image views for profile images
+- All media resources processing in detail screen
+- Changing activity structure to fully fragments based
 
-Note: Current 0.20 version isn't stable a bit. 
-Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into /src/com.rtweel.twitteroauth/ConstantValues.java class.
+Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/com.rtweel.twitteroauth/ConstantValues.java class.
 
