@@ -15,6 +15,7 @@ android {
         compile 'org.twitter4j:twitter4j-core:4.0.2'
         compile 'com.nineoldandroids:library:2.4.0'
         compile 'com.squareup.picasso:picasso:2.5.0'
+        compile 'com.makeramen:roundedimageview:2.0.0'
     }
 
     buildTypes {

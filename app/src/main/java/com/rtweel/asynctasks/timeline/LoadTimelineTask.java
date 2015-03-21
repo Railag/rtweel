@@ -7,16 +7,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.rtweel.activities.MainActivity;
+import com.rtweel.fragments.TimelineFragment;
 import com.rtweel.tweet.Timeline;
 
 public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 
-	private MainActivity mActivity;
+	private TimelineFragment mFragment;
 
 	private Timeline mTimeline;
 
-	public LoadTimelineTask(MainActivity mainActivity) {
-		mActivity = mainActivity;
+	public LoadTimelineTask(TimelineFragment fragment) {
+		mFragment = fragment;
 	}
 
 	@Override
@@ -36,13 +37,13 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 
 		if (mTimeline.getTweets().isEmpty()) {
 			Log.i("DEBUG", "OnPostExecute loadtimeline NO NETWORK");
-			Toast.makeText(mActivity,
+			Toast.makeText(mFragment.getActivity(),
 					"No network connection, couldn't load tweets!",
 					Toast.LENGTH_LONG).show();
 		} else {
-			mActivity.getAdapter().notifyDataSetChanged();
+			mFragment.getAdapter().notifyDataSetChanged();
 
-			mActivity.crossfade();
+			mFragment.crossfade();
 		}
 	}
 }

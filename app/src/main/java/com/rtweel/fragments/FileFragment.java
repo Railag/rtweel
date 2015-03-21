@@ -1,4 +1,21 @@
-package com.rtweel.filechooser;
+package com.rtweel.fragments;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import com.rtweel.R;
+import com.rtweel.cache.App;
+import com.rtweel.constant.Extras;
+import com.rtweel.filechooser.FileAdapter;
+import com.rtweel.filechooser.Line;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,34 +26,34 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.app.ListActivity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
-
-import com.rtweel.R;
-import com.rtweel.cache.App;
-import com.rtweel.constant.Extras;
-
-public class FileActivity extends ListActivity {
-
+/**
+ * Created by root on 22.3.15.
+ */
+public class FileFragment extends BaseFragment {
     private File mCurrentPath;
 
     private FileAdapter mAdapter;
 
+    private ListView list;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
         mCurrentPath = Environment.getExternalStorageDirectory();
         initialize(mCurrentPath);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_file, null);
+        list = (ListView) v.findViewById(R.id.file_list);
+        return v;
+    }
+
     private void initialize(File startPath) {
         File[] paths = startPath.listFiles();
-        this.setTitle("Current Dir: " + startPath.getName());
+        getActionBar().setTitle("Current Dir: " + startPath.getName());
         List<Line> pathList = new ArrayList<Line>();
         List<Line> fileList = new ArrayList<Line>();
         try {
@@ -65,21 +82,23 @@ public class FileActivity extends ListActivity {
             pathList.add(0,
                     new Line("..", "Parent Directory", startPath.getParent()));
         }
-        mAdapter = new FileAdapter(FileActivity.this, R.layout.file, pathList);
-        this.setListAdapter(mAdapter);
-    }
+        mAdapter = new FileAdapter(getActivity(), R.layout.file, pathList);
+        list.setAdapter(mAdapter);
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Line line = mAdapter.getItem(position);
-        if (line.getData().equalsIgnoreCase("folder")
-                || line.getData().equalsIgnoreCase("parent directory")) {
-            mCurrentPath = new File(line.getPath());
-            initialize(mCurrentPath);
-        } else {
-            onFileClick(line);
-        }
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Line line = mAdapter.getItem(position);
+                if (line.getData().equalsIgnoreCase("folder")
+                        || line.getData().equalsIgnoreCase("parent directory")) {
+                    mCurrentPath = new File(line.getPath());
+                    initialize(mCurrentPath);
+                } else {
+                    onFileClick(line);
+                }
+
+            }
+        });
 
     }
 
@@ -124,7 +143,8 @@ public class FileActivity extends ListActivity {
 
         Intent data = new Intent();
         data.putExtra(Extras.FILE_URI, line.getPath());
-        setResult(RESULT_OK, data);
-        finish();
+        // setResult(RESULT_OK, data);
+        // finish();
+        back();
     }
 }

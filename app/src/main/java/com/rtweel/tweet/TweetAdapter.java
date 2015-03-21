@@ -31,8 +31,6 @@ public class TweetAdapter extends BaseAdapter {
 
     private static ArrayList<String> sLoadedUris = new ArrayList<String>();
 
-    boolean mIsMediaAvailable;
-
     public TweetAdapter(List<Status> data, Context context) {
         this.mData = data;
         this.mContext = context;
@@ -103,7 +101,7 @@ public class TweetAdapter extends BaseAdapter {
 
         if (!TextUtils.isEmpty(vh.getUrl())) {
             Picasso.with(mContext).load(url)
-                    .placeholder(R.drawable.placeholder).into(vh.getMediaView());
+                    .placeholder(R.drawable.placeholder).resize(200, 200).into(vh.getMediaView());
         }
 
         String imageUri = tweet.getUser().getProfileImageURL();

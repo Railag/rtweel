@@ -1,27 +1,22 @@
 package com.rtweel.asynctasks.tweet;
 
-import twitter4j.TwitterException;
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 
-import com.rtweel.activities.DetailActivity;
-import com.rtweel.activities.MainActivity;
+import com.rtweel.fragments.BaseFragment;
+import com.rtweel.fragments.DetailFragment;
+import com.rtweel.fragments.TimelineFragment;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.tweet.Timeline;
 
+import twitter4j.TwitterException;
+
 public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
 
-	public static final int MAIN = 1;
-	public static final int DETAIL = 2;
-
-	private final Context mContext;
-	private final int mActivityType;
+	private final BaseFragment mFragment;
 	private final int mPosition;
 
-	public DeleteTweetTask(Context context, int type, int position) {
-		mContext = context;
-		mActivityType = type;
+	public DeleteTweetTask(BaseFragment fragment, int position) {
+		mFragment = fragment;
 		mPosition = position;
 	}
 
@@ -39,32 +34,23 @@ public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
 	@Override
 	protected void onPostExecute(Long result) {
 		super.onPostExecute(result);
-		if (mActivityType == DETAIL) {
-			DetailActivity detailActivity = (DetailActivity) mContext;
-			detailActivity.getContentResolver().delete(
-					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-					TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "="
-							+ String.valueOf(result), null);
-			detailActivity.getContentResolver().delete(
-					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-					TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "="
-							+ String.valueOf(result), null);
-			Timeline.getDefaultTimeline().remove(mPosition);
-			detailActivity.setResult(Activity.RESULT_OK);
 
-			detailActivity.finish();
-		} else if (mActivityType == MAIN) {
-			MainActivity mainActivity = (MainActivity) mContext;
-			mainActivity.getContentResolver().delete(
-					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-					TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "="
-							+ String.valueOf(result), null);
-			mainActivity.getContentResolver().delete(
-					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-					TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "="
-							+ String.valueOf(result), null);
-			Timeline.getDefaultTimeline().remove(mPosition);
-			mainActivity.getAdapter().notifyDataSetChanged();
+        mFragment.getActivity().getContentResolver().delete(
+                TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "="
+                        + String.valueOf(result), null);
+        mFragment.getActivity().getContentResolver().delete(
+                TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "="
+                        + String.valueOf(result), null);
+        Timeline.getDefaultTimeline().remove(mPosition);
+
+		if (mFragment instanceof DetailFragment) {
+		//	detailFragment.setResult(Activity.RESULT_OK);
+			mFragment.getMainActivity().setMainFragment(new TimelineFragment());
+		} else if (mFragment instanceof TimelineFragment) {
+			TimelineFragment timelineFragment = (TimelineFragment) mFragment;
+			timelineFragment.getAdapter().notifyDataSetChanged();
 		}
 
 	}

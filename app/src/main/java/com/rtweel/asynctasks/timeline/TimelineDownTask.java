@@ -7,14 +7,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.rtweel.activities.MainActivity;
+import com.rtweel.fragments.TimelineFragment;
 import com.rtweel.tweet.Timeline;
 
 public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 
-	private MainActivity mActivity;
+	private TimelineFragment mFragment;
 
-	public TimelineDownTask(MainActivity mainActivity) {
-		mActivity = mainActivity;
+	public TimelineDownTask(TimelineFragment fragment) {
+		mFragment = fragment;
 	}
 
 	@Override
@@ -44,15 +45,15 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 	@Override
 	protected void onPostExecute(Integer result) {
 
-		mActivity.getAdapter().notifyDataSetChanged();
+		mFragment.getAdapter().notifyDataSetChanged();
 
 		// mActivity.crossfade();
 
 		if (result != 0) {
-			Toast.makeText(mActivity, "New tweets: " + result,
+			Toast.makeText(mFragment.getActivity(), "New tweets: " + result,
 					Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(mActivity, "No new tweets", Toast.LENGTH_LONG)
+			Toast.makeText(mFragment.getActivity(), "No new tweets", Toast.LENGTH_LONG)
 					.show();
 		}
 	}

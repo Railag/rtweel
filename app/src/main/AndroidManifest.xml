@@ -28,37 +28,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="image/*" />
 
                 <data
                     android:host="rtweel.com"
                     android:scheme="oauth" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.rtweel.activities.DetailActivity"
-            android:label="@string/title_activity_detail"
-            android:theme="@style/Theme.AppCompat.Light" />
-        <activity
-            android:name="com.rtweel.activities.SendTweetActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.rtweel.filechooser.FileActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name="com.rtweel.settings.SettingActivity"
             android:label="@string/settings"

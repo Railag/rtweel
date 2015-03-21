@@ -3,6 +3,7 @@ package com.rtweel.asynctasks.timeline;
 import java.util.List;
 
 import com.rtweel.activities.MainActivity;
+import com.rtweel.fragments.TimelineFragment;
 import com.rtweel.tweet.Timeline;
 
 import android.os.AsyncTask;
@@ -11,10 +12,10 @@ import android.widget.Toast;
 
 public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 
-	private MainActivity mActivity;
+	private TimelineFragment mFragment;
 
-	public TimelineUpTask(MainActivity mainActivity) {
-		mActivity = mainActivity;
+	public TimelineUpTask(TimelineFragment fragment) {
+		mFragment = fragment;
 	}
 
 	@Override
@@ -43,22 +44,22 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 
 	@Override
 	protected void onPostExecute(Integer result) {
-		mActivity.getAdapter().notifyDataSetChanged();
+		mFragment.getAdapter().notifyDataSetChanged();
 		// adapter.notifyDataSetInvalidated();
 		// mActivity.crossfade();
 		// Toast.makeText(mActivity, "Finished", Toast.LENGTH_LONG).show();
 
 		if (result == 0) {
-			Toast.makeText(mActivity, "No new tweets", Toast.LENGTH_LONG)
+			Toast.makeText(mFragment.getActivity(), "No new tweets", Toast.LENGTH_LONG)
 					.show();
 
 		} else {
 			if (result < (100 - 3)) {
-				Toast.makeText(mActivity, "New tweets: " + result,
+				Toast.makeText(mFragment.getActivity(), "New tweets: " + result,
 						Toast.LENGTH_LONG).show();
 			} else {
 				Toast.makeText(
-						mActivity,
+						mFragment.getActivity(),
 						"New tweets: "
 								+ result
 								+ "\n There are unloaded new tweets, you can make right swipe one more time",

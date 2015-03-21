@@ -1,28 +1,26 @@
 package com.rtweel.asynctasks.tweet;
 
-import twitter4j.TwitterException;
-
-import com.rtweel.activities.DetailActivity;
-import com.rtweel.tweet.Timeline;
-
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rtweel.fragments.DetailFragment;
+import com.rtweel.tweet.Timeline;
+
+import twitter4j.TwitterException;
+
 public class FavoriteTask extends AsyncTask<Long, Void, Void> {
 
-	private final Context mContext;
+	private final DetailFragment mFragment;
 	private final ImageView mFavoriteButton;
     private final TextView mCountView;
 	private Boolean mIsFavorited;
 
-	public FavoriteTask(Context context, ImageView button, TextView countView, Boolean isFavorited) {
-		mContext = context;
+	public FavoriteTask(DetailFragment fragment, ImageView button, TextView countView, Boolean isFavorited) {
+		mFragment = fragment;
 		mFavoriteButton = button;
         mCountView = countView;
 		mIsFavorited = isFavorited;
@@ -46,20 +44,19 @@ public class FavoriteTask extends AsyncTask<Long, Void, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
 		super.onPostExecute(result);
-		DetailActivity detailActivity = (DetailActivity) mContext;
-		detailActivity.changeIsFavorited();
+		mFragment.changeIsFavorited();
 		mIsFavorited = !mIsFavorited;
 		if (mIsFavorited) {
             mFavoriteButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
 			mCountView.setText(String.valueOf(Long
 					.valueOf((String) mCountView.getText()) + 1));
-			Toast.makeText(mContext, "Added to favorites", Toast.LENGTH_LONG)
+			Toast.makeText(mFragment.getActivity(), "Added to favorites", Toast.LENGTH_LONG)
 					.show();
 		} else {
             mFavoriteButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
 			mCountView.setText(String.valueOf(Long
 					.valueOf((String) mCountView.getText()) - 1));
-			Toast.makeText(mContext, "Removed from favorites",
+			Toast.makeText(mFragment.getActivity(), "Removed from favorites",
 					Toast.LENGTH_LONG).show();
 		}
 	}

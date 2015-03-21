@@ -31,8 +31,7 @@ public class FileAdapter extends ArrayAdapter<Line> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		if (convertView == null) {
-			LayoutInflater layoutInflater = (LayoutInflater) mContext
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater layoutInflater = LayoutInflater.from(mContext);
 			convertView = layoutInflater.inflate(mId, null);
 		}
 
