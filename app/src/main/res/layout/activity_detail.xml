@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:text="Some author name here"/>
 
         <TextView
             android:id="@+id/detail_date"
@@ -34,7 +35,8 @@
             android:layout_height="58dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:text="03/10/2010 \n10:55"/>
 
         <TextView
             android:id="@+id/detail_text"
@@ -48,7 +50,8 @@
             android:gravity="fill_horizontal"
             android:orientation="horizontal"
             android:textColor="#008080"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:text="Some 140 symbols text here right now appearing immediately on my screen for some strange tests after READY! STEADY! GO! still need some more"/>
 
         <ImageView
             android:id="@+id/detail_retweet_button"

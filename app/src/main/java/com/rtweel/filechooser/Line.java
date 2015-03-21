@@ -1,5 +1,7 @@
 package com.rtweel.filechooser;
 
+import android.support.annotation.NonNull;
+
 import java.util.Locale;
 
 public class Line implements Comparable<Line> {
@@ -26,7 +28,7 @@ public class Line implements Comparable<Line> {
 	}
 
 	@Override
-	public int compareTo(Line line) {
+	public int compareTo(@NonNull Line line) {
 		if (this.mName != null)
 			return this.mName.toLowerCase(Locale.getDefault()).compareTo(
 					line.getName().toLowerCase(Locale.getDefault()));

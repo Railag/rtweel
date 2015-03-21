@@ -29,25 +29,25 @@ public class FileAdapter extends ArrayAdapter<Line> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = convertView;
-		if (v == null) {
-			
-			LayoutInflater vi = (LayoutInflater) mContext
+
+		if (convertView == null) {
+			LayoutInflater layoutInflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(mId, null);
+			convertView = layoutInflater.inflate(mId, null);
 		}
-		final Line o = mList.get(position);
-		if (o != null) {
-			TextView t1 = (TextView) v.findViewById(R.id.TextView01);
-			TextView t2 = (TextView) v.findViewById(R.id.TextView02);
 
-			if (t1 != null)
-				t1.setText(o.getName());
-			if (t2 != null)
-				t2.setText(o.getData());
+		final Line line = mList.get(position);
+		if (line != null) {
+			TextView fileName = (TextView) convertView.findViewById(R.id.file_name);
+			TextView fileClass = (TextView) convertView.findViewById(R.id.file_class);
+
+			if (fileName != null)
+				fileName.setText(line.getName());
+			if (fileClass != null)
+				fileClass.setText(line.getData());
 
 		}
-		return v;
+		return convertView;
 	}
 
 }
