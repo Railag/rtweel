@@ -37,9 +37,9 @@ TODO:
 - ~~localization (EN/RU)~~
 - File choosing section improvements
 - Update token exception fix
-- Round image views for profile images
+- ~~Round image views for profile images~~
 - All media resources processing in detail screen
-- Changing activity structure to fully fragments based
+- ~~Changing activity structure to fully fragments based~~
 - Improving app behavior with bad connections
 - Improving timeline system
 - Replacing rotate animation with something more smoother
