@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.R;
 import com.rtweel.parsers.DateParser;
@@ -88,7 +89,7 @@ public class TweetAdapter extends BaseAdapter {
                     .findViewById(R.id.tweet_author);
             TextView date = (TextView) convertView
                     .findViewById(R.id.tweet_date);
-            ImageView picture = (ImageView) convertView
+            RoundedImageView picture = (RoundedImageView) convertView
                     .findViewById(R.id.tweet_author_picture);
 
             ImageView media = (ImageView) convertView.findViewById(R.id.tweet_media);
@@ -102,16 +103,16 @@ public class TweetAdapter extends BaseAdapter {
         ViewHolder vh = (ViewHolder) convertView.getTag();
 
 
-        if (!TextUtils.isEmpty(vh.getUrl())) {
+      //  if (!TextUtils.isEmpty(vh.getUrl())) {
             Picasso.with(mContext).load(url)
                     .placeholder(R.drawable.placeholder).resize(200, 200).into(vh.getMediaView());
-        }
+      //  }
 
         String imageUri = tweet.getUser().getProfileImageURL();
 
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(Color.BLACK)
-                .borderWidthDp(2)
+                .borderWidthDp(1)
                 .cornerRadiusDp(30)
                 .oval(false)
                 .build();
@@ -121,7 +122,7 @@ public class TweetAdapter extends BaseAdapter {
 
         vh.getAuthorView().setText(tweet.getUser().getName());
 
-        //vh.getTextView().setText(tweet.getText().replace('\n', ' '));
+        vh.getTextView().setText(tweet.getText().replace("\\n", "\n"));
         vh.getTextView().setText(tweet.getText());
 
         String date = DateParser.parse(tweet.getCreatedAt().toString());
@@ -135,12 +136,12 @@ public class TweetAdapter extends BaseAdapter {
         private final TextView mAuthorView;
         private final TextView mTextView;
         private final TextView mDateView;
-        private final ImageView mPictureView;
+        private final RoundedImageView mPictureView;
         private final ImageView mMediaView;
         private final String mUrl;
 
         public ViewHolder(TextView user, TextView text, TextView date,
-                          ImageView picture, ImageView media, String url) {
+                          RoundedImageView picture, ImageView media, String url) {
             this.mAuthorView = user;
             this.mTextView = text;
             this.mDateView = date;

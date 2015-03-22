@@ -252,7 +252,7 @@ public class Timeline implements Iterable<Status> {
 				try {
 					StringBuilder builder = new StringBuilder();
 					builder.append("{text='");
-					builder.append(text);
+					builder.append(text.replace("\n", "\\n"));
 					builder.append("', id='");
 					builder.append(id);
 					builder.append("', created_at='");

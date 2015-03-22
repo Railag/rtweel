@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/tweet_author_picture"
             android:layout_width="32dp"
             android:layout_height="32dp"
