@@ -51,7 +51,7 @@ public class LoginFragment extends BaseFragment {
             startLoading(getResources().getString(R.string.authorization));
 
             try {
-                Uri uri = getActivity().getIntent().getData();///////////////////////////////////////////////////////////////////////////////
+                Uri uri = getActivity().getIntent().getData();
                 if (uri != null
                         && uri.toString().startsWith(
                         ConstantValues.TWITTER_CALLBACK_URL)) {

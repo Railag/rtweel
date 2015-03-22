@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="green_progress" type="color">#56d2c2</item>
+    <item name="light_gray_progress" type="color">#757575</item>
+</resources>

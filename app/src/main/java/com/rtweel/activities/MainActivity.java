@@ -105,8 +105,8 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 //        else if (requestCode == REQUEST_FILE_SELECT) {
 //            if (resultCode == RESULT_OK) {
@@ -122,8 +122,8 @@ public class MainActivity extends ActionBarActivity {
 //                        Toast.LENGTH_LONG).show();
 //            }
 //        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     public void onBackPressed() {

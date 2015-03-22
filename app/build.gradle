@@ -16,6 +16,7 @@ android {
         compile 'com.nineoldandroids:library:2.4.0'
         compile 'com.squareup.picasso:picasso:2.5.0'
         compile 'com.makeramen:roundedimageview:2.0.0'
+        compile 'com.akexorcist:RoundCornerProgressBar:1.1.0'
     }
 
     buildTypes {

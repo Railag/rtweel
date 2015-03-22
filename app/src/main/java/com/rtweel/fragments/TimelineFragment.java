@@ -78,7 +78,7 @@ public class TimelineFragment extends BaseFragment {
 
         Log.i("DEBUG", "Initializing...");
 
-        mTimeline = new Timeline(getActivity());
+        mTimeline = new Timeline(getActivity().getApplicationContext());
 
         Timeline.setDefaultTimeline(mTimeline);
 

@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.roundcornerprogressbar.IconRoundCornerProgressBar;
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.rtweel.R;
 import com.rtweel.activities.MainActivity;
 import com.rtweel.asynctasks.tweet.TwitterSendTweetTask;
@@ -47,24 +49,35 @@ public class SendTweetFragment extends BaseFragment {
 
     public final static String SAVE_TWEET_ENTRY = "save_tweet_entry";
     public final static String SAVE_TWEET_ENTRY_COUNTER = "save_tweet_entry_counter";
+    public final static String SAVE_TWEET_PROGRESS = "save_tweet_progress";
 
     private EditText mTweetEntry;
     private TextView mTweetLengthCounter;
     private ImageView mTweetPicture;
     private Button mGetPictureButton;
     private Button mFileSelectButton;
+    private RoundCornerProgressBar mTweetProgress;
 
     private boolean mIsValidTweetSize = true;
 
     private Bundle mSavedInstanceState = null;
+
+    private int mCurrentMax = 140;
 
 
     @Override
     public void onStart() {
         super.onStart();
 
-        mTweetLengthCounter.setBackgroundColor(Color.GREEN);
-        mTweetLengthCounter.setText("0/140");
+        mTweetProgress.setProgressColor(getResources().getColor(R.color.green_progress));
+        mTweetProgress.setBackgroundColor(getResources().getColor(R.color.light_gray_progress));
+
+//        mTweetProgress.setHeaderColor(Color.parseColor("#38c0ae"));
+        mTweetProgress.setMax(mCurrentMax);
+        int charsCount = mTweetEntry.getText().length();
+        mTweetProgress.setProgress(charsCount);
+        mTweetLengthCounter.setText(charsCount + "/" + mCurrentMax);
+//        mTweetProgress.setIconImageDrawable(getResources().getDrawable(R.drawable.rtweel));
 
 
         mTweetEntry.addTextChangedListener(new TextWatcher() {
@@ -74,12 +87,13 @@ public class SendTweetFragment extends BaseFragment {
                                       int count) {
                 if (!"".equals(s)) {
                     mTweetLengthCounter.setText(s.length() + "/140");
-                    if (s.length() > 140) {
-                        mTweetLengthCounter.setBackgroundColor(Color.RED);
+                    mTweetProgress.setProgress(s.length());
+                    if (s.length() > mCurrentMax) {
+                        mTweetProgress.setProgressColor(Color.RED);
                         mIsValidTweetSize = false;
                     } else {
-                        mTweetLengthCounter.setBackgroundColor(Color.GREEN);
                         mIsValidTweetSize = true;
+                        mTweetProgress.setProgressColor(getResources().getColor(R.color.green_progress));
                     }
                 }
 
@@ -128,7 +142,9 @@ public class SendTweetFragment extends BaseFragment {
             mTweetEntry.setText(mSavedInstanceState.getString(SAVE_TWEET_ENTRY));
             mTweetLengthCounter.setText(mSavedInstanceState
                     .getString(SAVE_TWEET_ENTRY_COUNTER));
+            mTweetProgress.setProgress(mSavedInstanceState.getFloat(SAVE_TWEET_PROGRESS));
         }
+
         if (getActivity().getIntent().getAction() != null) {
             if (getActivity().getIntent().getAction().equals(Intent.ACTION_SEND)) {
                 Intent data = getActivity().getIntent();
@@ -247,6 +263,7 @@ public class SendTweetFragment extends BaseFragment {
         mTweetPicture = (ImageView) v.findViewById(R.id.tweet_photo_imageview);
         mGetPictureButton = (Button) v.findViewById(R.id.tweet_add_photo_button);
         mFileSelectButton = (Button) v.findViewById(R.id.tweet_send_file_choose_button);
+        mTweetProgress = (RoundCornerProgressBar) v.findViewById(R.id.tweet_progress);
 
         return v;
 
@@ -263,6 +280,8 @@ public class SendTweetFragment extends BaseFragment {
         outState.putString(SAVE_TWEET_ENTRY, mTweetEntry.getText().toString());
         outState.putString(SAVE_TWEET_ENTRY_COUNTER, mTweetLengthCounter
                 .getText().toString());
+        outState.putFloat(SAVE_TWEET_PROGRESS, mTweetProgress.getProgress());
+        outState.putFloat(SAVE_TWEET_PROGRESS, mTweetProgress.getProgress());
         super.onSaveInstanceState(outState);
     }
 
@@ -275,6 +294,7 @@ public class SendTweetFragment extends BaseFragment {
                         + App.PHOTO_PATH
                         + ".jpg");
                 setImage(bitmap);
+                mCurrentMax = 117;
             }
 
         } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -283,5 +303,13 @@ public class SendTweetFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        File file = new File(Environment.getExternalStorageDirectory()
+                + App.PHOTO_PATH + ".jpg");
+        if(file.exists())
+            file.delete();
+        super.onDestroy();
+    }
 }
 

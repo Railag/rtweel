@@ -1,40 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/lib/rtweel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="15dp">
 
     <EditText
         android:id="@+id/tweet_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="@string/tweet_send_hint"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"
+        android:layout_below="@+id/tweet_progress"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="23dp" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/tweet_progress"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        app:backgroundPadding="5dp"
+        android:layout_below="@+id/tweet_input_counter"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/tweet_input_counter"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        android:gravity="center_horizontal"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="27dp"
-        android:layout_marginLeft="27dp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"/>
 
     <Button
         android:id="@+id/tweet_add_photo_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_alignStart="@+id/tweet_input_counter"
-        android:layout_alignLeft="@+id/tweet_input_counter"
-        android:layout_below="@+id/tweet_input"
         android:layout_marginTop="32dp"
         android:background="@drawable/camera"
-        />
+        android:layout_marginLeft="48dp"
+        android:layout_marginStart="48dp"
+        android:layout_below="@+id/tweet_input"
+        android:layout_alignLeft="@+id/tweet_input"
+        android:layout_alignStart="@+id/tweet_input" />
 
     <ImageView
         android:id="@+id/tweet_photo_imageview"
@@ -53,7 +65,9 @@
         android:layout_height="60dp"
         android:background="@drawable/file"
         android:layout_alignTop="@+id/tweet_add_photo_button"
-        android:layout_toRightOf="@+id/tweet_photo_imageview"
-        android:layout_toEndOf="@+id/tweet_photo_imageview" />
+        android:layout_alignRight="@+id/tweet_input"
+        android:layout_alignEnd="@+id/tweet_input"
+        android:layout_marginRight="89dp"
+        android:layout_marginEnd="89dp" />
 
 </RelativeLayout>
