@@ -79,17 +79,15 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mFragmentManager = getFragmentManager();
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-        mFragmentManager = getFragmentManager();
 
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
         setMainFragment(new LoginFragment());
 
-        getSupportActionBar().hide();
     }
 
     public void setMainFragment(final BaseFragment fragment) {
@@ -127,14 +125,14 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if(mCurrentFragment.isLoading())
-            mCurrentFragment.stopLoading();
-        else {
+//        if(mCurrentFragment.isLoading())
+//            mCurrentFragment.stopLoading();
+//        else {
             if(mFragmentManager.getBackStackEntryCount() == 1)
                 super.onBackPressed();
             else
                 mFragmentManager.popBackStackImmediate();
-        }
+//        }
     }
 
     public ProgressBar getLoadingBar() {

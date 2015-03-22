@@ -113,9 +113,7 @@ public class TimelineFragment extends BaseFragment {
 
         list.setOnTouchListener(new View.OnTouchListener() {
 
-            float x1
-                    ,
-                    x2;
+            float x1, x2;
 
             @SuppressLint("ClickableViewAccessibility")
             @Override

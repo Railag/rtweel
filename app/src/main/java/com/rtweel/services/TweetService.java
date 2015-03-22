@@ -112,7 +112,7 @@ public class TweetService extends IntentService {
 				String author = cursor.getString(cursor
 						.getColumnIndex(projection[0]));
 				String text = cursor.getString(cursor
-						.getColumnIndex(projection[1]));
+						.getColumnIndex(projection[1])).replace("\\n", "\n");
 				String pictureUrl = cursor.getString(cursor
 						.getColumnIndex(projection[2]));
 				String date = cursor.getString(cursor

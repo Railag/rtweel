@@ -36,12 +36,12 @@
         android:layout_marginTop="16dp"
         android:textSize="18sp"/>
 
-    <Button
+    <ImageView
         android:id="@+id/tweet_add_photo_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="32dp"
-        android:background="@drawable/camera"
+        android:src="@drawable/camera"
         android:layout_marginLeft="48dp"
         android:layout_marginStart="48dp"
         android:layout_below="@+id/tweet_input"
@@ -59,11 +59,11 @@
         android:contentDescription="@string/hint_text"
         android:src="@drawable/abc_ab_share_pack_holo_dark" />
 
-    <Button
+    <ImageView
         android:id="@+id/tweet_send_file_choose_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/file"
+        android:src="@drawable/file"
         android:layout_alignTop="@+id/tweet_add_photo_button"
         android:layout_alignRight="@+id/tweet_input"
         android:layout_alignEnd="@+id/tweet_input"

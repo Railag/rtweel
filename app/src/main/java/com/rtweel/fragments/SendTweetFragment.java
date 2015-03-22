@@ -54,8 +54,8 @@ public class SendTweetFragment extends BaseFragment {
     private EditText mTweetEntry;
     private TextView mTweetLengthCounter;
     private ImageView mTweetPicture;
-    private Button mGetPictureButton;
-    private Button mFileSelectButton;
+    private ImageView mGetPictureButton;
+    private ImageView mFileSelectButton;
     private RoundCornerProgressBar mTweetProgress;
 
     private boolean mIsValidTweetSize = true;
@@ -261,8 +261,8 @@ public class SendTweetFragment extends BaseFragment {
         mTweetEntry = (EditText) v.findViewById(R.id.tweet_input);
         mTweetLengthCounter = (TextView) v.findViewById(R.id.tweet_input_counter);
         mTweetPicture = (ImageView) v.findViewById(R.id.tweet_photo_imageview);
-        mGetPictureButton = (Button) v.findViewById(R.id.tweet_add_photo_button);
-        mFileSelectButton = (Button) v.findViewById(R.id.tweet_send_file_choose_button);
+        mGetPictureButton = (ImageView) v.findViewById(R.id.tweet_add_photo_button);
+        mFileSelectButton = (ImageView) v.findViewById(R.id.tweet_send_file_choose_button);
         mTweetProgress = (RoundCornerProgressBar) v.findViewById(R.id.tweet_progress);
 
         return v;

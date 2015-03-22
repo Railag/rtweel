@@ -43,7 +43,6 @@ public class LoginFragment extends BaseFragment {
     }
 
     private boolean loginCheck() {
-        getActionBar().setDisplayShowTitleEnabled(false);
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getActivity());
         if (!sharedPreferences.getBoolean(
