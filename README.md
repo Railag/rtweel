@@ -43,6 +43,7 @@ TODO:
 - Improving app behavior with bad connections
 - Improving timeline system
 - Replacing rotate animation with something more smoother
+- Replacing standard menu with nav drawer one
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/com.rtweel.twitteroauth/ConstantValues.java class.
 
