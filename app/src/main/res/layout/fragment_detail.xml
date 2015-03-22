@@ -107,9 +107,11 @@
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/detail_favorited_button"
             android:layout_toRightOf="@+id/detail_favorited_button"
-            android:src="@drawable/delete" />
+            android:src="@drawable/delete"
+            android:contentDescription="@string/delete_button"/>
 
-        <ImageView
+
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/detail_profile_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -118,7 +120,6 @@
             android:layout_below="@+id/detail_name"
             android:layout_marginTop="5dp"
             android:contentDescription="@string/content_description" />
-
     </RelativeLayout>
 
 </ScrollView>

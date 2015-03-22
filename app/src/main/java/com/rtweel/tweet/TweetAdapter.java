@@ -8,6 +8,7 @@ import twitter4j.Status;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,9 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.R;
 import com.rtweel.parsers.DateParser;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 public class TweetAdapter extends BaseAdapter {
 
@@ -106,8 +109,15 @@ public class TweetAdapter extends BaseAdapter {
 
         String imageUri = tweet.getUser().getProfileImageURL();
 
+        Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(Color.BLACK)
+                .borderWidthDp(2)
+                .cornerRadiusDp(30)
+                .oval(false)
+                .build();
+
         Picasso.with(mContext).load(imageUri)
-                .placeholder(R.drawable.placeholder).into(vh.getPictureView());
+                .placeholder(R.drawable.placeholder).transform(transformation).into(vh.getPictureView());
 
         vh.getAuthorView().setText(tweet.getUser().getName());
 

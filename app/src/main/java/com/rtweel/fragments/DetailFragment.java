@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.R;
 import com.rtweel.asynctasks.tweet.DeleteTweetTask;
 import com.rtweel.asynctasks.tweet.FavoriteTask;
@@ -26,6 +28,7 @@ import com.rtweel.constant.Extras;
 import com.rtweel.parsers.DateParser;
 import com.rtweel.tweet.Timeline;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.apache.http.protocol.HTTP;
 
@@ -55,7 +58,7 @@ public class DetailFragment extends BaseFragment {
     private ImageView deleteButton;
     private TextView retweetsCountView;
     private TextView favsCountView;
-    private ImageView profilePictureView;
+    private RoundedImageView profilePictureView;
 
     @Nullable
     @Override
@@ -75,7 +78,7 @@ public class DetailFragment extends BaseFragment {
         deleteButton = (ImageView) v.findViewById(R.id.detail_delete);
         retweetsCountView = (TextView) v.findViewById(R.id.detail_retweet_count);
         favsCountView = (TextView) v.findViewById(R.id.detail_favorited_count);
-        profilePictureView = (ImageView) v.findViewById(R.id.detail_profile_picture);
+        profilePictureView = (RoundedImageView) v.findViewById(R.id.detail_profile_picture);
     }
 
     @Override
@@ -135,7 +138,14 @@ public class DetailFragment extends BaseFragment {
                 favsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
             }
 
-            Picasso.with(getActivity()).load(imageUri).into(profilePictureView);
+            Transformation transformation = new RoundedTransformationBuilder()
+                    .borderColor(Color.BLACK)
+                    .borderWidthDp(3)
+                    .cornerRadiusDp(30)
+                    .oval(false)
+                    .build();
+
+            Picasso.with(getActivity()).load(imageUri).transform(transformation).into(profilePictureView);
 
             nameView.setText(name);
             textView.setText(text);
