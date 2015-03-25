@@ -24,6 +24,9 @@ public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
 		public static final String COLUMN_MEDIA = "media";
 	}
 
+    public final static String SELECTION_ASC = " ASC ";
+    public final static String SELECTION_DESC = " DESC ";
+
 	private static final String DB_NAME = "tweets.db";
 	private static final int VERSION = 1;
 	private static final String CREATE_TABLE_HOME = "CREATE TABLE "

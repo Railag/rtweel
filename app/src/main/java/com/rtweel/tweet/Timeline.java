@@ -156,10 +156,13 @@ public class Timeline implements Iterable<Status> {
                 page.setPage(1);
                 break;
             case UP_TWEETS:
-                if (list.size() > 0)
+                    if(list == null || list.isEmpty())
+                        getLastTweetFromDb();
                     page.setSinceId(list.get(0).getId());
                 break;
             case DOWN_TWEETS:
+                if(list == null || list.isEmpty())
+                    getOldestTweetFromDb();
                 page.setMaxId(list.get(list.size() - 1).getId());
                 break;
         }
@@ -183,6 +186,110 @@ public class Timeline implements Iterable<Status> {
             }
         }
         return downloadedList;
+    }
+
+    private void getOldestTweetFromDb() {
+        String[] projection = { TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
+
+        ContentResolver resolver = mContext.getContentResolver();
+
+        Cursor cursor = null;
+        if (getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
+            cursor = resolver.query(
+                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
+                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_ASC + "LIMIT 1");
+        } else if (getCurrentTimelineType() == Timeline.USER_TIMELINE) {
+            cursor = resolver.query(
+                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
+                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_ASC + "LIMIT 1");
+        }
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String author = cursor.getString(cursor
+                        .getColumnIndex(projection[0]));
+                String text = cursor.getString(cursor
+                        .getColumnIndex(projection[1])).replace("\\n", "\n");
+                String pictureUrl = cursor.getString(cursor
+                        .getColumnIndex(projection[2]));
+                String date = cursor.getString(cursor
+                        .getColumnIndex(projection[3]));
+                long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
+
+                try {
+                    String creation = "{text='" + text + "', id='" + id
+                            + "', created_at='" + date
+                            + "',user={name='" + author
+                            + "', profile_image_url='" + pictureUrl + "'}}";
+                    Status insert = TwitterObjectFactory.createStatus(creation);
+                    getTweets().add(insert);
+                } catch (TwitterException e1) {
+                    e1.printStackTrace();
+                }
+                if(getAdapter() != null)
+                    getAdapter().notifyDataSetInvalidated();
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+
+    private void getLastTweetFromDb() {
+
+        String[] projection = { TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
+                TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
+
+        ContentResolver resolver = mContext.getContentResolver();
+
+        Cursor cursor = null;
+        if (getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
+            cursor = resolver.query(
+                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
+                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 1");
+        } else if (getCurrentTimelineType() == Timeline.USER_TIMELINE) {
+            cursor = resolver.query(
+                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
+                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 1");
+        }
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String author = cursor.getString(cursor
+                        .getColumnIndex(projection[0]));
+                String text = cursor.getString(cursor
+                        .getColumnIndex(projection[1])).replace("\\n", "\n");
+                String pictureUrl = cursor.getString(cursor
+                        .getColumnIndex(projection[2]));
+                String date = cursor.getString(cursor
+                        .getColumnIndex(projection[3]));
+                long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
+
+                try {
+                    String creation = "{text='" + text + "', id='" + id
+                            + "', created_at='" + date
+                            + "',user={name='" + author
+                            + "', profile_image_url='" + pictureUrl + "'}}";
+                    Status insert = TwitterObjectFactory.createStatus(creation);
+                    getTweets().add(insert);
+                } catch (TwitterException e1) {
+                    e1.printStackTrace();
+                }
+                if(getAdapter() != null)
+                    getAdapter().notifyDataSetInvalidated();
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     public Status get(int position) {
@@ -228,11 +335,11 @@ public class Timeline implements Iterable<Status> {
         if (mCurrentTimelineType == HOME_TIMELINE) {
             cursor = resolver.query(
                     TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-                    projection, null, null, "LIMIT 30");
+                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 30");
         } else if (mCurrentTimelineType == USER_TIMELINE) {
             cursor = resolver.query(
                     TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-                    projection, null, null, "LIMIT 30");
+                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 30");
         }
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -307,13 +414,13 @@ public class Timeline implements Iterable<Status> {
                     TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
                     projection, TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "<"
                             + list.get(list.size() - 1).getId(), null,
-                    "LIMIT 100");
+                    TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 100");
         } else if (mCurrentTimelineType == USER_TIMELINE) {
             cursor = resolver.query(
                     TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
                     projection, TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "<"
                             + list.get(list.size() - 1).getId(), null,
-                    "LIMIT 100");
+                    TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 100");
         }
         if (cursor != null) {
             result = cursor.getCount();
@@ -371,7 +478,7 @@ public class Timeline implements Iterable<Status> {
 
     // TODO: Implementation
     /*
-	 * public boolean searchCheckIsAvailable(String queryString) { Query query =
+     * public boolean searchCheckIsAvailable(String queryString) { Query query =
 	 * new Query(); query.setResultType(Query.RECENT);
 	 * query.setQuery(queryString); query.setCount(1);
 	 * query.setSinceId(list.get(0).getId());

@@ -85,15 +85,11 @@ public class TweetService extends IntentService {
 	}
 
 	private void loadFromDB() {
-		Log.i("DEBUG", "loading from DB started..");
-		Date time = new Date();
 		String[] projection = { TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
 				TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
-		//		TweetDatabaseOpenHelper.Tweets.COLUMN_RETWEET_COUNT,
-		//		TweetDatabaseOpenHelper.Tweets.COLUMN_FAVORITE_COUNT };
 
 		ContentResolver resolver = getContentResolver();
 
@@ -101,11 +97,11 @@ public class TweetService extends IntentService {
 		if (mTimeline.getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
 			cursor = resolver.query(
 					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-					projection, null, null, "LIMIT 1");
+					projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 1");
 		} else if (mTimeline.getCurrentTimelineType() == Timeline.USER_TIMELINE) {
 			cursor = resolver.query(
 					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-					projection, null, null, "LIMIT 1");
+					projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 1");
 		}
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
@@ -119,15 +115,9 @@ public class TweetService extends IntentService {
 						.getColumnIndex(projection[3]));
 				long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
 
-	//			long retweets = cursor.getInt(cursor
-	//					.getColumnIndex(projection[5]));
-	//			int favorites = cursor.getInt(cursor
-	//					.getColumnIndex(projection[6]));
-
 				try {
 					String creation = "{text='" + text + "', id='" + id
-							+ "', created_at='" + date //+ "', retweet_count='"
-		//					+ retweets + "', favorite_count='" + favorites
+							+ "', created_at='" + date
 							+ "',user={name='" + author
 							+ "', profile_image_url='" + pictureUrl + "'}}";
 					Status insert = TwitterObjectFactory.createStatus(creation);
@@ -138,15 +128,10 @@ public class TweetService extends IntentService {
                 if(mTimeline.getAdapter() != null)
                     mTimeline.getAdapter().notifyDataSetInvalidated();
 			}
-			// Timeline.setTweetsCount(Timeline.getTweetsCount()
-			// + mTimeline.getTweets().size());
+
 			if (cursor != null) {
 				cursor.close();
 			}
-			Date tmp = new Date();
-			Log.i("DEBUG",
-					"DB finished after " + (tmp.getTime() - time.getTime())
-							+ "ms");
 		}
 	}
 
