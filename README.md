@@ -45,6 +45,7 @@ TODO:
 - Replacing rotate animation with something more smoother
 - Replacing standard menu with nav drawer one
 - Add view pager for detail tweet scrolling
+- Replace main listview with recyclerview
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/com.rtweel.twitteroauth/ConstantValues.java class.
 
