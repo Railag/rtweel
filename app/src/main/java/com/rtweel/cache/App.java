@@ -10,12 +10,15 @@ import android.graphics.BitmapFactory.Options;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.rtweel.BuildConfig;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 
 public class App extends Application {
 
-	public static final String PATH = "/Android/data/com.rtweel/sp";
-	public static final String PHOTO_PATH = "/Android/data/com.rtweel/photo";
+
+    public static final String BUILD = BuildConfig.APPLICATION_ID;
+	public static final String PATH = "/Android/data/" + BUILD +"/sp";
+	public static final String PHOTO_PATH = "/Android/data/" + BUILD + "/photo";
 
 	private static DiskCache sDiskCache;
 

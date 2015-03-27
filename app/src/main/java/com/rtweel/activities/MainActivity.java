@@ -1,81 +1,41 @@
 package com.rtweel.activities;
 
-import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.view.ViewHelper;
 import com.rtweel.R;
-import com.rtweel.asynctasks.timeline.LoadTimelineTask;
-import com.rtweel.asynctasks.timeline.TimelineDownTask;
-import com.rtweel.asynctasks.timeline.TimelineUpTask;
-import com.rtweel.asynctasks.tweet.DeleteTweetTask;
-import com.rtweel.asynctasks.tweet.RefreshTweetTask;
-import com.rtweel.cache.App;
-import com.rtweel.constant.Extras;
-import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.LoginFragment;
+import com.rtweel.fragments.ProfileFragment;
 import com.rtweel.fragments.SendTweetFragment;
+import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.fragments.TimelineFragment;
-import com.rtweel.services.TweetService;
-import com.rtweel.settings.SettingActivity;
-import com.rtweel.sqlite.TweetDatabaseOpenHelper;
-import com.rtweel.tweet.Timeline;
-import com.rtweel.tweet.TweetAdapter;
-import com.rtweel.twitteroauth.ConstantValues;
-import com.rtweel.twitteroauth.TwitterGetAccessTokenTask;
-import com.rtweel.twitteroauth.TwitterUtil;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import twitter4j.Status;
-
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+import java.util.Arrays;
 
 public class MainActivity extends ActionBarActivity {
 
     private FragmentManager mFragmentManager;
 
-    private BaseFragment mCurrentFragment;
+    private Fragment mCurrentFragment;
 
     private ProgressBar mLoadingBar;
+
+    private DrawerLayout mDrawerLayout;
+
+    private ListView mDrawerList;
+
+    private ArrayList<String> mDrawerItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +44,47 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
+        initDrawer();
+
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
         setMainFragment(new LoginFragment());
 
     }
 
-    public void setMainFragment(final BaseFragment fragment) {
+    private void initDrawer() {
+        mDrawerItems = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.drawer_items)));
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_item, mDrawerItems));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch(position) {
+                    case 0:
+                        setMainFragment(new ProfileFragment());
+                        break;
+                    case 1:
+                        setMainFragment(new TimelineFragment());
+                        break;
+                    case 2:
+                        setMainFragment(new SendTweetFragment());
+                        break;
+                    case 3:
+                        setMainFragment(new SettingsFragment());
+                        break;
+                }
+
+                mDrawerLayout.closeDrawers();
+            }
+        });
+    }
+
+    public void setMainFragment(final Fragment fragment) {
 
         final FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
@@ -125,14 +119,10 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-//        if(mCurrentFragment.isLoading())
-//            mCurrentFragment.stopLoading();
-//        else {
             if(mFragmentManager.getBackStackEntryCount() == 1)
                 super.onBackPressed();
             else
                 mFragmentManager.popBackStackImmediate();
-//        }
     }
 
     public ProgressBar getLoadingBar() {

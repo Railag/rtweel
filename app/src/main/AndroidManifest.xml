@@ -48,10 +48,6 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:name="com.rtweel.settings.SettingActivity"
-            android:label="@string/settings"
-            android:theme="@style/Theme.AppCompat.Light" />
 
         <service
             android:name="com.rtweel.services.TweetService"

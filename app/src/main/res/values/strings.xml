@@ -39,5 +39,13 @@
     <string name="cd_retweet_btn">Retweet button</string>
     <string name="cd_fav_btn">Favorite button</string>
 
+        <!--nav drawer-->
+    <string-array name="drawer_items">
+        <item name="profile">Profile</item>
+        <item name="timeline">Timeline</item>
+        <item name="send_tweet">Send Tweet</item>
+        <item name="settings">Settings</item>
+    </string-array>
+
 
 </resources>

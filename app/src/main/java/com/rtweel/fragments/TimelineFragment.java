@@ -36,7 +36,6 @@ import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.asynctasks.tweet.RefreshTweetTask;
 import com.rtweel.cache.App;
 import com.rtweel.services.TweetService;
-import com.rtweel.settings.SettingActivity;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.tweet.Timeline;
 import com.rtweel.tweet.TweetAdapter;
@@ -283,11 +282,6 @@ public class TimelineFragment extends BaseFragment {
 
                 TwitterUtil.getInstance().reset();
                 getMainActivity().finish();
-                break;
-            }
-            case R.id.settings_button: {
-                Intent intent = new Intent(getMainActivity(), SettingActivity.class);
-                startActivity(intent);
                 break;
             }
         }

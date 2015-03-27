@@ -1,17 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.rtweel"
+        applicationId "com.firrael.rtweel"
         minSdkVersion 11
-        targetSdkVersion 21
+        targetSdkVersion 22
     }
 
     dependencies {
-        compile 'com.android.support:appcompat-v7:21.0.3'
+        compile 'com.android.support:appcompat-v7:22.0.0'
         compile 'org.twitter4j:twitter4j-core:4.0.2'
         compile 'com.nineoldandroids:library:2.4.0'
         compile 'com.squareup.picasso:picasso:2.5.0'
@@ -23,6 +23,13 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+
+    productFlavors {
+        dev {
+            applicationId "com.firrael.rtweel.dev"
+            versionName "0.29"
         }
     }
 }

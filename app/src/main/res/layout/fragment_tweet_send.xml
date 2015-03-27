@@ -52,12 +52,15 @@
         android:id="@+id/tweet_photo_imageview"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_alignStart="@+id/tweet_add_photo_button"
-        android:layout_alignLeft="@+id/tweet_add_photo_button"
-        android:layout_below="@+id/tweet_add_photo_button"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="28dp"
         android:contentDescription="@string/hint_text"
-        android:src="@drawable/abc_ab_share_pack_holo_dark" />
+        android:src="@drawable/image_border"
+        android:background="@android:color/black"
+
+        android:layout_below="@+id/tweet_add_photo_button"
+        android:layout_alignRight="@+id/tweet_send_file_choose_button"
+        android:layout_alignEnd="@+id/tweet_send_file_choose_button"
+        android:padding="3dp"/>
 
     <ImageView
         android:id="@+id/tweet_send_file_choose_button"
