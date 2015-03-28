@@ -100,8 +100,6 @@ public class TimelineFragment extends BaseFragment {
         // getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 
-        getActionBar().show();
-
         list = (ListView) v.findViewById(R.id.list);
 
         list.setDivider(getResources().getDrawable(android.R.drawable.divider_horizontal_textfield));

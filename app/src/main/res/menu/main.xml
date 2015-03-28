@@ -17,11 +17,6 @@
         android:orderInCategory="500"
         android:title="@string/switch_user_timeline"/>
     <item
-        android:id="@+id/settings_button"
-        ActionBar:showAsAction="never"
-        android:orderInCategory="600"
-        android:title="@string/settings"/>
-    <item
         android:id="@+id/logout_button"
         ActionBar:showAsAction="never"
         android:orderInCategory="1000"

@@ -84,7 +84,6 @@ public class DetailFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        getActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle start = getArguments();
         if(start != null) {

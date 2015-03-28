@@ -3,10 +3,16 @@ package com.rtweel.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -32,19 +38,28 @@ public class MainActivity extends ActionBarActivity {
     private ProgressBar mLoadingBar;
 
     private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
 
     private ListView mDrawerList;
 
     private ArrayList<String> mDrawerItems;
 
+    private Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         mFragmentManager = getFragmentManager();
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
+
         initDrawer();
+
+        initToolbar();
+
+        initToggle();
 
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
@@ -52,15 +67,59 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        mToolbar.setTitle("Home");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    private void initToggle() {
+        mToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                mToolbar,
+                R.string.drawer_open,
+                R.string.drawer_closed
+        ) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+            }
+
+        };
+
+
+
+        mDrawerLayout.setDrawerListener(mToggle);
+    }
+
     private void initDrawer() {
         mDrawerItems = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.drawer_items)));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        // Set the adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_item, mDrawerItems));
-        // Set the list's click listener
+
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -82,6 +141,7 @@ public class MainActivity extends ActionBarActivity {
                 mDrawerLayout.closeDrawers();
             }
         });
+
     }
 
     public void setMainFragment(final Fragment fragment) {
@@ -123,6 +183,18 @@ public class MainActivity extends ActionBarActivity {
                 super.onBackPressed();
             else
                 mFragmentManager.popBackStackImmediate();
+    }
+
+    @Override
+    public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+        mToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mToggle.onConfigurationChanged(newConfig);
     }
 
     public ProgressBar getLoadingBar() {

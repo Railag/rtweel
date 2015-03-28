@@ -5,6 +5,8 @@
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
+        <item name="windowActionBar">false</item>
+
         <!-- API 11 theme customizations can go here. -->
     </style>
 

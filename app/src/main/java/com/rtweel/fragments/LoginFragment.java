@@ -21,7 +21,6 @@ public class LoginFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
 
 		/*
          * Login Check
@@ -74,11 +73,6 @@ public class LoginFragment extends BaseFragment {
         } else {
             return true;
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.login, menu);
     }
 
     private void initialize() {

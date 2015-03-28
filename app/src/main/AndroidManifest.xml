@@ -21,7 +21,7 @@
         <activity
             android:name="com.rtweel.activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light" >
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
