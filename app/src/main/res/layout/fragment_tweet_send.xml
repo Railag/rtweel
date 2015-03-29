@@ -11,66 +11,72 @@
         android:id="@+id/tweet_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/tweet_send_hint"
-        android:inputType="textMultiLine"
-        android:layout_below="@+id/tweet_progress"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="23dp" />
+        android:layout_below="@+id/tweet_progress"
+        android:layout_marginTop="23dp"
+        android:ems="10"
+        android:hint="@string/tweet_send_hint"
+        android:inputType="textMultiLine" />
 
     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
         android:id="@+id/tweet_progress"
-        android:layout_height="30dp"
         android:layout_width="match_parent"
-        app:backgroundPadding="5dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/tweet_input_counter"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        app:backgroundPadding="5dp" />
 
     <TextView
         android:id="@+id/tweet_input_counter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:layout_alignParentTop="true"
         android:layout_marginTop="16dp"
-        android:textSize="18sp"/>
+        android:gravity="center_horizontal"
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/tweet_add_photo_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/camera"
+        android:layout_alignLeft="@+id/tweet_input"
+        android:layout_alignStart="@+id/tweet_input"
+        android:layout_below="@+id/tweet_input"
         android:layout_marginLeft="48dp"
         android:layout_marginStart="48dp"
-        android:layout_below="@+id/tweet_input"
-        android:layout_alignLeft="@+id/tweet_input"
-        android:layout_alignStart="@+id/tweet_input" />
+        android:layout_marginTop="32dp"
+        android:src="@drawable/camera" />
 
-    <ImageView
-        android:id="@+id/tweet_photo_imageview"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="28dp"
-        android:contentDescription="@string/hint_text"
-        android:src="@drawable/image_border"
-        android:background="@android:color/black"
-
-        android:layout_below="@+id/tweet_add_photo_button"
-        android:layout_alignRight="@+id/tweet_send_file_choose_button"
+    <RelativeLayout
+        android:layout_width="205dp"
+        android:layout_height="205dp"
         android:layout_alignEnd="@+id/tweet_send_file_choose_button"
-        android:padding="3dp"/>
+        android:layout_alignRight="@+id/tweet_send_file_choose_button"
+        android:layout_below="@+id/tweet_add_photo_button"
+        android:background="@android:color/black"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/tweet_photo_imageview"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@android:color/white"
+            android:contentDescription="@string/hint_text"
+            android:padding="5dp"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/tweet_send_file_choose_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/file"
-        android:layout_alignTop="@+id/tweet_add_photo_button"
-        android:layout_alignRight="@+id/tweet_input"
         android:layout_alignEnd="@+id/tweet_input"
+        android:layout_alignRight="@+id/tweet_input"
+        android:layout_alignTop="@+id/tweet_add_photo_button"
+        android:layout_marginEnd="89dp"
         android:layout_marginRight="89dp"
-        android:layout_marginEnd="89dp" />
+        android:src="@drawable/file" />
 
 </RelativeLayout>

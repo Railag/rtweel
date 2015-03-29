@@ -89,31 +89,18 @@ public class Timeline implements Iterable<Status> {
     }
 
     public void loadTimeline() {
-        Log.i("DEBUG", "loadtimeline started");
-        Date t1 = new Date();
         preparingUpdate();
-        Log.i("DEBUG",
-                "preparing update time: "
-                        + (new Date().getTime() - t1.getTime()));
 
         if (list.isEmpty()) {
-            App app = (App) mContext;
-            if (!app.isOnline()) {
+            if (!App.isOnline(mContext)) {
                 Log.i("DEBUG", "No network in loadTimeline()");
                 return;
             }
-            Log.i("DEBUG", "loading timeline..");
-            t1 = new Date();
             list.addAll(downloadTimeline(Timeline.INITIALIZATION_TWEETS));
-            Date t2 = new Date();
-            Log.i("DEBUG",
-                    "downloadTimeline time: " + (t2.getTime() - t1.getTime()));
-            new DbWriteTask(mContext, list, mCurrentTimelineType).execute();
-            Log.i("DEBUG", "dbwritetask start time: "
-                    + (new Date().getTime() - t2.getTime()));
-        }
-        Log.i("DEBUG", "loadTimeline finished");
 
+            new DbWriteTask(mContext, list, mCurrentTimelineType).execute();
+
+        }
     }
 
     public void updateTimelineUp(List<Status> downloadedList) {

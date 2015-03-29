@@ -157,26 +157,6 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-//        else if (requestCode == REQUEST_FILE_SELECT) {
-//            if (resultCode == RESULT_OK) {
-//                Uri file = Uri.fromFile(new File(data
-//                        .getStringExtra(Extras.FILE_URI)));
-//                Log.i("DEBUG", file.toString());
-//                Bitmap bitmap = BitmapFactory.decodeFile(data
-//                        .getStringExtra(Extras.FILE_URI));
-//                Log.i("DEBUG", data.getStringExtra(Extras.FILE_URI));
-//                mTweetPicture.setImageBitmap(bitmap);
-//            } else if (resultCode == RESULT_CANCELED) {
-//                Toast.makeText(getApplicationContext(), "File choosing failed",
-//                        Toast.LENGTH_LONG).show();
-//            }
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
-
     @Override
     public void onBackPressed() {
             if(mFragmentManager.getBackStackEntryCount() == 1)

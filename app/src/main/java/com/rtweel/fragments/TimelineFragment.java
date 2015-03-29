@@ -1,4 +1,4 @@
-package com.rtweel.fragments;
+ package com.rtweel.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -73,32 +74,20 @@ public class TimelineFragment extends BaseFragment {
         if (isLoading())
             stopLoading();
 
-        Date date = new Date();
-
-        Log.i("DEBUG", "Initializing...");
-
         mTimeline = new Timeline(getActivity().getApplicationContext());
 
         Timeline.setDefaultTimeline(mTimeline);
 
-        Intent serviceIntent = new Intent(getActivity(), TweetService.class);
-        PendingIntent alarmIntent = PendingIntent.getService(getActivity(), 0,
-                serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager
-                .setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        SystemClock.elapsedRealtime()
-                                + AlarmManager.INTERVAL_HALF_HOUR,
-                        AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
-        Date t1 = new Date();
-        Log.i("DEBUG", "Before loadtimelinetask: " + 0);
+        addTweetService();
+
         new LoadTimelineTask(this).execute(mTimeline);
 
-        Log.i("DEBUG",
-                "After loadtimelinetask started: "
-                        + String.valueOf(new Date().getTime() - t1.getTime()));
-        // getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        initList(v);
 
+        return v;
+    }
+
+    private void initList(View v) {
 
         list = (ListView) v.findViewById(R.id.list);
 
@@ -128,11 +117,9 @@ public class TimelineFragment extends BaseFragment {
                         float distance = x2 - x1;
 
                         if (distance > 150) { // Right swipe
-                            // AnimationSet set = new AnimationSet(false);
-                            // set.
+
                             rotate();
-                            App app = (App) getActivity().getApplication();
-                            if (!app.isOnline()) {
+                            if (!App.isOnline(getActivity())) {
                                 Log.i("DEBUG", "Right swipe NO NETWORK");
                                 Toast.makeText(
                                         getActivity(),
@@ -154,8 +141,7 @@ public class TimelineFragment extends BaseFragment {
                         }
                         if (distance < -150) { // Left Swipe
                             rotate();
-                            App app = (App) getActivity().getApplication();
-                            if (!app.isOnline()) {
+                            if (!App.isOnline(getActivity())) {
                                 Log.i("DEBUG", "Left swipe NO NETWORK");
                                 Toast.makeText(
                                         getActivity(),
@@ -175,7 +161,7 @@ public class TimelineFragment extends BaseFragment {
                 return false;
             }
         });
-        t1 = new Date();
+
         mAdapter = list;
 
         adapter = new TweetAdapter(mTimeline, getActivity());
@@ -183,8 +169,6 @@ public class TimelineFragment extends BaseFragment {
         mAdapter.setAdapter(adapter);
 
         mTimeline.setAdapter(adapter);
-        Log.i("DEBUG",
-                "tweetAdapter time: " + (new Date().getTime() - t1.getTime()));
 
         mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -192,14 +176,22 @@ public class TimelineFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Status tweet = (twitter4j.Status) adapter.getItem(position);
-                Log.i("DEBUG", "tweet retweets: " + tweet.getRetweetCount());
                 new RefreshTweetTask(TimelineFragment.this, position).execute(tweet.getId());
                 startLoading(getResources().getString(R.string.tweet_refreshing));
             }
         });
-        Log.i("DEBUG",
-                "initialize time: " + (new Date().getTime() - date.getTime()));
-        return v;
+    }
+
+    private void addTweetService() {
+        Intent serviceIntent = new Intent(getActivity(), TweetService.class);
+        PendingIntent alarmIntent = PendingIntent.getService(getActivity(), 0,
+                serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarmManager
+                .setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        SystemClock.elapsedRealtime()
+                                + AlarmManager.INTERVAL_HALF_HOUR,
+                        AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
     }
 
     @Override
@@ -207,8 +199,7 @@ public class TimelineFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.switch_home_timeline: {
 
-                App app = (App) getActivity().getApplication();
-                if (!app.isOnline()) {
+                if (!App.isOnline(getActivity())) {
                     Log.i("DEBUG", "home timeline button onClick NO NETWORK");
                     Toast.makeText(getActivity(),
                             "No network connection, couldn't load tweets!",
@@ -232,8 +223,7 @@ public class TimelineFragment extends BaseFragment {
                 break;
             }
             case R.id.switch_user_timeline: {
-                App app = (App) getActivity().getApplication();
-                if (!app.isOnline()) {
+                if (!App.isOnline(getActivity())) {
                     Log.i("DEBUG", "user timeline button onClick NO NETWORK");
                     Toast.makeText(getActivity(),
                             "No network connection, couldn't load tweets!",

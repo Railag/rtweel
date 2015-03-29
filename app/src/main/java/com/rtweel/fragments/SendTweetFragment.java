@@ -34,6 +34,7 @@ import com.rtweel.R;
 import com.rtweel.activities.MainActivity;
 import com.rtweel.asynctasks.tweet.TwitterSendTweetTask;
 import com.rtweel.cache.App;
+import com.rtweel.constant.Extras;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,6 +70,18 @@ public class SendTweetFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
 
+        Bundle args = getArguments();
+
+        if(args != null) {
+            String path = args.getString(Extras.FILE_URI);
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            setImage(bitmap);
+
+            String text = args.getString(Extras.TWEET_TEXT);
+            mCurrentMax = 117;
+            mTweetEntry.setText(text);
+        }
+
         mTweetProgress.setProgressColor(getResources().getColor(R.color.green_progress));
         mTweetProgress.setBackgroundColor(getResources().getColor(R.color.light_gray_progress));
 
@@ -86,7 +99,7 @@ public class SendTweetFragment extends BaseFragment {
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
                 if (!"".equals(s)) {
-                    mTweetLengthCounter.setText(s.length() + "/140");
+                    mTweetLengthCounter.setText(s.length() + "/" + mCurrentMax);
                     mTweetProgress.setProgress(s.length());
                     if (s.length() > mCurrentMax) {
                         mTweetProgress.setProgressColor(Color.RED);
@@ -134,7 +147,11 @@ public class SendTweetFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-                getMainActivity().setMainFragment(new FileFragment());
+                FileFragment fragment = new FileFragment();
+                Bundle args = new Bundle();
+                args.putString(Extras.TWEET_TEXT, mTweetEntry.getText().toString());
+                fragment.setArguments(args);
+                getMainActivity().setMainFragment(fragment);
             }
         });
 
@@ -206,8 +223,7 @@ public class SendTweetFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.tweet_send_ok: {
                 if (mIsValidTweetSize) {
-                    App app = (App) getActivity().getApplication();
-                    if (!app.isOnline()) {
+                    if (!App.isOnline(getActivity())) {
                         Log.i("DEBUG",
                                 "sendtweetactivity send tweet button onClick NO NETWORK");
                         Toast.makeText(getActivity(),

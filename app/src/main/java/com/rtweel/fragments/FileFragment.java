@@ -1,10 +1,8 @@
 package com.rtweel.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +16,7 @@ import com.rtweel.filechooser.FileAdapter;
 import com.rtweel.filechooser.Line;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by root on 22.3.15.
@@ -36,9 +37,20 @@ public class FileFragment extends BaseFragment {
 
     private ListView list;
 
+    private String mTweetText;
+
+    private Pattern pattern = Pattern.compile("^.*\\.(png|gif|jpg|jpeg|bmp)$");
+    private Matcher matcher;
+
     @Override
     public void onStart() {
         super.onStart();
+
+        Bundle args = getArguments();
+        if (args != null) {
+            mTweetText = args.getString(Extras.TWEET_TEXT);
+        }
+
         mCurrentPath = Environment.getExternalStorageDirectory();
         initialize(mCurrentPath);
     }
@@ -52,32 +64,39 @@ public class FileFragment extends BaseFragment {
     }
 
     private void initialize(File startPath) {
-        File[] paths = startPath.listFiles();
+
+        File[] paths = startPath.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                if (pathname.isDirectory())
+                    return true;
+                matcher = pattern.matcher(pathname.getPath());
+                return matcher.matches();
+            }
+        });
+
         getActionBar().setTitle("Current Dir: " + startPath.getName());
         List<Line> pathList = new ArrayList<Line>();
         List<Line> fileList = new ArrayList<Line>();
-        try {
-            for (File path : paths) {
-                if (path.isDirectory())
-                    pathList.add(new Line(path.getName(), "Folder", path
-                            .getAbsolutePath()));
-                else {
-                    String type = path.getAbsolutePath().substring(
-                            path.getAbsolutePath().length() - 4);
-                    Log.i("DEBUG", type);
-                    if (".jpg".equals(type) || ".bmp".equals(type)
-                            || ".gif".equals(type)) {
+        if (paths != null && paths.length > 0) {
+            try {
+                for (File path : paths) {
+                    if (path.isDirectory())
+                        pathList.add(new Line(path.getName(), "Folder", path
+                                .getAbsolutePath()));
+                    else {
                         fileList.add(new Line(path.getName(), "File Size: "
                                 + path.length(), path.getAbsolutePath()));
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            Collections.sort(pathList);
+            Collections.sort(fileList);
+            pathList.addAll(fileList);
         }
-        Collections.sort(pathList);
-        Collections.sort(fileList);
-        pathList.addAll(fileList);
         if (!startPath.getName().contains("sdcard") && startPath.getParent() != null) {
             pathList.add(0,
                     new Line("..", "Parent Directory", startPath.getParent()));
@@ -141,10 +160,11 @@ public class FileFragment extends BaseFragment {
             }
         }).start();
 
-        Intent data = new Intent();
-        data.putExtra(Extras.FILE_URI, line.getPath());
-        // setResult(RESULT_OK, data);
-        // finish();
-        back();
+        SendTweetFragment fragment = new SendTweetFragment();
+        Bundle args = new Bundle();
+        args.putString(Extras.FILE_URI, line.getPath());
+        args.putString(Extras.TWEET_TEXT, mTweetText);
+        fragment.setArguments(args);
+        getMainActivity().setMainFragment(fragment);
     }
 }
