@@ -33,8 +33,6 @@ public class TweetAdapter extends BaseAdapter {
     private final List<Status> mData;
     private final Context mContext;
 
-    private static ArrayList<String> sLoadedUris = new ArrayList<String>();
-
     public TweetAdapter(List<Status> data, Context context) {
         this.mData = data;
         this.mContext = context;

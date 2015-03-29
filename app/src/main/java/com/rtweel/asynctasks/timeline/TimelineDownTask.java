@@ -48,7 +48,7 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 		mFragment.getAdapter().notifyDataSetChanged();
 
 		// mActivity.crossfade();
-
+/*
 		if (result != 0) {
 			Toast.makeText(mFragment.getActivity(), "New tweets: " + result,
 					Toast.LENGTH_LONG).show();
@@ -56,5 +56,6 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 			Toast.makeText(mFragment.getActivity(), "No new tweets", Toast.LENGTH_LONG)
 					.show();
 		}
+*/
 	}
 }

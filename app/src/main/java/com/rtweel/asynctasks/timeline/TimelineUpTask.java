@@ -21,24 +21,12 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 	@Override
 	protected Integer doInBackground(Timeline... params) {
 		Timeline timeline = params[0];
-		List<twitter4j.Status> downloadedList = timeline.downloadTimeline(//0,
-	//			Timeline.getTweetsPerPage(),
-				Timeline.UP_TWEETS);
-		// boolean available;
-		// try {
-		// available = timeline.searchCheckIsAvailable(timeline
-		// .getTwitter().getAccountSettings().getScreenName());
-		// if (available) {
-		// downloadedList.addAll(timeline.downloadTimeline(0,
-		// Timeline.getTweetsPerPage(), Timeline.UP_TWEETS));
-		// }
-		// } catch (TwitterException e) {
-		// e.printStackTrace();
-		// }
+		List<twitter4j.Status> downloadedList = timeline.downloadTimeline(Timeline.UP_TWEETS);
+
 		timeline.updateTimelineUp(downloadedList);
 
 		int size = downloadedList.size();
-		Log.i("DEBUG", "Finished downloading down task");
+		Log.i("DEBUG", "Finished downloading up task");
 		return size;
 	}
 

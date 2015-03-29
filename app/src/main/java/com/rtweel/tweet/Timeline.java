@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import twitter4j.Paging;
+import twitter4j.RateLimitStatusEvent;
+import twitter4j.RateLimitStatusListener;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -83,6 +85,20 @@ public class Timeline implements Iterable<Status> {
                     accessTokenSecret);
             mTwitter = TwitterUtil.getInstance().getTwitterFactory()
                     .getInstance(accessToken);
+            mTwitter.addRateLimitStatusListener(new RateLimitStatusListener() {
+                @Override
+                public void onRateLimitStatus(RateLimitStatusEvent event) {
+                    Log.i("LIMIT", "limit = " + event.getRateLimitStatus().getLimit());
+                    Log.i("LIMIT", "remaining: " + event.getRateLimitStatus().getRemaining());
+                    Log.i("LIMIT", "secondsUntilReset: " + event.getRateLimitStatus().getSecondsUntilReset());
+                }
+
+                @Override
+                public void onRateLimitReached(RateLimitStatusEvent event) {
+                    Log.i("LIMIT", "BLOCKED");
+                }
+            });
+
             new GetScreenNameTask().execute(mTwitter);
             Log.i("DEBUG", "timeline construction finished");
         }
@@ -333,7 +349,7 @@ public class Timeline implements Iterable<Status> {
                 String author = cursor.getString(cursor
                         .getColumnIndex(projection[0]));
                 String text = cursor.getString(cursor
-                        .getColumnIndex(projection[1]));
+                        .getColumnIndex(projection[1])).replace("\n", "\\n");
                 String pictureUrl = cursor.getString(cursor
                         .getColumnIndex(projection[2]));
                 String date = cursor.getString(cursor
@@ -349,7 +365,6 @@ public class Timeline implements Iterable<Status> {
                     builder.append(id);
                     builder.append("', created_at='");
                     builder.append(date);
-                    Log.i("DEBUG", "media: " + media);
                     if (!"".equals(media)) {
                         //	builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
                         builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"");
@@ -415,7 +430,7 @@ public class Timeline implements Iterable<Status> {
                 String author = cursor.getString(cursor
                         .getColumnIndex(projection[0]));
                 String text = cursor.getString(cursor
-                        .getColumnIndex(projection[1]));
+                        .getColumnIndex(projection[1])).replace("\n", "\\n");
                 String pictureUrl = cursor.getString(cursor
                         .getColumnIndex(projection[2]));
                 String date = cursor.getString(cursor
@@ -432,7 +447,6 @@ public class Timeline implements Iterable<Status> {
                     builder.append(id);
                     builder.append("', created_at='");
                     builder.append(date);
-                    Log.i("DEBUG", "media: " + media);
                     if (!"".equals(media)) {
 //						builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
                         builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"");

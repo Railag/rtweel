@@ -1,5 +1,6 @@
- package com.rtweel.fragments;
+package com.rtweel.fragments;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
@@ -64,6 +67,11 @@ public class TimelineFragment extends BaseFragment {
 
     private boolean mContentLoaded;
 
+    private int mLastVisibleItem = 0;
+
+    private TimelineUpTask mUpTask;
+    private TimelineDownTask mDownTask;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,68 +105,27 @@ public class TimelineFragment extends BaseFragment {
         list.setVisibility(View.GONE);
         crossfade();
 
-        list.setOnTouchListener(new View.OnTouchListener() {
-
-            float x1, x2;
-
-            @SuppressLint("ClickableViewAccessibility")
+        list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == SCROLL_STATE_IDLE && mLastVisibleItem == 0)
+                    updateUp();
+            }
 
-                    case MotionEvent.ACTION_DOWN: {
-                        x1 = event.getX();
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        x2 = event.getX();
-
-                        float distance = x2 - x1;
-
-                        if (distance > 150) { // Right swipe
-
-                            rotate();
-                            if (!App.isOnline(getActivity())) {
-                                Log.i("DEBUG", "Right swipe NO NETWORK");
-                                Toast.makeText(
-                                        getActivity(),
-                                        "No network connection, couldn't load tweets!",
-                                        Toast.LENGTH_LONG).show();
-                                return true;
-                            }
-                            Log.i("DEBUG", "SWIPE RIGHT");
-
-                            new TimelineUpTask(TimelineFragment.this)
-                                    .execute(mTimeline);
-
-                            // TODO Some scrolling up
-
-                            // Scroller scroller = new
-                            // Scroller(getApplicationContext());
-                            // scroller.startScroll((int)x2, (int)event.getY(), 0,
-                            // -800);
-                        }
-                        if (distance < -150) { // Left Swipe
-                            rotate();
-                            if (!App.isOnline(getActivity())) {
-                                Log.i("DEBUG", "Left swipe NO NETWORK");
-                                Toast.makeText(
-                                        getActivity(),
-                                        "No network connection, couldn't load tweets!",
-                                        Toast.LENGTH_LONG).show();
-                                return true;
-                            }
-                            Log.i("DEBUG", "SWIPE LEFT");
-
-                            new TimelineDownTask(TimelineFragment.this)
-                                    .execute(mTimeline);
-                            // TODO Some scrolling up
-                        }
-                        break;
-                    }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0 && mLastVisibleItem > firstVisibleItem) {
+                    updateUp();
+                    mLastVisibleItem = 0;
+                    return;
                 }
-                return false;
+                if (firstVisibleItem > mLastVisibleItem && (totalItemCount - firstVisibleItem) < 5) {
+                    updateDown();
+                    mLastVisibleItem = firstVisibleItem;
+                    return;
+                }
+
+                mLastVisibleItem = firstVisibleItem;
             }
         });
 
@@ -180,6 +147,45 @@ public class TimelineFragment extends BaseFragment {
                 startLoading(getResources().getString(R.string.tweet_refreshing));
             }
         });
+    }
+
+    private void updateUp() {
+
+        blink();
+        if (!App.isOnline(getActivity())) {
+            Log.i("DEBUG", "Up swipe NO NETWORK");
+            Toast.makeText(
+                    getActivity(),
+                    "No network connection, couldn't load tweets!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        Log.i("DEBUG", "SWIPE UP");
+        if (mUpTask != null)
+            if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
+                return;
+        mUpTask = new TimelineUpTask(TimelineFragment.this);
+        mUpTask.execute(mTimeline);
+
+    }
+
+    private void updateDown() {
+        blink();
+        if (!App.isOnline(getActivity())) {
+            Log.i("DEBUG", "Down swipe NO NETWORK");
+            Toast.makeText(
+                    getActivity(),
+                    "No network connection, couldn't load tweets!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        Log.i("DEBUG", "SWIPE DOWN");
+
+        if (mDownTask != null)
+            if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
+                return;
+        mDownTask = new TimelineDownTask(TimelineFragment.this);
+        mDownTask.execute(mTimeline);
     }
 
     private void addTweetService() {
@@ -307,12 +313,20 @@ public class TimelineFragment extends BaseFragment {
                 });
     }
 
-    private void rotate() {
-        RotateAnimation anim = new RotateAnimation(0, 360, 0, 0);
-        anim.startNow();
-        anim.setDuration(4000);
-        anim.setInterpolator(new AccelerateDecelerateInterpolator());
-        list.setAnimation(anim);
+    private void blink() {
+
+        ValueAnimator fade = new ValueAnimator();
+        fade.setFloatValues(1, 0.1f, 1);
+        fade.setDuration(4000);
+        fade.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (Float) animation.getAnimatedValue();
+                list.setAlpha(value);
+            }
+        });
+
+        fade.start();
     }
 
     public ListView getList() {
