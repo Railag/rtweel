@@ -41,12 +41,14 @@ TODO:
 - All media resources processing in detail screen
 - ~~Changing activity structure to fully fragments based~~
 - Improving app behavior with bad connections
-- Improving timeline system
-- Replacing rotate animation with something more smoother
+- ~~Improving timeline system~~
+- ~~Replacing rotate animation with something more smoother~~
 - Adding webview for auth
 - Replacing standard menu with nav drawer one
 - Add view pager for detail tweet scrolling
 - Replace main listview with recyclerview
+- Adding floating button to scroll up and down on timeline
+
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/com.rtweel.twitteroauth/ConstantValues.java class.
 

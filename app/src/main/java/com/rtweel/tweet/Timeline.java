@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.BaseAdapter;
 
@@ -15,7 +16,6 @@ import com.rtweel.twitteroauth.TwitterUtil;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -159,12 +159,12 @@ public class Timeline implements Iterable<Status> {
                 page.setPage(1);
                 break;
             case UP_TWEETS:
-                    if(list == null || list.isEmpty())
-                        getLastTweetFromDb();
-                    page.setSinceId(list.get(0).getId());
+                if (list == null || list.isEmpty())
+                    getLastTweetFromDb();
+                page.setSinceId(list.get(0).getId());
                 break;
             case DOWN_TWEETS:
-                if(list == null || list.isEmpty())
+                if (list == null || list.isEmpty())
                     getOldestTweetFromDb();
                 page.setMaxId(list.get(list.size() - 1).getId());
                 break;
@@ -192,11 +192,11 @@ public class Timeline implements Iterable<Status> {
     }
 
     private void getOldestTweetFromDb() {
-        String[] projection = { TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
+        String[] projection = {TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
                 TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
                 TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
                 TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
+                TweetDatabaseOpenHelper.Tweets.COLUMN_ID};
 
         ContentResolver resolver = mContext.getContentResolver();
 
@@ -222,17 +222,11 @@ public class Timeline implements Iterable<Status> {
                         .getColumnIndex(projection[3]));
                 long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
 
-                try {
-                    String creation = "{text='" + text + "', id='" + id
-                            + "', created_at='" + date
-                            + "',user={name='" + author
-                            + "', profile_image_url='" + pictureUrl + "'}}";
-                    Status insert = TwitterObjectFactory.createStatus(creation);
-                    getTweets().add(insert);
-                } catch (TwitterException e1) {
-                    e1.printStackTrace();
-                }
-                if(getAdapter() != null)
+                Status tweet = buildTweet(author, text, pictureUrl, date, id, "");
+                if (tweet != null)
+                    getTweets().add(tweet);
+                
+                if (getAdapter() != null)
                     getAdapter().notifyDataSetInvalidated();
             }
 
@@ -245,11 +239,11 @@ public class Timeline implements Iterable<Status> {
 
     private void getLastTweetFromDb() {
 
-        String[] projection = { TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
+        String[] projection = {TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
                 TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
                 TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
                 TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
+                TweetDatabaseOpenHelper.Tweets.COLUMN_ID};
 
         ContentResolver resolver = mContext.getContentResolver();
 
@@ -275,17 +269,11 @@ public class Timeline implements Iterable<Status> {
                         .getColumnIndex(projection[3]));
                 long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
 
-                try {
-                    String creation = "{text='" + text + "', id='" + id
-                            + "', created_at='" + date
-                            + "',user={name='" + author
-                            + "', profile_image_url='" + pictureUrl + "'}}";
-                    Status insert = TwitterObjectFactory.createStatus(creation);
-                    getTweets().add(insert);
-                } catch (TwitterException e1) {
-                    e1.printStackTrace();
-                }
-                if(getAdapter() != null)
+                Status tweet = buildTweet(author, text, pictureUrl, date, id, "");
+                if (tweet != null)
+                    getTweets().add(tweet);
+
+                if (getAdapter() != null)
                     getAdapter().notifyDataSetInvalidated();
             }
 
@@ -357,38 +345,10 @@ public class Timeline implements Iterable<Status> {
                 long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
                 String media = cursor.getString(cursor
                         .getColumnIndex(projection[5]));
-                try {
-                    StringBuilder builder = new StringBuilder();
-                    builder.append("{text='");
-                    builder.append(text.replace("\n", "\\n"));
-                    builder.append("', id='");
-                    builder.append(id);
-                    builder.append("', created_at='");
-                    builder.append(date);
-                    if (!"".equals(media)) {
-                        //	builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
-                        builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"");
-                        builder.append(media);
-                        builder.append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]}");
-                        //	builder.append("'}]}");
-                    } else {
-                        builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[]}");
-                    }
-                    //	"entities":{"hashtags":[],"symbols":[],"urls":[],"user_mentions":[],"media":[{"indices":[-1],"media_url":"http:\/\/pbs.twimg.com\/media\/BwOgUtuIQAAvPUJ.png","type":"photo","sizes":{"large":{"w":1024,"h":575,"resize":"fit"},"small":{"w":340,"h":191,"resize":"fit"},"thumb":{"w":150,"h":150,"resize":"crop"},"medium":{"w":600,"h":337,"resize":"fit"}}}]}
 
-
-                    builder.append(",user={name='");
-                    builder.append(author);
-                    builder.append("', profile_image_url='");
-                    builder.append(pictureUrl);
-                    builder.append("'}}");
-                    //		Log.i("DEBUG", "BBB: " + builder.toString());
-                    Status insert = TwitterObjectFactory.createStatus(builder
-                            .toString());
-                    list.add(insert);
-                } catch (TwitterException e1) {
-                    e1.printStackTrace();
-                }
+                Status tweet = buildTweet(author, text, pictureUrl, date, id, media);
+                if (tweet != null)
+                    list.add(tweet);
 
             }
             if (cursor != null) {
@@ -439,34 +399,9 @@ public class Timeline implements Iterable<Status> {
                 String media = cursor.getString(cursor
                         .getColumnIndex(projection[5]));
 
-                try {
-                    StringBuilder builder = new StringBuilder();
-                    builder.append("{text='");
-                    builder.append(text);
-                    builder.append("', id='");
-                    builder.append(id);
-                    builder.append("', created_at='");
-                    builder.append(date);
-                    if (!"".equals(media)) {
-//						builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
-                        builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"");
-                        builder.append(media);
-                        builder.append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]}");
-                        //	builder.append("'}]}");
-                    } else {
-                        builder.append("'");
-                    }
-                    builder.append(",user={name='");
-                    builder.append(author);
-                    builder.append("', profile_image_url='");
-                    builder.append(pictureUrl);
-                    builder.append("'}}");
-                    Status insert = TwitterObjectFactory.createStatus(builder
-                            .toString());
-                    list.add(insert);
-                } catch (TwitterException e1) {
-                    e1.printStackTrace();
-                }
+                Status tweet = buildTweet(author, text, pictureUrl, date, id, media);
+                if (tweet != null)
+                    list.add(tweet);
 
             }
             if (cursor != null) {
@@ -489,6 +424,37 @@ public class Timeline implements Iterable<Status> {
 	 * 
 	 * return !result.getTweets().isEmpty(); }
 	 */
+
+    public static Status buildTweet(String author, String text, String pictureUrl, String date, long id, String media) {
+        try {
+            StringBuilder builder = new StringBuilder();
+            builder.append("{text='");
+            builder.append(text);
+            builder.append("', id='");
+            builder.append(id);
+            builder.append("', created_at='");
+            builder.append(date);
+            if (!TextUtils.isEmpty(media)) {
+//						builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
+                builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"");
+                builder.append(media);
+                builder.append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]}");
+                //	builder.append("'}]}");
+            } else {
+                builder.append("'");
+            }
+            builder.append(",user={name='");
+            builder.append(author);
+            builder.append("', profile_image_url='");
+            builder.append(pictureUrl);
+            builder.append("'}}");
+            return TwitterObjectFactory.createStatus(builder
+                    .toString());
+        } catch (TwitterException e1) {
+            e1.printStackTrace();
+            return null;
+        }
+    }
 
     public Twitter getTwitter() {
         return mTwitter;
