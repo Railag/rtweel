@@ -1,19 +1,18 @@
 package com.rtweel.fragments;
 
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,16 +20,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -41,7 +32,6 @@ import com.rtweel.R;
 import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
-import com.rtweel.asynctasks.tweet.RefreshTweetTask;
 import com.rtweel.cache.App;
 import com.rtweel.services.TweetService;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
@@ -49,10 +39,6 @@ import com.rtweel.tweet.Timeline;
 import com.rtweel.tweet.TweetAdapter;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
-
-import java.util.Date;
-
-import twitter4j.Status;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
@@ -109,6 +95,7 @@ public class TimelineFragment extends BaseFragment {
 
         //list.setDivider(getResources().getDrawable(android.R.drawable.divider_horizontal_textfield));
 
+
         mLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(mLayoutManager);
         list.setItemAnimator(new DefaultItemAnimator());
@@ -116,6 +103,8 @@ public class TimelineFragment extends BaseFragment {
 
         list.setVisibility(View.GONE);
         crossfade();
+
+
 
         list.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -171,16 +160,19 @@ public class TimelineFragment extends BaseFragment {
         list.setAdapter(adapter);
 
 
-        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
         fab.setType(1);
         fab.setColorNormal(R.color.green);
         fab.setColorPressed(R.color.blue);
         fab.setColorRipple(R.color.red);
         fab.attachToRecyclerView(list);
+        fab.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.up_arrow));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 list.scrollToPosition(0);
+                fab.hide(true);
             }
         });
     }
