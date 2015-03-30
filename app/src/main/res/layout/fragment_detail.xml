@@ -1,6 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll_detail_view"
+    xmlns:tools="http://schemas.android.com/tools"    android:id="@+id/scroll_detail_view"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
@@ -70,8 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/detail_retweet_button"
-            android:text="2400" />
+            android:layout_below="@id/detail_retweet_button" />
 
         <ImageView
             android:id="@+id/detail_favorited_button"
@@ -94,8 +92,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginStart="25dp"
             android:layout_toEndOf="@+id/detail_retweet_button"
-            android:layout_toRightOf="@+id/detail_retweet_button"
-            android:text="2405" />
+            android:layout_toRightOf="@+id/detail_retweet_button" />
 
         <ImageView
             android:id="@+id/detail_delete"

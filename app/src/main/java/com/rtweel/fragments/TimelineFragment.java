@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +33,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
@@ -57,20 +61,24 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  */
 public class TimelineFragment extends BaseFragment {
 
-    private BaseAdapter adapter;
+    private TweetAdapter adapter;
 
-    private AdapterView<ListAdapter> mAdapter;
+    //private AdapterView<TweetAdapter> mAdapter;
 
     private Timeline mTimeline;
 
-    private ListView list;
+    private RecyclerView list;
 
     private boolean mContentLoaded;
 
-    private int mLastVisibleItem = 0;
+    private int mLastYChange = 0;
 
     private TimelineUpTask mUpTask;
     private TimelineDownTask mDownTask;
+
+    private RecyclerView.Adapter mAdapterRecycle;
+    private RecyclerView.LayoutManager mLayoutManager;
+
 
     @Nullable
     @Override
@@ -97,14 +105,36 @@ public class TimelineFragment extends BaseFragment {
 
     private void initList(View v) {
 
-        list = (ListView) v.findViewById(R.id.list);
+        list = (RecyclerView) v.findViewById(R.id.list);
 
-        list.setDivider(getResources().getDrawable(android.R.drawable.divider_horizontal_textfield));
+        //list.setDivider(getResources().getDrawable(android.R.drawable.divider_horizontal_textfield));
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        list.setLayoutManager(mLayoutManager);
+        list.setItemAnimator(new DefaultItemAnimator());
 
 
         list.setVisibility(View.GONE);
         crossfade();
 
+        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                mLastYChange = dy;
+                Log.i("DEBUG", "Coords:" + dx + dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_AXIS_VERTICAL)
+                    Log.i("DEBUG", "Axis y scroll");
+            //    if(== RecyclerView.SCROLL_STATE_IDLE && mLastYChange);
+            }
+        });
+
+        /*
         list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -128,23 +158,29 @@ public class TimelineFragment extends BaseFragment {
                 mLastVisibleItem = firstVisibleItem;
             }
         });
-
-        mAdapter = list;
+    */
+        //mAdapter = list;
 
         adapter = new TweetAdapter(mTimeline, getActivity());
 
-        mAdapter.setAdapter(adapter);
+        //mAdapter.setAdapter(adapter);
 
-        mTimeline.setAdapter(adapter);
+        //mTimeline.setAdapter(adapter);
 
-        mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+     //   mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setAdapter(adapter);
 
+
+        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+        fab.setType(1);
+        fab.setColorNormal(R.color.green);
+        fab.setColorPressed(R.color.blue);
+        fab.setColorRipple(R.color.red);
+        fab.attachToRecyclerView(list);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Status tweet = (twitter4j.Status) adapter.getItem(position);
-                new RefreshTweetTask(TimelineFragment.this, position).execute(tweet.getId());
-                startLoading(getResources().getString(R.string.tweet_refreshing));
+            public void onClick(View v) {
+                list.scrollToPosition(0);
             }
         });
     }
@@ -316,8 +352,8 @@ public class TimelineFragment extends BaseFragment {
     private void blink() {
 
         ValueAnimator fade = new ValueAnimator();
-        fade.setFloatValues(1, 0.1f, 1);
-        fade.setDuration(4000);
+        fade.setFloatValues(1, 0.3f, 1);
+        fade.setDuration(2000);
         fade.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -329,21 +365,24 @@ public class TimelineFragment extends BaseFragment {
         fade.start();
     }
 
-    public ListView getList() {
+
+
+
+    public RecyclerView getList() {
         return list;
     }
 
-    public BaseAdapter getAdapter() {
+    public TweetAdapter getAdapter() {
         return adapter;
     }
 
-    public AdapterView<ListAdapter> getAdapterView() {
-        return mAdapter;
-    }
-
-    public void setAdapterView(ListView list) {
-        mAdapter = list;
-    }
+//    public AdapterView<ListAdapter> getAdapterView() {
+//        return mAdapter;
+//    }
+//
+//    public void setAdapterView(ListView list) {
+//        mAdapter = list;
+//    }
 
     public Timeline getTimeline() {
         return mTimeline;

@@ -1,8 +1,11 @@
 package com.rtweel.asynctasks.tweet;
 
+import android.app.Fragment;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.rtweel.activities.MainActivity;
 import com.rtweel.constant.Extras;
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
@@ -14,12 +17,12 @@ import twitter4j.api.TweetsResources;
 
 public class RefreshTweetTask extends AsyncTask<Long, Void, twitter4j.Status> {
 
-    private BaseFragment mFragment;
+    private MainActivity mActivity;
     private Long mId;
     private int mPosition;
 
-    public RefreshTweetTask(BaseFragment fragment, int position) {
-        mFragment = fragment;
+    public RefreshTweetTask(Context activity, int position) {
+        mActivity = (MainActivity) activity;
         mPosition = position;
     }
 
@@ -42,16 +45,16 @@ public class RefreshTweetTask extends AsyncTask<Long, Void, twitter4j.Status> {
     protected void onPostExecute(twitter4j.Status result) {
         super.onPostExecute(result);
         if (result != null) {
-            if (mFragment.isLoading())
-                mFragment.stopLoading();
-            Bundle args = new Bundle();
-            args.putSerializable(Extras.TWEET, result);
-            args.putInt(Extras.POSITION, mPosition);
-            DetailFragment fragment = new DetailFragment();
-            fragment.setArguments(args);
-            mFragment.getMainActivity().setMainFragment(fragment);
+            Fragment fragment = mActivity.getCurrentFragment();
+            if(fragment instanceof DetailFragment) {
+                DetailFragment detailFragment = (DetailFragment) fragment;
+                Bundle args = new Bundle();
+                args.putSerializable(Extras.TWEET, result);
+                args.putInt(Extras.POSITION, mPosition);
+                detailFragment.setResult(args);
+            }
         } else {
-            new DeleteTweetTask(mFragment, mPosition).execute(mId);
+            new DeleteTweetTask( (BaseFragment) mActivity.getCurrentFragment(), mPosition).execute(mId);
         }
     }
 }

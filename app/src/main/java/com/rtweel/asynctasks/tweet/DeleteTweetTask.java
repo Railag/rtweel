@@ -46,7 +46,6 @@ public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
         Timeline.getDefaultTimeline().remove(mPosition);
 
 		if (mFragment instanceof DetailFragment) {
-		//	detailFragment.setResult(Activity.RESULT_OK);
 			mFragment.getMainActivity().setMainFragment(new TimelineFragment());
 		} else if (mFragment instanceof TimelineFragment) {
 			TimelineFragment timelineFragment = (TimelineFragment) mFragment;

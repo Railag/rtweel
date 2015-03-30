@@ -53,6 +53,7 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
             } else {
                 values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA, "");
             }
+
             if (mTimelineType == Timeline.HOME_TIMELINE) {
                 resolver.insert(
                         TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,

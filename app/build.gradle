@@ -17,6 +17,7 @@ android {
         compile 'com.squareup.picasso:picasso:2.5.0'
         compile 'com.makeramen:roundedimageview:2.0.0'
         compile 'com.akexorcist:RoundCornerProgressBar:1.1.0'
+        compile 'com.melnykov:floatingactionbutton:1.2.0'
     }
 
     buildTypes {
@@ -29,7 +30,7 @@ android {
     productFlavors {
         dev {
             applicationId "com.firrael.rtweel.dev"
-            versionName "0.29"
+            versionName "0.30"
         }
     }
 }

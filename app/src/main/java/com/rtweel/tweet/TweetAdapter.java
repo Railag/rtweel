@@ -1,56 +1,52 @@
 package com.rtweel.tweet;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import twitter4j.MediaEntity;
-import twitter4j.Status;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.R;
+import com.rtweel.activities.MainActivity;
+import com.rtweel.asynctasks.tweet.RefreshTweetTask;
+import com.rtweel.constant.Extras;
+import com.rtweel.fragments.DetailFragment;
 import com.rtweel.parsers.DateParser;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
-public class TweetAdapter extends BaseAdapter {
+import java.util.List;
 
-    private final List<Status> mData;
-    private final Context mContext;
+import twitter4j.MediaEntity;
+import twitter4j.Status;
+
+public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
+
+    private static List<Status> sData;
+    private static Context sContext;
 
     public TweetAdapter(List<Status> data, Context context) {
-        this.mData = data;
-        this.mContext = context;
+        sData = data;
+        sContext = context;
     }
 
     public TweetAdapter(Timeline timeline, Context context) {
-        this.mData = timeline.getTweets();
-        this.mContext = context;
+        sData = timeline.getTweets();
+        sContext = context;
     }
 
     @Override
-    public int getCount() {
-        return mData.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mData.get(position);
+    public int getItemCount() {
+        return sData.size();
     }
 
     @Override
@@ -59,52 +55,42 @@ public class TweetAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public TweetAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                      int viewType) {
 
-        Status tweet = mData.get(position);
+        LinearLayout v = (LinearLayout) LayoutInflater.from(sContext)
+                .inflate(R.layout.list_item, parent, false);
 
+        TextView text = (TextView) v
+                .findViewById(R.id.tweet_text);
+        TextView author = (TextView) v
+                .findViewById(R.id.tweet_author);
+        TextView date = (TextView) v
+                .findViewById(R.id.tweet_date);
+        RoundedImageView picture = (RoundedImageView) v
+                .findViewById(R.id.tweet_author_picture);
+
+        ImageView media = (ImageView) v.findViewById(R.id.tweet_media);
+
+        return new ViewHolder(v, author, text, date, picture, media);
+    }
+
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        Status tweet = sData.get(position);
         SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
-
+                .getDefaultSharedPreferences(sContext);
         String url = null;
-
         if (preferences.getBoolean("images_shown", true)) {
             MediaEntity[] entities = tweet.getMediaEntities();
-
             if (entities.length > 0)
                 url = entities[0].getMediaURL();
-
         }
 
-        if (convertView == null) {
-
-            convertView = LayoutInflater.from(mContext).inflate(
-                    R.layout.list_item, parent, false);
-
-            TextView text = (TextView) convertView
-                    .findViewById(R.id.tweet_text);
-            TextView author = (TextView) convertView
-                    .findViewById(R.id.tweet_author);
-            TextView date = (TextView) convertView
-                    .findViewById(R.id.tweet_date);
-            RoundedImageView picture = (RoundedImageView) convertView
-                    .findViewById(R.id.tweet_author_picture);
-
-            ImageView media = (ImageView) convertView.findViewById(R.id.tweet_media);
-
-            ViewHolder vh = new ViewHolder(author, text, date, picture, media, url);
-
-            convertView.setTag(vh);
-
-        }
-
-        ViewHolder vh = (ViewHolder) convertView.getTag();
-
-
-      //  if (!TextUtils.isEmpty(vh.getUrl())) {
-            Picasso.with(mContext).load(url)
-                    .placeholder(R.drawable.placeholder).resize(200, 200).into(vh.getMediaView());
-      //  }
+        Picasso.with(sContext).load(url)
+                .placeholder(R.drawable.placeholder).resize(200, 200).into(holder.getMediaView());
 
         String imageUri = tweet.getUser().getProfileImageURL();
 
@@ -115,37 +101,54 @@ public class TweetAdapter extends BaseAdapter {
                 .oval(false)
                 .build();
 
-        Picasso.with(mContext).load(imageUri)
-                .placeholder(R.drawable.placeholder).transform(transformation).into(vh.getPictureView());
+        Picasso.with(sContext).load(imageUri)
+                .placeholder(R.drawable.placeholder).transform(transformation).into(holder.getPictureView());
 
-        vh.getAuthorView().setText(tweet.getUser().getName());
+        holder.getAuthorView().setText(tweet.getUser().getName());
 
-        vh.getTextView().setText(tweet.getText().replace("\\n", "\n"));
-        vh.getTextView().setText(tweet.getText());
+        holder.getTextView().setText(tweet.getText().replace("\\n", "\n"));
+        holder.getTextView().setText(tweet.getText());
 
         String date = DateParser.parse(tweet.getCreatedAt().toString());
 
-        vh.getDateView().setText(date);
-
-        return convertView;
+        holder.getDateView().setText(date);
     }
 
-    private class ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
         private final TextView mAuthorView;
         private final TextView mTextView;
         private final TextView mDateView;
         private final RoundedImageView mPictureView;
         private final ImageView mMediaView;
-        private final String mUrl;
 
-        public ViewHolder(TextView user, TextView text, TextView date,
-                          RoundedImageView picture, ImageView media, String url) {
+        public ViewHolder(View main, TextView user, TextView text, TextView date,
+                          RoundedImageView picture, ImageView media) {
+            super(main);
+            main.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getPosition();
+                    Status tweet = sData.get(position);
+
+                    new RefreshTweetTask(sContext, position).execute(tweet.getId());
+
+                    DetailFragment fragment = new DetailFragment();
+                    Bundle args = new Bundle();
+                    args.putSerializable(Extras.TWEET, tweet);
+                    args.putInt(Extras.POSITION, position);
+                    fragment.setArguments(args);
+                    ((MainActivity) sContext).setMainFragment(fragment);
+
+
+                }
+            });
+
             this.mAuthorView = user;
             this.mTextView = text;
             this.mDateView = date;
             this.mPictureView = picture;
             this.mMediaView = media;
-            this.mUrl = url;
         }
 
         public TextView getAuthorView() {
@@ -167,10 +170,7 @@ public class TweetAdapter extends BaseAdapter {
         public ImageView getMediaView() {
             return mMediaView;
         }
-
-        public String getUrl() {
-            return mUrl;
-        }
     }
-
 }
+
+

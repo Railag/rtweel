@@ -64,12 +64,12 @@ public class DetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_detail, null);
-        init(mView);
+        initViews(mView);
         setHasOptionsMenu(true);
         return mView;
     }
 
-    private void init(View v) {
+    private void initViews(View v) {
         nameView = (TextView) v.findViewById(R.id.detail_name);
         textView = (TextView) v.findViewById(R.id.detail_text);
         dateView = (TextView) v.findViewById(R.id.detail_date);
@@ -86,107 +86,8 @@ public class DetailFragment extends BaseFragment {
         super.onStart();
 
         Bundle start = getArguments();
-        if(start != null) {
-            mTweet = (Status) start.getSerializable(Extras.TWEET);
-            final String name = mTweet.getUser().getName();
-            String text = mTweet.getText();
-            String location = mTweet.getUser().getLocation();
-            String date = DateParser.parse(mTweet.getCreatedAt().toString());
-            int retweetsCount = mTweet.getRetweetCount();
-            int favsCount = mTweet.getFavoriteCount();
-            String imageUri = mTweet.getUser().getBiggerProfileImageURL();
-            final long id = mTweet.getId();
-            mIsFavorited = mTweet.isFavorited();
-            mIsRetweeted = mTweet.isRetweetedByMe();
-            mRetweetId = mTweet.getCurrentUserRetweetId();
-            MediaEntity[] entities = mTweet.getMediaEntities();
-            String[] urls = new String[entities.length];
-            ImageView[] views = new ImageView[entities.length];
+        init(start);
 
-            RelativeLayout relativeLayout = (RelativeLayout) mView.findViewById(R.id.detail_layout);
-            if (entities.length > 0) {
-                Log.i("DEBUG", "Entities length: " + entities.length);
-                String cacheName = "entity_" + mTweet.getId();
-                for (int i = 0; i < entities.length; i++) {
-                    urls[i] = entities[i].getMediaURL();
-
-
-                    views[i] = new ImageView(getActivity());
-
-                    Picasso.with(getActivity()).load(urls[0]).into(views[i]);
-                    //views[i].setImageBitmap(bitmap);
-                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                    p.addRule(RelativeLayout.BELOW, R.id.detail_retweet_count);
-
-                    views[i].setLayoutParams(p);
-                    relativeLayout.addView(views[i]);
-                }
-
-            }
-
-            final int position = start.getInt(Extras.POSITION);
-
-            if (mIsRetweeted) {
-                retweetsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
-            }
-
-            if (mIsFavorited) {
-                favsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
-            }
-
-            Transformation transformation = new RoundedTransformationBuilder()
-                    .borderColor(Color.BLACK)
-                    .borderWidthDp(3)
-                    .cornerRadiusDp(30)
-                    .oval(false)
-                    .build();
-
-            Picasso.with(getActivity()).load(imageUri).transform(transformation).into(profilePictureView);
-
-            nameView.setText(name);
-            textView.setText(text);
-            dateView.setText(date);
-            retweetsCountView.setText(String.valueOf(retweetsCount));
-            retweetsButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if (!name.equals(Timeline.getUserName())) {
-                        new RetweetTask(DetailFragment.this, retweetsButton, retweetsCountView,
-                                mIsRetweeted).execute(id, mRetweetId);
-                    } else {
-                        Toast.makeText(getActivity(),
-                                "You can't retweet your own tweet",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            favsCountView.setText(String.valueOf(favsCount));
-            favsButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    new FavoriteTask(DetailFragment.this, favsButton, favsCountView,
-                            mIsFavorited).execute(id);
-                }
-            });
-
-            if (name.equals(Timeline.getUserName())) {
-                deleteButton.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        new DeleteTweetTask(DetailFragment.this,
-                                position).execute(id);
-                    }
-                });
-            } else {
-                deleteButton.setVisibility(View.GONE);
-            }
-        }
     }
 
     @Override
@@ -225,6 +126,129 @@ public class DetailFragment extends BaseFragment {
         return true;
     }
 
+    private void refresh(Bundle args) {
+        if (args != null) {
+
+            mTweet = (Status) args.getSerializable(Extras.TWEET);
+            final String name = mTweet.getUser().getName();
+            final long id = mTweet.getId();
+
+            int retweetsCount = mTweet.getRetweetCount();
+            int favsCount = mTweet.getFavoriteCount();
+
+            mIsFavorited = mTweet.isFavorited();
+            mIsRetweeted = mTweet.isRetweetedByMe();
+
+            if (mIsRetweeted) {
+                retweetsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
+            }
+
+            if (mIsFavorited) {
+                favsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
+            }
+
+            retweetsCountView.setText(String.valueOf(retweetsCount));
+            retweetsButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (!name.equals(Timeline.getUserName())) {
+                        new RetweetTask(DetailFragment.this, retweetsButton, retweetsCountView,
+                                mIsRetweeted).execute(id, mRetweetId);
+                    } else {
+                        Toast.makeText(getActivity(),
+                                "You can't retweet your own tweet",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+
+            favsCountView.setText(String.valueOf(favsCount));
+            favsButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    new FavoriteTask(DetailFragment.this, favsButton, favsCountView,
+                            mIsFavorited).execute(id);
+                }
+            });
+        }
+
+    }
+
+    private void init(Bundle start) {
+        if (start != null) {
+            mTweet = (Status) start.getSerializable(Extras.TWEET);
+            final String name = mTweet.getUser().getName();
+            String text = mTweet.getText();
+            String date = DateParser.parse(mTweet.getCreatedAt().toString());
+
+
+            final int position = start.getInt(Extras.POSITION);
+
+            String imageUri = mTweet.getUser().getBiggerProfileImageURL();
+            final long id = mTweet.getId();
+
+            mRetweetId = mTweet.getCurrentUserRetweetId();
+
+            if (name.equals(Timeline.getUserName())) {
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        new DeleteTweetTask(DetailFragment.this,
+                                position).execute(id);
+                    }
+                });
+            } else {
+                deleteButton.setVisibility(View.GONE);
+            }
+
+            MediaEntity[] entities = mTweet.getMediaEntities();
+            String[] urls = new String[entities.length];
+            ImageView[] views = new ImageView[entities.length];
+
+            RelativeLayout relativeLayout = (RelativeLayout) mView.findViewById(R.id.detail_layout);
+            if (entities.length > 0) {
+                Log.i("DEBUG", "Entities length: " + entities.length);
+                String cacheName = "entity_" + mTweet.getId();
+                for (int i = 0; i < entities.length; i++) {
+                    urls[i] = entities[i].getMediaURL();
+
+
+                    views[i] = new ImageView(getActivity());
+
+                    Picasso.with(getActivity()).load(urls[0]).into(views[i]);
+                    //views[i].setImageBitmap(bitmap);
+                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    p.addRule(RelativeLayout.BELOW, R.id.detail_retweet_count);
+
+                    views[i].setLayoutParams(p);
+                    relativeLayout.addView(views[i]);
+                }
+
+            }
+
+            Transformation transformation = new RoundedTransformationBuilder()
+                    .borderColor(Color.BLACK)
+                    .borderWidthDp(3)
+                    .cornerRadiusDp(30)
+                    .oval(false)
+                    .build();
+
+            Picasso.with(getActivity()).load(imageUri).transform(transformation).into(profilePictureView);
+
+            nameView.setText(name);
+            textView.setText(text);
+            dateView.setText(date);
+
+
+
+        }
+    }
 
 
     public void changeIsRetweeted() {
@@ -243,5 +267,9 @@ public class DetailFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.detail, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    public void setResult(Bundle args) {
+        refresh(args);
     }
 }

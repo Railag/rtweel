@@ -184,4 +184,8 @@ public class MainActivity extends ActionBarActivity {
     public boolean isLoggedIn() {
         return mCurrentFragment != null;
     }
+
+    public Fragment getCurrentFragment() {
+        return mCurrentFragment;
+    }
 }
