@@ -7,4 +7,10 @@
         android:title="@string/pref_images_shown"
         android:defaultValue="true"/>
 
+    <CheckBoxPreference
+        android:key="save_tweet"
+        android:summary="@string/pref_save_tweet_summary"
+        android:title="@string/pref_save_tweet"
+        android:defaultValue="true"/>
+
 </PreferenceScreen>

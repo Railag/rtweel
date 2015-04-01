@@ -30,6 +30,9 @@
     <string name="select_file">Select file</string>
     <string name="pref_images_shown">Images preview</string>
     <string name="pref_images_shown_summary">In timeline</string>
+    <string name="pref_save_tweet">Tweet text saving</string>
+    <string name="pref_save_tweet_summary">Even after app closing or screen changing</string>
+
     <string name="settings">Settings</string>
     <string name="loading">Loading..</string>
     <string name="tweet_refreshing">Tweet refreshing..</string>

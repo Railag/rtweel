@@ -1,5 +1,6 @@
 package com.rtweel.activities;
 
+import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -10,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.rtweel.R;
 import com.rtweel.fragments.LoginFragment;
@@ -26,6 +29,7 @@ import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.fragments.TimelineFragment;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -76,42 +80,6 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-    private void initToggle() {
-        mToggle = new ActionBarDrawerToggle(
-                this,
-                mDrawerLayout,
-                mToolbar,
-                R.string.drawer_open,
-                R.string.drawer_closed
-        ) {
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                invalidateOptionsMenu();
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu();
-            }
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                super.onDrawerStateChanged(newState);
-            }
-
-        };
-
-
-
-        mDrawerLayout.setDrawerListener(mToggle);
-    }
-
     private void initDrawer() {
         mDrawerItems = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.drawer_items)));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -123,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch(position) {
+                switch (position) {
                     case 0:
                         setMainFragment(new ProfileFragment());
                         break;
@@ -144,11 +112,35 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+
+    private void initToggle() {
+        mToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                mToolbar,
+                R.string.drawer_open,
+                R.string.drawer_closed
+        ) {
+
+        };
+
+        mDrawerLayout.setDrawerListener(mToggle);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+
+        setTitleClickable();
+
+
+        mToggle.syncState();
+    }
+
+
     public void setMainFragment(final Fragment fragment) {
 
         final FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        if( !(fragment instanceof LoginFragment) )
+        if (!(fragment instanceof LoginFragment))
             fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.replace(R.id.main_frame, fragment).commit();
@@ -159,22 +151,44 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-            if(mFragmentManager.getBackStackEntryCount() == 1)
-                super.onBackPressed();
-            else
-                mFragmentManager.popBackStackImmediate();
-    }
-
-    @Override
-    public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onPostCreate(savedInstanceState, persistentState);
-        mToggle.syncState();
+        if (mFragmentManager.getBackStackEntryCount() == 1)
+            super.onBackPressed();
+        else
+            mFragmentManager.popBackStackImmediate();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mToggle.onConfigurationChanged(newConfig);
+    }
+
+    private void setTitleClickable() {
+        try {
+            Field titleField = Toolbar.class.getDeclaredField("mTitleTextView");
+            titleField.setAccessible(true);
+            final TextView barTitleView = (TextView) titleField.get(mToolbar);
+            barTitleView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    ObjectAnimator animator = new ObjectAnimator();
+                    animator.setFloatValues(1.0f, 0.5f, 1.0f);
+                    animator.setDuration(600);
+                    animator.setPropertyName("alpha");
+                    animator.setTarget(barTitleView);
+                    animator.start();
+
+                    if(mDrawerLayout.isDrawerOpen(mDrawerList))
+                        mDrawerLayout.closeDrawers();
+                    else
+                        mDrawerLayout.openDrawer(Gravity.START);
+                }
+            });
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public ProgressBar getLoadingBar() {
