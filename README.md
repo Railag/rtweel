@@ -55,6 +55,8 @@ TODO:
 - ~~Replace main listview with recyclerview~~
 - ~~Adding floating button to scroll up and down on timeline~~
 - Profile section implementation
+- Mention in tweet custom push notification with opening this tweet
+- PN system changes + settings
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/com.rtweel.twitteroauth/ConstantValues.java class.
