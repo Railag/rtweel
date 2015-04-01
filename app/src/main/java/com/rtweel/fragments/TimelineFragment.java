@@ -80,6 +80,8 @@ public class TimelineFragment extends BaseFragment {
 
         Timeline.setDefaultTimeline(mTimeline);
 
+        setTitle(getString(R.string.title_timeline));
+
         addTweetService();
 
         new LoadTimelineTask(this).execute(mTimeline);

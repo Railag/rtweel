@@ -70,6 +70,8 @@ public class DetailFragment extends BaseFragment {
     }
 
     private void initViews(View v) {
+        //setTitle(getString(R.string.title_detail));
+        getMainActivity().hide();
         nameView = (TextView) v.findViewById(R.id.detail_name);
         textView = (TextView) v.findViewById(R.id.detail_text);
         dateView = (TextView) v.findViewById(R.id.detail_date);
@@ -267,6 +269,12 @@ public class DetailFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.detail, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getMainActivity().show();
     }
 
     public void setResult(Bundle args) {

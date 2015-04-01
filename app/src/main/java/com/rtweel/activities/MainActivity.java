@@ -188,4 +188,16 @@ public class MainActivity extends ActionBarActivity {
     public Fragment getCurrentFragment() {
         return mCurrentFragment;
     }
+
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
+
+    public void hide() {
+        getSupportActionBar().hide();
+    }
+
+    public void show() {
+        getSupportActionBar().show();
+    }
 }

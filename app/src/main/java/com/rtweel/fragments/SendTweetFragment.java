@@ -2,6 +2,7 @@ package com.rtweel.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -40,6 +42,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.prefs.PreferencesFactory;
 
 /**
  * Created by root on 22.3.15.
@@ -77,9 +80,11 @@ public class SendTweetFragment extends BaseFragment {
             Bitmap bitmap = BitmapFactory.decodeFile(path);
             setImage(bitmap);
 
-            String text = args.getString(Extras.TWEET_TEXT);
             mCurrentMax = 117;
-            mTweetEntry.setText(text);
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String tweetText = prefs.getString(Extras.TWEET_TEXT, "");
+            mTweetEntry.setText(tweetText);
         }
 
         mTweetProgress.setProgressColor(getResources().getColor(R.color.green_progress));
@@ -274,6 +279,8 @@ public class SendTweetFragment extends BaseFragment {
 
         mSavedInstanceState = savedInstanceState;
 
+        setTitle(getString(R.string.title_send_tweet));
+
         mTweetEntry = (EditText) v.findViewById(R.id.tweet_input);
         mTweetLengthCounter = (TextView) v.findViewById(R.id.tweet_input_counter);
         mTweetPicture = (ImageView) v.findViewById(R.id.tweet_photo_imageview);
@@ -293,10 +300,10 @@ public class SendTweetFragment extends BaseFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+
         outState.putString(SAVE_TWEET_ENTRY, mTweetEntry.getText().toString());
         outState.putString(SAVE_TWEET_ENTRY_COUNTER, mTweetLengthCounter
                 .getText().toString());
-        outState.putFloat(SAVE_TWEET_PROGRESS, mTweetProgress.getProgress());
         outState.putFloat(SAVE_TWEET_PROGRESS, mTweetProgress.getProgress());
         super.onSaveInstanceState(outState);
     }
@@ -317,6 +324,23 @@ public class SendTweetFragment extends BaseFragment {
             Toast.makeText(getActivity(),
                     "Image capturing failed", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onPause() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Extras.TWEET_TEXT, mTweetEntry.getText().toString());
+        editor.apply();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String tweetText = prefs.getString(Extras.TWEET_TEXT, "");
+        mTweetEntry.setText(tweetText);
     }
 
     @Override

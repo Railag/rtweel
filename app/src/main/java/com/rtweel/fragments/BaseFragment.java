@@ -48,4 +48,8 @@ public class BaseFragment extends Fragment {
     protected void back() {
         getMainActivity().onBackPressed();
     }
+
+    protected void setTitle(String title) {
+        getMainActivity().getSupportActionBar().setTitle(title);
+    }
 }

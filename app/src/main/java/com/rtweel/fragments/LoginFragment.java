@@ -25,6 +25,9 @@ public class LoginFragment extends BaseFragment {
 		/*
          * Login Check
 		 */
+
+        setTitle(getString(R.string.title_login));
+
         if (loginCheck()) {
             initialize();
         }

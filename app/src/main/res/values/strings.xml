@@ -49,5 +49,14 @@
         <item name="settings">Settings</item>
     </string-array>
 
+    <!--Toolbar titles-->
+    <string name="title_detail">Tweet</string>
+    <string name="title_timeline">Home</string>
+    <string name="title_file">Select File</string>
+    <string name="title_login">Start</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_send_tweet">Send Tweet</string>
+
 
 </resources>
