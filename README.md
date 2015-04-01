@@ -44,10 +44,10 @@ TODO:
 - ~~Improving timeline system~~
 - ~~Replacing rotate animation with something more smoother~~
 - Adding webview for auth
-- Replacing standard menu with nav drawer one
+- ~~Replacing standard menu with nav drawer one~~
 - Add view pager for detail tweet scrolling
-- Replace main listview with recyclerview
-- Adding floating button to scroll up and down on timeline
+- ~~Replace main listview with recyclerview~~
+- ~~Adding floating button to scroll up and down on timeline~~
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/com.rtweel.twitteroauth/ConstantValues.java class.
