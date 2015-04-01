@@ -4,17 +4,23 @@ Lightweight Twitter application available even for old android devices starting 
 
 Already done:
 - Twitter OAuth authentification through integrated twitter4j library, initial browser login
+- Navigation via navigation drawer, with toggle and its title animation
+- Toolbar 
+- Floating up button for scrolling to the beginning
+- RecyclerView wrapping the timeline
+- CardView wrapping tweet's text
+- Round profile logos
 - Notifications which check updates on your twitter and download tweets, cyan LED color
 - One timeline, which can contain both your tweets or your home timeline's. 
 - Some buttons for manual updating timelines, posting tweets, etc.
-- Right swipe to receive newest tweets and left swipe to receive older tweets.
+- Up/bottom swipes for timeline updating
 - Caching profile images, so the second and later launches will be faster.
 - Caching your downloaded timeline into SQLite DB and retrieving it from if there are any tweets cached.
 - Timeline updating animation (circle).
 - Using Picasso library for async image downloading & caching
 - Dialogs for loading moments
 - Icons
-- Some screens for tweet posting, for detail tweet view.
+- Some fragments for tweet posting, for detail tweet view, for file etc.
 - Using support library, 3.0 > version support.
 
 TODO:
