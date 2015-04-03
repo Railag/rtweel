@@ -12,7 +12,6 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -49,21 +49,18 @@ public class TimelineFragment extends BaseFragment {
 
     private TweetAdapter adapter;
 
-    //private AdapterView<TweetAdapter> mAdapter;
-
     private Timeline mTimeline;
 
     private RecyclerView list;
 
     private boolean mContentLoaded;
 
-    private int mLastYChange = 0;
+    private int mLastVisibleItem = 0;
 
     private TimelineUpTask mUpTask;
     private TimelineDownTask mDownTask;
 
-    private RecyclerView.Adapter mAdapterRecycle;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
 
 
     @Nullable
@@ -76,9 +73,15 @@ public class TimelineFragment extends BaseFragment {
         if (isLoading())
             stopLoading();
 
+        //    if(Timeline.getDefaultTimeline() == null) {
         mTimeline = new Timeline(getActivity().getApplicationContext());
 
         Timeline.setDefaultTimeline(mTimeline);
+        //    } else
+
+        //    mTimeline = Timeline.getDefaultTimeline();
+
+        //    mTimeline.l
 
         setTitle(getString(R.string.title_timeline));
 
@@ -98,32 +101,69 @@ public class TimelineFragment extends BaseFragment {
         //list.setDivider(getResources().getDrawable(android.R.drawable.divider_horizontal_textfield));
 
 
+        list.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int firstVisibleItem = mLayoutManager.findFirstCompletelyVisibleItemPosition();
+
+                if(event.getAction() == MotionEvent.ACTION_UP && mLastVisibleItem == 0) {
+                    updateUp();
+                    return true;
+                }
+
+                if (firstVisibleItem == 0 && mLastVisibleItem > firstVisibleItem) {
+                    updateUp();
+                    mLastVisibleItem = 0;
+                    return true;
+                }
+                if ( event.getAction() == MotionEvent.ACTION_DOWN && firstVisibleItem > mLastVisibleItem && (adapter.getItemCount() - firstVisibleItem) < 5) {
+                    updateDown();
+                    mLastVisibleItem = firstVisibleItem;
+                    return true;
+                }
+
+                int count = adapter.getItemCount();
+                int last = mLayoutManager.findLastVisibleItemPosition();
+                if(event.getAction() == MotionEvent.ACTION_UP && count - last < 3) {
+                    updateDown();
+                    return true;
+                }
+
+                mLastVisibleItem = firstVisibleItem;
+                return false;
+            }
+        });
+
+//        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                Log.i("DEBUG", "Coords:" + dx + dy);
+//                super.onScrolled(recyclerView, dx, dy);
+////                mLastYChange = dy;
+//
+//            }
+//
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                Log.i("DEBUG", "Axis y scroll");
+//                super.onScrollStateChanged(recyclerView, newState);
+//     //           if (newState == RecyclerView.SCROLL_AXIS_VERTICAL)
+//
+//                //    if(== RecyclerView.SCROLL_STATE_IDLE && mLastYChange);
+//            }
+//        });
+
+
         mLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(mLayoutManager);
         list.setItemAnimator(new DefaultItemAnimator());
 
 
+
+
         list.setVisibility(View.GONE);
         crossfade();
 
-
-
-        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                mLastYChange = dy;
-                Log.i("DEBUG", "Coords:" + dx + dy);
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(newState == RecyclerView.SCROLL_AXIS_VERTICAL)
-                    Log.i("DEBUG", "Axis y scroll");
-            //    if(== RecyclerView.SCROLL_STATE_IDLE && mLastYChange);
-            }
-        });
 
         /*
         list.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -158,7 +198,6 @@ public class TimelineFragment extends BaseFragment {
 
         //mTimeline.setAdapter(adapter);
 
-     //   mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         list.setAdapter(adapter);
 
 
@@ -358,8 +397,6 @@ public class TimelineFragment extends BaseFragment {
 
         fade.start();
     }
-
-
 
 
     public RecyclerView getList() {
