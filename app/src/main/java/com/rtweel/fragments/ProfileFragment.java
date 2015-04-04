@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ public class ProfileFragment extends BaseFragment {
 
     private PagerAdapter mPagerAdapter;
 
-    private PagerTitleStrip mPagerTitleStrip;
+    private PagerTabStrip mPagerTabStrip;
 
     @Nullable
     @Override
@@ -35,7 +36,7 @@ public class ProfileFragment extends BaseFragment {
 
         mPager = (ViewPager) v.findViewById(R.id.pager);
 
-        mPagerTitleStrip = (PagerTitleStrip) v.findViewById(R.id.pager_title_strip);
+        mPagerTabStrip = (PagerTabStrip) v.findViewById(R.id.pager_tab_strip);
 
 
         mPagerAdapter = new FragmentStatePagerAdapter(getMainActivity().getSupportFragmentManager()) {
@@ -56,6 +57,11 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public int getCount() {
                 return PAGER_SIZE;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return "Fragment" + position;
             }
         };
 
