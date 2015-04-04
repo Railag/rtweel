@@ -1,9 +1,9 @@
 package com.rtweel.asynctasks.tweet;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.rtweel.activities.MainActivity;
 import com.rtweel.constant.Extras;

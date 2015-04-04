@@ -331,7 +331,7 @@ public class SendTweetFragment extends BaseFragment {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = prefs.edit();
-        if (prefs.getBoolean("save_tweet", true))
+        if (prefs.getBoolean(SettingsFragment.SAVE_TWEET_PREFS, true))
             editor.putString(Extras.TWEET_TEXT, mTweetEntry.getText().toString());
         else
             editor.putString(Extras.TWEET_TEXT, "");
@@ -343,7 +343,7 @@ public class SendTweetFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (prefs.getBoolean("save_tweet", true)) {
+        if (prefs.getBoolean(SettingsFragment.SAVE_TWEET_PREFS, true)) {
             String tweetText = prefs.getString(Extras.TWEET_TEXT, "");
             mTweetEntry.setText(tweetText);
         }

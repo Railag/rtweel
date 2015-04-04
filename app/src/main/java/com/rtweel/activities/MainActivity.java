@@ -1,20 +1,17 @@
 package com.rtweel.activities;
 
 import android.animation.ObjectAnimator;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -53,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -179,7 +176,7 @@ public class MainActivity extends ActionBarActivity {
                     animator.setTarget(barTitleView);
                     animator.start();
 
-                    if(mDrawerLayout.isDrawerOpen(mDrawerList))
+                    if (mDrawerLayout.isDrawerOpen(mDrawerList))
                         mDrawerLayout.closeDrawers();
                     else
                         mDrawerLayout.openDrawer(Gravity.START);

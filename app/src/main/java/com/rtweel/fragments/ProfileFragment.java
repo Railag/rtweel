@@ -2,6 +2,11 @@ package com.rtweel.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.PagerTitleStrip;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +19,52 @@ import com.rtweel.R;
 public class ProfileFragment extends BaseFragment {
     //TODO
 
+    private final static int PAGER_SIZE = 3;
+
+    private ViewPager mPager;
+
+    private PagerAdapter mPagerAdapter;
+
+    private PagerTitleStrip mPagerTitleStrip;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setTitle(getString(R.string.title_profile));
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        mPager = (ViewPager) v.findViewById(R.id.pager);
+
+        mPagerTitleStrip = (PagerTitleStrip) v.findViewById(R.id.pager_title_strip);
+
+
+        mPagerAdapter = new FragmentStatePagerAdapter(getMainActivity().getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                switch (position) {
+                    case 0:
+                        return new TimelineFragment();
+                    case 1:
+                        return new SettingsFragment();
+                    case 2:
+                        return new SendTweetFragment();
+                    default:
+                        return new TimelineFragment();
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return PAGER_SIZE;
+            }
+        };
+
+        mPager.setAdapter(mPagerAdapter);
+
+        return v;
     }
+
+
+
+
 }

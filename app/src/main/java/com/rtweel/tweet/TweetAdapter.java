@@ -20,6 +20,7 @@ import com.rtweel.activities.MainActivity;
 import com.rtweel.asynctasks.tweet.RefreshTweetTask;
 import com.rtweel.constant.Extras;
 import com.rtweel.fragments.DetailFragment;
+import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.parsers.DateParser;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -83,7 +84,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(sContext);
         String url = null;
-        if (preferences.getBoolean("images_shown", true)) {
+        if (preferences.getBoolean(SettingsFragment.IMAGES_SHOWN_PREFS, true)) {
             MediaEntity[] entities = tweet.getMediaEntities();
             if (entities.length > 0)
                 url = entities[0].getMediaURL();

@@ -116,7 +116,7 @@ public class TimelineFragment extends BaseFragment {
                     mLastVisibleItem = 0;
                     return true;
                 }
-                if ( event.getAction() == MotionEvent.ACTION_DOWN && firstVisibleItem > mLastVisibleItem && (adapter.getItemCount() - firstVisibleItem) < 5) {
+                if ( event.getAction() == MotionEvent.ACTION_MOVE && firstVisibleItem > mLastVisibleItem && (adapter.getItemCount() - firstVisibleItem) < 4) {
                     updateDown();
                     mLastVisibleItem = firstVisibleItem;
                     return true;

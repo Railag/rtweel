@@ -1,9 +1,9 @@
 package com.rtweel.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.widget.ProgressBar;
 
