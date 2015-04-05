@@ -33,6 +33,7 @@ import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
+import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.services.TweetService;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.tweet.Timeline;
@@ -45,22 +46,21 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 /**
  * Created by root on 21.3.15.
  */
-public class TimelineFragment extends BaseFragment {
+public abstract class TimelineFragment extends BaseFragment {
 
-    private TweetAdapter adapter;
+    protected TweetAdapter adapter;
 
-    private Timeline mTimeline;
+    protected Timeline mTimeline;
 
-    private RecyclerView list;
+    protected RecyclerView list;
 
-    private boolean mContentLoaded;
+    protected boolean mContentLoaded;
 
-    private int mLastVisibleItem = 0;
+    protected int mLastVisibleItem = 0;
 
-    private TimelineUpTask mUpTask;
-    private TimelineDownTask mDownTask;
+    protected LinearLayoutManager mLayoutManager;
 
-    private LinearLayoutManager mLayoutManager;
+    private HideHeaderOnScrollListener mListener;
 
 
     @Nullable
@@ -73,26 +73,26 @@ public class TimelineFragment extends BaseFragment {
         if (isLoading())
             stopLoading();
 
-        //    if(Timeline.getDefaultTimeline() == null) {
-        mTimeline = new Timeline(getActivity().getApplicationContext());
-
-        Timeline.setDefaultTimeline(mTimeline);
-        //    } else
-
-        //    mTimeline = Timeline.getDefaultTimeline();
-
-        //    mTimeline.l
+        instantiateTimeline();
 
         setTitle(getString(R.string.title_timeline));
 
         addTweetService();
 
-        new LoadTimelineTask(this).execute(mTimeline);
+        loadTweets();
 
         initList(v);
 
         return v;
     }
+
+    protected abstract void updateUp();
+
+    protected abstract void updateDown();
+
+    protected abstract void loadTweets();
+
+    protected abstract void instantiateTimeline();
 
     private void initList(View v) {
 
@@ -106,12 +106,20 @@ public class TimelineFragment extends BaseFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 int firstVisibleItem = mLayoutManager.findFirstCompletelyVisibleItemPosition();
 
+                if(firstVisibleItem <= mLastVisibleItem && firstVisibleItem <= 0)
+                    if(mListener.isHidden())
+                        mListener.onTop();
+
                 if(event.getAction() == MotionEvent.ACTION_UP && mLastVisibleItem == 0) {
                     updateUp();
                     return true;
                 }
 
-                if (firstVisibleItem == 0 && mLastVisibleItem > firstVisibleItem) {
+                if (firstVisibleItem <= 0 && mLastVisibleItem > firstVisibleItem) {
+
+                    if(!mListener.isHidden())
+                        mListener.onScrollDown();
+
                     updateUp();
                     mLastVisibleItem = 0;
                     return true;
@@ -218,45 +226,6 @@ public class TimelineFragment extends BaseFragment {
         });
     }
 
-    private void updateUp() {
-
-        blink();
-        if (!App.isOnline(getActivity())) {
-            Log.i("DEBUG", "Up swipe NO NETWORK");
-            Toast.makeText(
-                    getActivity(),
-                    "No network connection, couldn't load tweets!",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-        Log.i("DEBUG", "SWIPE UP");
-        if (mUpTask != null)
-            if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
-                return;
-        mUpTask = new TimelineUpTask(TimelineFragment.this);
-        mUpTask.execute(mTimeline);
-
-    }
-
-    private void updateDown() {
-        blink();
-        if (!App.isOnline(getActivity())) {
-            Log.i("DEBUG", "Down swipe NO NETWORK");
-            Toast.makeText(
-                    getActivity(),
-                    "No network connection, couldn't load tweets!",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-        Log.i("DEBUG", "SWIPE DOWN");
-
-        if (mDownTask != null)
-            if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
-                return;
-        mDownTask = new TimelineDownTask(TimelineFragment.this);
-        mDownTask.execute(mTimeline);
-    }
-
     private void addTweetService() {
         Intent serviceIntent = new Intent(getActivity(), TweetService.class);
         PendingIntent alarmIntent = PendingIntent.getService(getActivity(), 0,
@@ -267,88 +236,6 @@ public class TimelineFragment extends BaseFragment {
                         SystemClock.elapsedRealtime()
                                 + AlarmManager.INTERVAL_HALF_HOUR,
                         AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.switch_home_timeline: {
-
-                if (!App.isOnline(getActivity())) {
-                    Log.i("DEBUG", "home timeline button onClick NO NETWORK");
-                    Toast.makeText(getActivity(),
-                            "No network connection, couldn't load tweets!",
-                            Toast.LENGTH_LONG).show();
-                    break;
-                }
-                if (mTimeline.getCurrentTimelineType() != Timeline.HOME_TIMELINE) {
-
-                    mTimeline.clear();
-
-                    mTimeline.setTimelineType(Timeline.HOME_TIMELINE);
-                    list.setVisibility(View.GONE);
-                    crossfade();
-                    Log.i("DEBUG", "Updating home timeline...");
-                    new LoadTimelineTask(this).execute(mTimeline);
-                } else {
-                    Toast.makeText(getActivity(),
-                            "It's your current timeline!", Toast.LENGTH_LONG)
-                            .show();
-                }
-                break;
-            }
-            case R.id.switch_user_timeline: {
-                if (!App.isOnline(getActivity())) {
-                    Log.i("DEBUG", "user timeline button onClick NO NETWORK");
-                    Toast.makeText(getActivity(),
-                            "No network connection, couldn't load tweets!",
-                            Toast.LENGTH_LONG).show();
-                    break;
-                }
-                if (mTimeline.getCurrentTimelineType() != Timeline.USER_TIMELINE) {
-                    mTimeline.clear();
-
-                    mTimeline.setTimelineType(Timeline.USER_TIMELINE);
-                    list.setVisibility(View.GONE);
-                    crossfade();
-                    Log.i("DEBUG", "Updating user timeline...");
-                    new LoadTimelineTask(this).execute(mTimeline);
-                } else {
-                    Toast.makeText(getActivity(),
-                            "It's your current timeline!", Toast.LENGTH_LONG)
-                            .show();
-                }
-                break;
-            }
-            case R.id.tweet_send_open: {
-                getMainActivity().setMainFragment(new SendTweetFragment());
-                break;
-            }
-            case R.id.logout_button: {
-                App app = (App) getActivity().getApplication();
-
-                boolean dbDeleted = getActivity().deleteDatabase(TweetDatabaseOpenHelper
-                        .getDbName());
-                Log.i("DEBUG", "DB DELETED = " + dbDeleted);
-
-                app.createDb();
-
-                SharedPreferences sharedPreferences = PreferenceManager
-                        .getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
-                editor.putString(
-                        ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
-                editor.putBoolean(ConstantValues.PREFERENCE_TWITTER_IS_LOGGED_IN,
-                        false);
-                editor.commit();
-
-                TwitterUtil.getInstance().reset();
-                getMainActivity().finish();
-                break;
-            }
-        }
-        return true;
     }
 
     @Override
@@ -382,7 +269,7 @@ public class TimelineFragment extends BaseFragment {
                 });
     }
 
-    private void blink() {
+    public void blink() {
 
         ValueAnimator fade = new ValueAnimator();
         fade.setFloatValues(1, 0.3f, 1);
@@ -418,4 +305,9 @@ public class TimelineFragment extends BaseFragment {
     public Timeline getTimeline() {
         return mTimeline;
     }
+
+    public void setHideHeaderListener(HideHeaderOnScrollListener listener) {
+        mListener = listener;
+    }
+
 }

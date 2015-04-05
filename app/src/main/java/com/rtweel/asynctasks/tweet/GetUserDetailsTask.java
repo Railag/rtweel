@@ -65,7 +65,7 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
         if(user != null) {
             Transformation transformation = new RoundedTransformationBuilder()
                     .borderColor(Color.BLACK)
-                    .borderWidthDp(1)
+                    .borderWidthDp(2)
                     .cornerRadiusDp(30)
                     .oval(false)
                     .build();

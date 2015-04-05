@@ -21,11 +21,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.rtweel.R;
+import com.rtweel.fragments.HomeTimelineFragment;
 import com.rtweel.fragments.LoginFragment;
 import com.rtweel.fragments.ProfileFragment;
 import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.fragments.SettingsFragment;
-import com.rtweel.fragments.TimelineFragment;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
                         setMainFragment(new ProfileFragment());
                         break;
                     case 1:
-                        setMainFragment(new TimelineFragment());
+                        setMainFragment(new HomeTimelineFragment());
                         break;
                     case 2:
                         setMainFragment(new SendTweetFragment());

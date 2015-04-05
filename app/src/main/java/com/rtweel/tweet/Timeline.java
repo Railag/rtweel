@@ -50,8 +50,8 @@ public class Timeline implements Iterable<Status> {
     private static String sUserName;
     private static String sScreenUserName;
 
-    public Timeline(Context context) {
-        mCurrentTimelineType = HOME_TIMELINE;
+    public Timeline(Context context, int timelineType) {
+        mCurrentTimelineType = timelineType;
         list = new ArrayList<twitter4j.Status>();
         mContext = context;
         String accessTokenString = null;
@@ -324,7 +324,7 @@ public class Timeline implements Iterable<Status> {
             cursor = resolver.query(
                     TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
                     projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 30");
-        }
+       }
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 String author = cursor.getString(cursor
@@ -455,6 +455,7 @@ public class Timeline implements Iterable<Status> {
 
     public static void setDefaultTimeline(Timeline timeline) {
         sTimeline = timeline;
+        sTimeline.mCurrentTimelineType = timeline.getCurrentTimelineType();
     }
 
     public static Timeline getDefaultTimeline() {

@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import com.rtweel.R;
 import com.rtweel.asynctasks.auth.TwitterAuthenticateTask;
@@ -82,6 +80,6 @@ public class LoginFragment extends BaseFragment {
         if (isLoading())
             stopLoading();
 
-        getMainActivity().setMainFragment(new TimelineFragment());
+        getMainActivity().setMainFragment(new HomeTimelineFragment());
     }
 }

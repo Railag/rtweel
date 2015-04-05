@@ -30,12 +30,12 @@ public class TweetService extends IntentService {
 
 	public TweetService() {
 		super("TestService");
-		mTimeline = new Timeline(this);
+		mTimeline = new Timeline(this, Timeline.USER_TIMELINE);
 	}
 
-	public TweetService(String name) {
+	public TweetService(String name, int type) {
 		super(name);
-		mTimeline = new Timeline(this);
+		mTimeline = new Timeline(this, type);
 	}
 
 	@Override
