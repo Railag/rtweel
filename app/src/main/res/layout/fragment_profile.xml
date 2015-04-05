@@ -12,29 +12,23 @@
             android:id="@+id/profile_background"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_above="@+id/profile_picture"
-            android:background="@android:color/white"
             android:contentDescription="@string/cd_profile_background" />
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/profile_picture"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="22dp"
-            android:background="@android:color/white"
-            android:contentDescription="@string/cd_profile_picture" />
+            android:contentDescription="@string/cd_profile_picture"
+            android:layout_centerInParent="true" />
 
         <TextView
             android:id="@+id/profile_name_normal"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_picture"
             android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:text="Name" />
+            android:gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/profile_name_link"
@@ -42,15 +36,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_name_normal"
             android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:text="\@name" />
+            android:gravity="center_horizontal" />
 
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/profile_description"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:text="Description \n description" />
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:padding="5dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
@@ -61,7 +56,6 @@
             android:id="@+id/pager_tab_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
             android:background="#33b5e5"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"

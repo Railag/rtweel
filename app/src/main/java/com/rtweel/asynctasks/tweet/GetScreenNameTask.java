@@ -24,7 +24,6 @@ public class GetScreenNameTask extends AsyncTask<Twitter, Void, Void> {
                 e.printStackTrace();
             }
 
-            rates.toString();
             if (TextUtils.isEmpty(Timeline.getUserName()))
                 Timeline.setScreenUserName(twitter.getScreenName());
 

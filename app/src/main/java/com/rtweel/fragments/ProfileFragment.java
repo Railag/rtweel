@@ -5,14 +5,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.PagerTabStrip;
-import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.R;
+import com.rtweel.asynctasks.tweet.GetUserDetailsTask;
+import com.rtweel.tweet.Timeline;
 
 /**
  * Created by root on 25.3.15.
@@ -26,7 +29,28 @@ public class ProfileFragment extends BaseFragment {
 
     private PagerAdapter mPagerAdapter;
 
-    private PagerTabStrip mPagerTabStrip;
+    private TextView mProfileNameNormal;
+    private TextView mProfileNameLink;
+
+    private ImageView mBackground;
+    private RoundedImageView mLogo;
+
+    private TextView mDescription;
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mProfileNameNormal.setText(Timeline.getUserName());
+        mProfileNameLink.setText(Timeline.getScreenUserName());
+
+        Timeline timeline = Timeline.getDefaultTimeline();
+        GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription);
+        task.execute(timeline.getTwitter());
+
+        initPagerAdapter();
+    }
 
     @Nullable
     @Override
@@ -36,9 +60,19 @@ public class ProfileFragment extends BaseFragment {
 
         mPager = (ViewPager) v.findViewById(R.id.pager);
 
-        mPagerTabStrip = (PagerTabStrip) v.findViewById(R.id.pager_tab_strip);
+        mBackground = (ImageView) v.findViewById(R.id.profile_background);
+        mLogo = (RoundedImageView) v.findViewById(R.id.profile_picture);
+
+        mProfileNameNormal = (TextView) v.findViewById(R.id.profile_name_normal);
+        mProfileNameLink = (TextView) v.findViewById(R.id.profile_name_link);
+
+        mDescription = (TextView) v.findViewById(R.id.profile_description);
+
+        return v;
+    }
 
 
+    private void initPagerAdapter() {
         mPagerAdapter = new FragmentStatePagerAdapter(getMainActivity().getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -61,16 +95,39 @@ public class ProfileFragment extends BaseFragment {
 
             @Override
             public CharSequence getPageTitle(int position) {
-                return "Fragment" + position;
+                String title;
+
+                switch (position) {
+                    case 0:
+                        title = "Home";
+                        break;
+                    case 1:
+                        title = "Settings";
+                        break;
+                    case 2:
+                        title = "Send";
+                        break;
+                    default:
+                        title = "";
+                        break;
+                }
+
+//                Drawable myDrawable = getResources().getDrawable(R.drawable.placeholder); //TODO spannable with image
+//                SpannableStringBuilder sb = new SpannableStringBuilder(title);
+//                myDrawable.setBounds(0, 0, myDrawable.getIntrinsicWidth(), myDrawable.getIntrinsicHeight());
+//                ImageSpan span = new ImageSpan(myDrawable, ImageSpan.ALIGN_BASELINE);
+//                sb.setSpan(span, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//
+//                return sb;
+
+                return title;
             }
         };
 
         mPager.setAdapter(mPagerAdapter);
 
-        return v;
     }
-
-
 
 
 }
