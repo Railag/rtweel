@@ -107,7 +107,7 @@ public abstract class TimelineFragment extends BaseFragment {
                 int firstVisibleItem = mLayoutManager.findFirstCompletelyVisibleItemPosition();
 
                 if(firstVisibleItem <= mLastVisibleItem && firstVisibleItem <= 0)
-                    if(mListener.isHidden())
+                    if(mListener != null && mListener.isHidden())
                         mListener.onTop();
 
                 if(event.getAction() == MotionEvent.ACTION_UP && mLastVisibleItem == 0) {
@@ -117,7 +117,7 @@ public abstract class TimelineFragment extends BaseFragment {
 
                 if (firstVisibleItem <= 0 && mLastVisibleItem > firstVisibleItem) {
 
-                    if(!mListener.isHidden())
+                    if(mListener != null && !mListener.isHidden())
                         mListener.onScrollDown();
 
                     updateUp();
