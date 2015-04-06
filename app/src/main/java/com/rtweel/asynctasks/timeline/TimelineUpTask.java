@@ -3,7 +3,7 @@ package com.rtweel.asynctasks.timeline;
 import java.util.List;
 
 import com.rtweel.fragments.TimelineFragment;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 import android.os.AsyncTask;
 import android.util.Log;

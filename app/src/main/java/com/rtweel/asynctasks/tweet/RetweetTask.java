@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rtweel.fragments.DetailFragment;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 import twitter4j.TwitterException;
 

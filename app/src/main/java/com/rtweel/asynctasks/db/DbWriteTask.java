@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 
@@ -45,23 +45,33 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
                     .getCreatedAt().toString());
 
             values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_ID, s.getId());
-            Log.i("DEBUG", "stage1");
             if (s.getMediaEntities().length > 0) {
                 String media = s.getMediaEntities()[0].getMediaURL();
-                Log.i("DEBUG", s.getUser().getName() + ":" + media);
                 values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA, media);
             } else {
                 values.put(TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA, "");
             }
 
-            if (mTimelineType == Timeline.HOME_TIMELINE) {
-                resolver.insert(
-                        TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-                        values);
-            } else if (mTimelineType == Timeline.USER_TIMELINE) {
-                resolver.insert(
-                        TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-                        values);
+            switch (mTimelineType) {
+                case Timeline.HOME_TIMELINE:
+                    resolver.insert(
+                            TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
+                            values);
+                    break;
+                case Timeline.USER_TIMELINE:
+                    resolver.insert(
+                            TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
+                            values);
+                    break;
+                case Timeline.FAVORITE_TIMELINE:
+                    //TODO
+                    break;
+                case Timeline.ANSWERS_TIMELINE:
+                    //TODO
+                    break;
+                case Timeline.IMAGES_TIMELINE:
+                    //TODO
+                    break;
             }
         }
 

@@ -9,7 +9,7 @@ import com.rtweel.activities.MainActivity;
 import com.rtweel.constant.Extras;
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;

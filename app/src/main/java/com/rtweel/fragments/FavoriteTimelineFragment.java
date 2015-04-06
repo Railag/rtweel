@@ -4,12 +4,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rtweel.Timelines.FavoriteTimeline;
+import com.rtweel.timelines.FavoriteTimeline;
 import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 /**
  * Created by root on 6.4.15.
@@ -26,7 +26,7 @@ public class FavoriteTimelineFragment extends TimelineFragment {
 
     @Override
     protected void instantiateTimeline() {
-        mTimeline = new FavoriteTimeline(getActivity().getApplicationContext(), Timeline.FAVORITE_TIMELINE);
+        mTimeline = new FavoriteTimeline(getActivity().getApplicationContext());
 
         Timeline.setDefaultTimeline(mTimeline);
     }

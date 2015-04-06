@@ -1,4 +1,4 @@
-package com.rtweel.Timelines;
+package com.rtweel.timelines;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -32,6 +32,8 @@ public abstract class Timeline implements Iterable<Status> {
     public static final int USER_TIMELINE = 0;
     public static final int HOME_TIMELINE = 1;
     public static final int FAVORITE_TIMELINE = 2;
+    public static final int ANSWERS_TIMELINE = 3;
+    public static final int IMAGES_TIMELINE = 4;
 
     public static final int UP_TWEETS = 0;
     public static final int DOWN_TWEETS = 1;
@@ -39,9 +41,9 @@ public abstract class Timeline implements Iterable<Status> {
 
     public static final int TWEETS_PER_PAGE = 30;
 
-    private List<twitter4j.Status> list;
+    protected List<twitter4j.Status> list;
 
-    private Twitter mTwitter;
+    protected Twitter mTwitter;
 
     private int mCurrentTimelineType;
     private final Context mContext;
@@ -170,22 +172,47 @@ public abstract class Timeline implements Iterable<Status> {
         }
 
         switch (mCurrentTimelineType) {
-            case Timeline.HOME_TIMELINE: {
+            case Timeline.HOME_TIMELINE:
                 try {
                     downloadedList = mTwitter.getHomeTimeline(page);
                 } catch (TwitterException | NullPointerException e) {
                     e.printStackTrace();
                 }
                 break;
-            }
-            case Timeline.USER_TIMELINE: {
+            case Timeline.USER_TIMELINE:
                 try {
                     downloadedList = mTwitter.getUserTimeline(page);
                 } catch (TwitterException | NullPointerException e) {
                     e.printStackTrace();
                 }
                 break;
-            }
+            case Timeline.FAVORITE_TIMELINE:
+                try {
+                    downloadedList = mTwitter.getFavorites(page);
+                } catch (TwitterException | NullPointerException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Timeline.ANSWERS_TIMELINE:
+                try {
+                    downloadedList = mTwitter.getMentionsTimeline(page); //TODO change
+                } catch (TwitterException | NullPointerException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Timeline.IMAGES_TIMELINE:
+                try {
+                    List<Status> download = mTwitter.getUserTimeline(page);
+
+                    for (Status s : download)
+                        if (s.getMediaEntities().length > 0 && s.getUser().getScreenName().equals(getScreenUserName()))
+                            downloadedList.add(s);
+
+                } catch (TwitterException | NullPointerException e) {
+                    e.printStackTrace();
+                }
+                break;
+
         }
         return downloadedList;
     }
@@ -325,7 +352,7 @@ public abstract class Timeline implements Iterable<Status> {
             cursor = resolver.query(
                     TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
                     projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 30");
-       }
+        }
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 String author = cursor.getString(cursor

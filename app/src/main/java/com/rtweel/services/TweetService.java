@@ -14,9 +14,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.rtweel.Timelines.UserTimeline;
+import com.rtweel.timelines.UserTimeline;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 public class TweetService extends IntentService {
 
@@ -30,12 +30,12 @@ public class TweetService extends IntentService {
 
 	public TweetService() {
 		super("TestService");
-		mTimeline = new UserTimeline(this, Timeline.USER_TIMELINE);
+		mTimeline = new UserTimeline(this);
 	}
 
 	public TweetService(String name, int type) {
 		super(name);
-		mTimeline = new UserTimeline(this, type);
+		mTimeline = new UserTimeline(this);
 	}
 
 	@Override

@@ -10,13 +10,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rtweel.R;
-import com.rtweel.Timelines.HomeTimeline;
+import com.rtweel.timelines.HomeTimeline;
 import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
 
@@ -35,7 +35,7 @@ public class HomeTimelineFragment extends TimelineFragment {
 
     @Override
     protected void instantiateTimeline() {
-        mTimeline = new HomeTimeline(getActivity().getApplicationContext(), Timeline.HOME_TIMELINE);
+        mTimeline = new HomeTimeline(getActivity().getApplicationContext());
 
         Timeline.setDefaultTimeline(mTimeline);
     }

@@ -25,7 +25,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.rtweel.R;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.services.TweetService;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 import com.rtweel.tweet.TweetAdapter;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;

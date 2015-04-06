@@ -4,7 +4,7 @@ import twitter4j.RateLimitStatus;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;

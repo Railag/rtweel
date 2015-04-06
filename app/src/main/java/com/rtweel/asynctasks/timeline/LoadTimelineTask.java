@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.rtweel.fragments.TimelineFragment;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 

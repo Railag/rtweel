@@ -21,7 +21,7 @@ import com.rtweel.asynctasks.tweet.RefreshTweetTask;
 import com.rtweel.constant.Extras;
 import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.SettingsFragment;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 import com.rtweel.parsers.DateParser;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;

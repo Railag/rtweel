@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.rtweel.fragments.TimelineFragment;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 

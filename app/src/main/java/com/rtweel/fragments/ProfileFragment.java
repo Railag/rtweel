@@ -21,7 +21,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.R;
 import com.rtweel.asynctasks.tweet.GetUserDetailsTask;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 
 /**
  * Created by root on 25.3.15.
@@ -29,7 +29,7 @@ import com.rtweel.Timelines.Timeline;
 public class ProfileFragment extends BaseFragment {
     //TODO
 
-    private final static int PAGER_SIZE = 3;
+    private final static int PAGER_SIZE = 4;
     private final static int ANIMATION_TIME = 2000;
 
     private View mView;
@@ -112,11 +112,13 @@ public class ProfileFragment extends BaseFragment {
                     case 0:
                         return instantiateFragment(new HomeTimelineFragment());
                     case 1:
-                        return instantiateFragment(new UserTimelineFragment());
+                        return instantiateFragment(new AnswersTimelineFragment());
                     case 2:
-                        return instantiateFragment(new HomeTimelineFragment());
+                        return instantiateFragment(new FavoriteTimelineFragment());
+                    case 3:
+                        return instantiateFragment(new ImagesTimelineFragment());
                     default:
-                        return instantiateFragment(new HomeTimelineFragment());
+                        return null;
                 }
             }
 
@@ -134,10 +136,13 @@ public class ProfileFragment extends BaseFragment {
                         title = "Home";
                         break;
                     case 1:
-                        title = "Settings";
+                        title = "Answers";
                         break;
                     case 2:
-                        title = "Send";
+                        title = "Favorites";
+                        break;
+                    case 3:
+                        title = "Images";
                         break;
                     default:
                         title = "";

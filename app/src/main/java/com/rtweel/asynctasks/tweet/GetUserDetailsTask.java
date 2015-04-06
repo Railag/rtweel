@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.rtweel.Timelines.Timeline;
+import com.rtweel.timelines.Timeline;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
