@@ -34,7 +34,7 @@ public class BaseFragment extends Fragment {
     }
 
     public MainActivity getMainActivity() {
-        return (MainActivity) getActivity();
+        return  (MainActivity) getActivity();
     }
 
     protected ActionBar getActionBar() {

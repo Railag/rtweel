@@ -5,11 +5,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,28 +15,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import com.rtweel.R;
-import com.rtweel.asynctasks.timeline.LoadTimelineTask;
-import com.rtweel.asynctasks.timeline.TimelineDownTask;
-import com.rtweel.asynctasks.timeline.TimelineUpTask;
-import com.rtweel.cache.App;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.services.TweetService;
-import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.tweet.Timeline;
 import com.rtweel.tweet.TweetAdapter;
-import com.rtweel.twitteroauth.ConstantValues;
-import com.rtweel.twitteroauth.TwitterUtil;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
@@ -56,11 +44,13 @@ public abstract class TimelineFragment extends BaseFragment {
 
     protected boolean mContentLoaded;
 
-    protected int mLastVisibleItem = 0;
+    protected int mLastFirstVisibleItem = 0;
 
     protected LinearLayoutManager mLayoutManager;
 
     private HideHeaderOnScrollListener mListener;
+
+//    private float lastY;
 
 
     @Nullable
@@ -105,39 +95,57 @@ public abstract class TimelineFragment extends BaseFragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int firstVisibleItem = mLayoutManager.findFirstCompletelyVisibleItemPosition();
+                int historySize = event.getHistorySize();
+                int action = event.getAction();
 
-                if(firstVisibleItem <= mLastVisibleItem && firstVisibleItem <= 0)
-                    if(mListener != null && mListener.isHidden())
-                        mListener.onTop();
 
-                if(event.getAction() == MotionEvent.ACTION_UP && mLastVisibleItem == 0) {
-                    updateUp();
-                    return true;
+                //only swipes
+                if (action == MotionEvent.ACTION_MOVE && historySize > 0) {
+                    float historicalY = event.getHistoricalY(historySize - 1);
+                    float y = event.getY();
+
+                    //showing profile header swipe
+                    if (firstVisibleItem <= mLastFirstVisibleItem && firstVisibleItem <= 0 && detectSwipeUp(y, historicalY))
+                        if (mListener != null && mListener.isHidden()) {
+                            mListener.onTop();
+                            return true;
+                        }
+
+                    //hiding profile header swipe
+                    if (firstVisibleItem > 0 && detectSwipeDown(y, historicalY) ) {
+                        if (mListener != null && !mListener.isHidden()) {
+                            mListener.onScrollDown();
+                            return true;
+                        }
+                    }
+
+                    //basic swipe up updating at top
+                    if (firstVisibleItem < 1 && mLastFirstVisibleItem == 0) {
+                            if (detectSwipeUp(y, historicalY)) {
+                                updateUp();
+                                mLastFirstVisibleItem = firstVisibleItem;
+                                return true;
+                            }
+                    }
+
+                    //basic swipe down updating
+                    if (firstVisibleItem > mLastFirstVisibleItem && (adapter.getItemCount() - firstVisibleItem) < 4) {
+                        updateDown();
+                        mLastFirstVisibleItem = firstVisibleItem;
+                        return true;
+                    }
+
+                    //pre-basic swipe down updating
+                    int count = adapter.getItemCount();
+                    int last = mLayoutManager.findLastVisibleItemPosition();
+
+                    if (count - last < 3 && detectSwipeDown(y, historicalY)) {
+                        updateDown();
+                        return true;
+                    }
                 }
 
-                if (firstVisibleItem <= 0 && mLastVisibleItem > firstVisibleItem) {
-
-                    if(mListener != null && !mListener.isHidden())
-                        mListener.onScrollDown();
-
-                    updateUp();
-                    mLastVisibleItem = 0;
-                    return true;
-                }
-                if ( event.getAction() == MotionEvent.ACTION_MOVE && firstVisibleItem > mLastVisibleItem && (adapter.getItemCount() - firstVisibleItem) < 4) {
-                    updateDown();
-                    mLastVisibleItem = firstVisibleItem;
-                    return true;
-                }
-
-                int count = adapter.getItemCount();
-                int last = mLayoutManager.findLastVisibleItemPosition();
-                if(event.getAction() == MotionEvent.ACTION_UP && count - last < 3) {
-                    updateDown();
-                    return true;
-                }
-
-                mLastVisibleItem = firstVisibleItem;
+                mLastFirstVisibleItem = firstVisibleItem;
                 return false;
             }
         });
@@ -166,9 +174,6 @@ public abstract class TimelineFragment extends BaseFragment {
         list.setLayoutManager(mLayoutManager);
         list.setItemAnimator(new DefaultItemAnimator());
 
-
-
-
         list.setVisibility(View.GONE);
         crossfade();
 
@@ -177,34 +182,30 @@ public abstract class TimelineFragment extends BaseFragment {
         list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == SCROLL_STATE_IDLE && mLastVisibleItem == 0)
+                if(scrollState == SCROLL_STATE_IDLE && mLastFirstVisibleItem == 0)
                     updateUp();
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem == 0 && mLastVisibleItem > firstVisibleItem) {
+                if (firstVisibleItem == 0 && mLastFirstVisibleItem > firstVisibleItem) {
                     updateUp();
-                    mLastVisibleItem = 0;
+                    mLastFirstVisibleItem = 0;
                     return;
                 }
-                if (firstVisibleItem > mLastVisibleItem && (totalItemCount - firstVisibleItem) < 5) {
+                if (firstVisibleItem > mLastFirstVisibleItem && (totalItemCount - firstVisibleItem) < 5) {
                     updateDown();
-                    mLastVisibleItem = firstVisibleItem;
+                    mLastFirstVisibleItem = firstVisibleItem;
                     return;
                 }
 
-                mLastVisibleItem = firstVisibleItem;
+                mLastFirstVisibleItem = firstVisibleItem;
             }
         });
     */
-        //mAdapter = list;
 
         adapter = new TweetAdapter(mTimeline, getActivity());
 
-        //mAdapter.setAdapter(adapter);
-
-        //mTimeline.setAdapter(adapter);
 
         list.setAdapter(adapter);
 
@@ -221,9 +222,18 @@ public abstract class TimelineFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 list.scrollToPosition(0);
+                updateUp();
                 fab.hide(true);
             }
         });
+    }
+
+    private boolean detectSwipeDown(float y, float historicalY) {
+        return y < historicalY;
+    }
+
+    private boolean detectSwipeUp(float y, float historicalY) {
+        return y > historicalY;
     }
 
     private void addTweetService() {
@@ -272,8 +282,8 @@ public abstract class TimelineFragment extends BaseFragment {
     public void blink() {
 
         ValueAnimator fade = new ValueAnimator();
-        fade.setFloatValues(1, 0.3f, 1);
-        fade.setDuration(2000);
+        fade.setFloatValues(1, 0.6f, 1);
+        fade.setDuration(1400);
         fade.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

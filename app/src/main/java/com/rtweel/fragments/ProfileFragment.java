@@ -14,7 +14,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -58,6 +60,10 @@ public class ProfileFragment extends BaseFragment {
 
     private float headerY;
     private float descriptionY;
+    private float pagerY;
+    private int pagerHeight;
+    private int fullHeight;
+
 
     @Override
     public void onStart() {
@@ -70,7 +76,11 @@ public class ProfileFragment extends BaseFragment {
         GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription);
         task.execute(timeline.getTwitter());
 
+
+
         initPagerAdapter();
+
+
     }
 
     @Nullable
@@ -96,7 +106,7 @@ public class ProfileFragment extends BaseFragment {
 
 
     private void initPagerAdapter() {
-        mPagerAdapter = new FragmentStatePagerAdapter(getMainActivity().getSupportFragmentManager()) {
+        mPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -189,13 +199,16 @@ public class ProfileFragment extends BaseFragment {
 
         headerY = mHeaderLayout.getY();
         descriptionY = mDescription.getY();
+        pagerY = mPager.getY();
+        pagerHeight = mPager.getHeight();
+        fullHeight = mPager.getHeight() + mHeaderLayout.getHeight() + mDescription.getHeight();
 
         mIsHidden = true;
 
         blockHiding();
 
         ValueAnimator hideHeader = new ValueAnimator();
-        hideHeader.setFloatValues(headerY, 0f);
+        hideHeader.setFloatValues(headerY, -mHeaderLayout.getHeight());
         hideHeader.setDuration(2000);
         hideHeader.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -216,7 +229,7 @@ public class ProfileFragment extends BaseFragment {
         });
 
         ValueAnimator hideDesc = new ValueAnimator();
-        hideDesc.setFloatValues(descriptionY, 0f);
+        hideDesc.setFloatValues(descriptionY, -mDescription.getHeight());
         hideDesc.setDuration(2000);
         hideDesc.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -227,6 +240,37 @@ public class ProfileFragment extends BaseFragment {
         });
         hideDesc.start();
 
+        ValueAnimator liftPager = new ValueAnimator();
+        liftPager.setFloatValues(mPager.getY(), 0f);
+        liftPager.setDuration(2000);
+        liftPager.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                mPager.setY(value);
+            }
+        });
+        liftPager.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mPager.setY(pagerY);
+            }
+        });
+        liftPager.start();
+
+        ValueAnimator increasePager = new ValueAnimator();
+        increasePager.setIntValues(pagerHeight, fullHeight);
+        increasePager.setDuration(2000);
+        increasePager.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int) animation.getAnimatedValue();
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mPager.getLayoutParams().width, value);
+                mPager.setLayoutParams(params);
+            }
+        });
+        increasePager.start();
     }
 
     private void showHeader() {
@@ -238,7 +282,7 @@ public class ProfileFragment extends BaseFragment {
         blockHiding();
 
         ValueAnimator showHeader = new ValueAnimator();
-        showHeader.setFloatValues(0f, headerY);
+        showHeader.setFloatValues(-mHeaderLayout.getHeight(), headerY);
         showHeader.setDuration(2000);
         showHeader.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -250,7 +294,7 @@ public class ProfileFragment extends BaseFragment {
         showHeader.start();
 
         ValueAnimator showDesc = new ValueAnimator();
-        showDesc.setFloatValues(0f, descriptionY);
+        showDesc.setFloatValues(-mDescription.getHeight(), descriptionY);
         showDesc.setDuration(2000);
         showDesc.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -260,6 +304,32 @@ public class ProfileFragment extends BaseFragment {
             }
         });
         showDesc.start();
+
+        ValueAnimator downPager = new ValueAnimator();
+        downPager.setFloatValues(0f, pagerY);
+        downPager.setDuration(2000);
+        downPager.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                mPager.setY(value);
+            }
+        });
+        downPager.start();
+
+        ValueAnimator decreasePager = new ValueAnimator();
+        decreasePager.setIntValues(fullHeight, pagerHeight);
+        decreasePager.setDuration(2000);
+        decreasePager.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = mPager.getLayoutParams();
+                params.height = value;
+                mPager.setLayoutParams(params);
+            }
+        });
+        decreasePager.start();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.rtweel.R;
@@ -24,8 +25,6 @@ public class LoginFragment extends BaseFragment {
          * Login Check
 		 */
 
-        setTitle(getString(R.string.title_login));
-
         if (loginCheck()) {
             initialize();
         }
@@ -40,6 +39,12 @@ public class LoginFragment extends BaseFragment {
             if (loginCheck())
                 initialize();
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setTitle(getString(R.string.title_login));
     }
 
     private boolean loginCheck() {
