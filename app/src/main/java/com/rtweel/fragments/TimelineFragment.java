@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +25,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.rtweel.R;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.services.TweetService;
-import com.rtweel.tweet.Timeline;
+import com.rtweel.Timelines.Timeline;
 import com.rtweel.tweet.TweetAdapter;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;

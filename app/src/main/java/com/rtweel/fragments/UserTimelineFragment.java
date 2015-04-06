@@ -7,16 +7,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.rtweel.R;
+import com.rtweel.Timelines.UserTimeline;
 import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
-import com.rtweel.tweet.Timeline;
+import com.rtweel.Timelines.Timeline;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
 
@@ -35,7 +35,7 @@ public class UserTimelineFragment extends TimelineFragment {
 
     @Override
     protected void instantiateTimeline() {
-        mTimeline = new Timeline(getActivity().getApplicationContext(), Timeline.USER_TIMELINE);
+        mTimeline = new UserTimeline(getActivity().getApplicationContext(), Timeline.USER_TIMELINE);
 
     //    Timeline.setDefaultTimeline(mTimeline);
     }

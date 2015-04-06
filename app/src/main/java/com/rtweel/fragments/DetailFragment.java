@@ -26,7 +26,7 @@ import com.rtweel.asynctasks.tweet.FavoriteTask;
 import com.rtweel.asynctasks.tweet.RetweetTask;
 import com.rtweel.constant.Extras;
 import com.rtweel.parsers.DateParser;
-import com.rtweel.tweet.Timeline;
+import com.rtweel.Timelines.Timeline;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 

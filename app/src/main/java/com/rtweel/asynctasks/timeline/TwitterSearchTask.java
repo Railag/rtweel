@@ -1,6 +1,6 @@
 package com.rtweel.asynctasks.timeline;
 
-import com.rtweel.tweet.Timeline;
+import com.rtweel.Timelines.Timeline;
 
 import android.os.AsyncTask;
 

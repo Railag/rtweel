@@ -1,4 +1,4 @@
-package com.rtweel.tweet;
+package com.rtweel.Timelines;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -27,10 +27,11 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
 import twitter4j.auth.AccessToken;
 
-public class Timeline implements Iterable<Status> {
+public abstract class Timeline implements Iterable<Status> {
 
     public static final int USER_TIMELINE = 0;
     public static final int HOME_TIMELINE = 1;
+    public static final int FAVORITE_TIMELINE = 2;
 
     public static final int UP_TWEETS = 0;
     public static final int DOWN_TWEETS = 1;

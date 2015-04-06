@@ -7,7 +7,7 @@ import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.HomeTimelineFragment;
 import com.rtweel.fragments.TimelineFragment;
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
-import com.rtweel.tweet.Timeline;
+import com.rtweel.Timelines.Timeline;
 
 import twitter4j.TwitterException;
 

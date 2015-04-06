@@ -2,9 +2,8 @@ package com.rtweel.asynctasks.timeline;
 
 import java.util.List;
 
-import com.rtweel.activities.MainActivity;
 import com.rtweel.fragments.TimelineFragment;
-import com.rtweel.tweet.Timeline;
+import com.rtweel.Timelines.Timeline;
 
 import android.os.AsyncTask;
 import android.util.Log;

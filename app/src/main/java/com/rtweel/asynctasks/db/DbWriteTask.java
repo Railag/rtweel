@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.rtweel.sqlite.TweetDatabaseOpenHelper;
-import com.rtweel.tweet.Timeline;
+import com.rtweel.Timelines.Timeline;
 
 public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 

@@ -2,7 +2,6 @@ package com.rtweel.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,7 +21,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.R;
 import com.rtweel.asynctasks.tweet.GetUserDetailsTask;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
-import com.rtweel.tweet.Timeline;
+import com.rtweel.Timelines.Timeline;
 
 /**
  * Created by root on 25.3.15.
@@ -32,6 +30,7 @@ public class ProfileFragment extends BaseFragment {
     //TODO
 
     private final static int PAGER_SIZE = 3;
+    private final static int ANIMATION_TIME = 2000;
 
     private View mView;
 
@@ -192,7 +191,7 @@ public class ProfileFragment extends BaseFragment {
 
     private void blockHiding() {
         mIsBlocked = true;
-        mHandler.postDelayed(mRunnable, 2000);
+        mHandler.postDelayed(mRunnable, ANIMATION_TIME);
     }
 
     private void hideHeader() {
@@ -209,7 +208,7 @@ public class ProfileFragment extends BaseFragment {
 
         ValueAnimator hideHeader = new ValueAnimator();
         hideHeader.setFloatValues(headerY, -mHeaderLayout.getHeight());
-        hideHeader.setDuration(2000);
+        hideHeader.setDuration(ANIMATION_TIME);
         hideHeader.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -230,7 +229,7 @@ public class ProfileFragment extends BaseFragment {
 
         ValueAnimator hideDesc = new ValueAnimator();
         hideDesc.setFloatValues(descriptionY, -mDescription.getHeight());
-        hideDesc.setDuration(2000);
+        hideDesc.setDuration(ANIMATION_TIME);
         hideDesc.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -242,7 +241,7 @@ public class ProfileFragment extends BaseFragment {
 
         ValueAnimator liftPager = new ValueAnimator();
         liftPager.setFloatValues(mPager.getY(), 0f);
-        liftPager.setDuration(2000);
+        liftPager.setDuration(ANIMATION_TIME);
         liftPager.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -261,7 +260,7 @@ public class ProfileFragment extends BaseFragment {
 
         ValueAnimator increasePager = new ValueAnimator();
         increasePager.setIntValues(pagerHeight, fullHeight);
-        increasePager.setDuration(2000);
+        increasePager.setDuration(ANIMATION_TIME);
         increasePager.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -283,7 +282,7 @@ public class ProfileFragment extends BaseFragment {
 
         ValueAnimator showHeader = new ValueAnimator();
         showHeader.setFloatValues(-mHeaderLayout.getHeight(), headerY);
-        showHeader.setDuration(2000);
+        showHeader.setDuration(ANIMATION_TIME);
         showHeader.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -295,7 +294,7 @@ public class ProfileFragment extends BaseFragment {
 
         ValueAnimator showDesc = new ValueAnimator();
         showDesc.setFloatValues(-mDescription.getHeight(), descriptionY);
-        showDesc.setDuration(2000);
+        showDesc.setDuration(ANIMATION_TIME);
         showDesc.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -307,7 +306,7 @@ public class ProfileFragment extends BaseFragment {
 
         ValueAnimator downPager = new ValueAnimator();
         downPager.setFloatValues(0f, pagerY);
-        downPager.setDuration(2000);
+        downPager.setDuration(ANIMATION_TIME);
         downPager.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -319,7 +318,7 @@ public class ProfileFragment extends BaseFragment {
 
         ValueAnimator decreasePager = new ValueAnimator();
         decreasePager.setIntValues(fullHeight, pagerHeight);
-        decreasePager.setDuration(2000);
+        decreasePager.setDuration(ANIMATION_TIME);
         decreasePager.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

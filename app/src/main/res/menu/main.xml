@@ -7,16 +7,6 @@
         android:orderInCategory="100"
         android:title="@string/tweet_send_open"/>
     <item
-        android:id="@+id/switch_home_timeline"
-        ActionBar:showAsAction="ifRoom"
-        android:orderInCategory="500"
-        android:title="@string/switch_home_timeline"/>
-    <item
-        android:id="@+id/switch_user_timeline"
-        ActionBar:showAsAction="ifRoom"
-        android:orderInCategory="500"
-        android:title="@string/switch_user_timeline"/>
-    <item
         android:id="@+id/logout_button"
         ActionBar:showAsAction="never"
         android:orderInCategory="1000"
