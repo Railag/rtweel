@@ -55,4 +55,11 @@
     <string name="title_settings">Настройки</string>
     <string name="title_send_tweet">Новый твит</string>
 
+    <!--Pager titles-->
+    <string name="timeline_home">Домашняя</string>
+    <string name="timeline_answers">Ответы</string>
+    <string name="timeline_favorite">Избранное</string>
+    <string name="timeline_images">Изображения</string>
+
+
 </resources>

@@ -133,16 +133,16 @@ public class ProfileFragment extends BaseFragment {
 
                 switch (position) {
                     case 0:
-                        title = "Home";
+                        title = getString(R.string.timeline_home);
                         break;
                     case 1:
-                        title = "Answers";
+                        title = getString(R.string.timeline_answers);
                         break;
                     case 2:
-                        title = "Favorites";
+                        title = getString(R.string.timeline_favorite);
                         break;
                     case 3:
-                        title = "Images";
+                        title = getString(R.string.timeline_images);
                         break;
                     default:
                         title = "";

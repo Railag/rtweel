@@ -48,7 +48,7 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
 
         User user = null;
         try {
-            String screenName = twitter.getScreenName();
+            String screenName = twitter.getScreenName(); //TODO caching details
             Timeline.setScreenUserName(screenName);
 
             user = twitter.showUser(screenName);
