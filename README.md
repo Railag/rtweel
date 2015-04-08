@@ -29,7 +29,7 @@ TODO:
 - ~~Loading animation on app start~~
 - ~~Something with first app pre-login activity~~
 - ~~Improving the detail view tweet window~~
-- ~~Adding network exceptions avoiding~~, screen rotating info saving
+- ~~Adding network exceptions avoiding~~, ~~screen rotating info saving~~
 - ~~Logout~~
 - Followers
 - Direct messages
