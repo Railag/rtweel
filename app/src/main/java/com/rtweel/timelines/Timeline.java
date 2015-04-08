@@ -164,12 +164,14 @@ public abstract class Timeline implements Iterable<Status> {
             case UP_TWEETS:
                 if (list == null || list.isEmpty())
                     getLastTweetFromDb();
-                page.setSinceId(list.get(0).getId());
+                if (list.size() > 0)
+                    page.setSinceId(list.get(0).getId());
                 break;
             case DOWN_TWEETS:
                 if (list == null || list.isEmpty())
                     getOldestTweetFromDb();
-                page.setMaxId(list.get(list.size() - 1).getId());
+                if (list.size() > 0)
+                    page.setMaxId(list.get(list.size() - 1).getId());
                 break;
         }
 
@@ -275,15 +277,34 @@ public abstract class Timeline implements Iterable<Status> {
         ContentResolver resolver = mContext.getContentResolver();
 
         Cursor cursor = null;
-        if (getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
-        } else if (getCurrentTimelineType() == Timeline.USER_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+        switch(getCurrentTimelineType()) {
+            case USER_TIMELINE:
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                break;
+            case HOME_TIMELINE:
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                break;
+            case FAVORITE_TIMELINE: //TODO impl
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                break;
+            case ANSWERS_TIMELINE: //TODO impl
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                break;
+            case IMAGES_TIMELINE: //TODO impl
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                break;
         }
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 String author = cursor.getString(cursor

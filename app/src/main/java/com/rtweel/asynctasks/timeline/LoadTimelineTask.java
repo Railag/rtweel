@@ -42,7 +42,8 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 		} else {
 			mFragment.getAdapter().notifyDataSetChanged();
 
-			mFragment.crossfade();
+            if(mFragment.getActivity() != null)
+			    mFragment.crossfade();
 		}
 	}
 }
