@@ -14,8 +14,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.UserTimeline;
-import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.timelines.Timeline;
 
 public class TweetService extends IntentService {
@@ -85,23 +85,23 @@ public class TweetService extends IntentService {
 	}
 
 	private void loadFromDB() {
-		String[] projection = { TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
-				TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
-				TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
-				TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-				TweetDatabaseOpenHelper.Tweets.COLUMN_ID };
+		String[] projection = { TweetDatabase.Tweets.COLUMN_AUTHOR,
+				TweetDatabase.Tweets.COLUMN_TEXT,
+				TweetDatabase.Tweets.COLUMN_PICTURE,
+				TweetDatabase.Tweets.COLUMN_DATE,
+				TweetDatabase.Tweets._ID};
 
 		ContentResolver resolver = getContentResolver();
 
 		Cursor cursor = null;
 		if (mTimeline.getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
 			cursor = resolver.query(
-					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-					projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 1");
+					TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+					projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
 		} else if (mTimeline.getCurrentTimelineType() == Timeline.USER_TIMELINE) {
 			cursor = resolver.query(
-					TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-					projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 1");
+					TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+					projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
 		}
 		if (cursor != null) {
 			while (cursor.moveToNext()) {

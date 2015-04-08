@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.rtweel.R;
+import com.rtweel.cache.App;
 import com.rtweel.fragments.HomeTimelineFragment;
 import com.rtweel.fragments.LoginFragment;
 import com.rtweel.fragments.ProfileFragment;

@@ -25,7 +25,7 @@ public class TweetContentProvider extends ContentProvider {
 		SQLiteDatabase db = app.getDB();
 		Cursor cur = db.query(uri.getPath().replace('/', ' '), projection,
 				selection, selectionArgs, null, null,
-				TweetDatabaseOpenHelper.Tweets.COLUMN_ID + sortOrder);
+				TweetDatabase.Tweets._ID + sortOrder);
 		return cur;
 	}
 

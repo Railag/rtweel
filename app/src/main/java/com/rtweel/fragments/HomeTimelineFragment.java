@@ -10,12 +10,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rtweel.R;
+import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.HomeTimeline;
 import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
-import com.rtweel.sqlite.TweetDatabaseOpenHelper;
 import com.rtweel.timelines.Timeline;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
@@ -89,7 +89,7 @@ public class HomeTimelineFragment extends TimelineFragment {
             case R.id.logout_button: {
                 App app = (App) getActivity().getApplication();
 
-                boolean dbDeleted = getActivity().deleteDatabase(TweetDatabaseOpenHelper
+                boolean dbDeleted = getActivity().deleteDatabase(TweetDatabase
                         .getDbName());
                 Log.i("DEBUG", "DB DELETED = " + dbDeleted);
 

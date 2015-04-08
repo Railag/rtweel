@@ -10,7 +10,7 @@ import android.util.Log;
 import com.rtweel.asynctasks.db.DbWriteTask;
 import com.rtweel.asynctasks.tweet.GetScreenNameTask;
 import com.rtweel.cache.App;
-import com.rtweel.sqlite.TweetDatabaseOpenHelper;
+import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.twitteroauth.TwitterUtil;
 
 import java.io.FileInputStream;
@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import twitter4j.Paging;
+import twitter4j.Query;
+import twitter4j.QueryResult;
 import twitter4j.RateLimitStatusEvent;
 import twitter4j.RateLimitStatusListener;
 import twitter4j.Status;
@@ -182,6 +184,7 @@ public abstract class Timeline implements Iterable<Status> {
             case Timeline.USER_TIMELINE:
                 try {
                     downloadedList = mTwitter.getUserTimeline(page);
+                    //mTwitter.users(). //TODO
                 } catch (TwitterException | NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -202,7 +205,7 @@ public abstract class Timeline implements Iterable<Status> {
                 break;
             case Timeline.IMAGES_TIMELINE:
                 try {
-                    List<Status> download = mTwitter.getUserTimeline(page);
+                    List<Status> download = mTwitter.getHomeTimeline(page);
 
                     for (Status s : download)
                         if (s.getMediaEntities().length > 0 && s.getUser().getScreenName().equals(getScreenUserName()))
@@ -218,23 +221,23 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
     private void getOldestTweetFromDb() {
-        String[] projection = {TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_ID};
+        String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
+                TweetDatabase.Tweets.COLUMN_TEXT,
+                TweetDatabase.Tweets.COLUMN_PICTURE,
+                TweetDatabase.Tweets.COLUMN_DATE,
+                TweetDatabase.Tweets._ID};
 
         ContentResolver resolver = mContext.getContentResolver();
 
         Cursor cursor = null;
         if (getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
             cursor = resolver.query(
-                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_ASC + "LIMIT 1");
+                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                    projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
         } else if (getCurrentTimelineType() == Timeline.USER_TIMELINE) {
             cursor = resolver.query(
-                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_ASC + "LIMIT 1");
+                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                    projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
         }
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -263,23 +266,23 @@ public abstract class Timeline implements Iterable<Status> {
 
     private void getLastTweetFromDb() {
 
-        String[] projection = {TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_ID};
+        String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
+                TweetDatabase.Tweets.COLUMN_TEXT,
+                TweetDatabase.Tweets.COLUMN_PICTURE,
+                TweetDatabase.Tweets.COLUMN_DATE,
+                TweetDatabase.Tweets._ID};
 
         ContentResolver resolver = mContext.getContentResolver();
 
         Cursor cursor = null;
         if (getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
             cursor = resolver.query(
-                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 1");
+                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
         } else if (getCurrentTimelineType() == Timeline.USER_TIMELINE) {
             cursor = resolver.query(
-                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 1");
+                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
         }
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -334,24 +337,24 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
     private void preparingUpdate() {
-        String[] projection = {TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_ID,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA};
+        String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
+                TweetDatabase.Tweets.COLUMN_TEXT,
+                TweetDatabase.Tweets.COLUMN_PICTURE,
+                TweetDatabase.Tweets.COLUMN_DATE,
+                TweetDatabase.Tweets._ID,
+                TweetDatabase.Tweets.COLUMN_MEDIA};
 
         ContentResolver resolver = mContext.getContentResolver();
 
         Cursor cursor = null;
         if (mCurrentTimelineType == HOME_TIMELINE) {
             cursor = resolver.query(
-                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 30");
+                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
         } else if (mCurrentTimelineType == USER_TIMELINE) {
             cursor = resolver.query(
-                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-                    projection, null, null, TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 30");
+                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
         }
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -382,28 +385,28 @@ public abstract class Timeline implements Iterable<Status> {
 
     public int updateFromDb() {
         int result = 0;
-        String[] projection = {TweetDatabaseOpenHelper.Tweets.COLUMN_AUTHOR,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_TEXT,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_PICTURE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_DATE,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_ID,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_MEDIA};
+        String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
+                TweetDatabase.Tweets.COLUMN_TEXT,
+                TweetDatabase.Tweets.COLUMN_PICTURE,
+                TweetDatabase.Tweets.COLUMN_DATE,
+                TweetDatabase.Tweets._ID,
+                TweetDatabase.Tweets.COLUMN_MEDIA};
 
         ContentResolver resolver = mContext.getContentResolver();
 
         Cursor cursor = null;
         if (mCurrentTimelineType == HOME_TIMELINE) {
             cursor = resolver.query(
-                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-                    projection, TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "<"
+                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                    projection, TweetDatabase.Tweets._ID + "<"
                             + list.get(list.size() - 1).getId(), null,
-                    TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 100");
+                    TweetDatabase.SELECTION_DESC + "LIMIT 100");
         } else if (mCurrentTimelineType == USER_TIMELINE) {
             cursor = resolver.query(
-                    TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-                    projection, TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "<"
+                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                    projection, TweetDatabase.Tweets._ID + "<"
                             + list.get(list.size() - 1).getId(), null,
-                    TweetDatabaseOpenHelper.SELECTION_DESC + "LIMIT 100");
+                    TweetDatabase.SELECTION_DESC + "LIMIT 100");
         }
         if (cursor != null) {
             result = cursor.getCount();
@@ -434,17 +437,26 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
     // TODO: Implementation
-    /*
-     * public boolean searchCheckIsAvailable(String queryString) { Query query =
-	 * new Query(); query.setResultType(Query.RECENT);
-	 * query.setQuery(queryString); query.setCount(1);
-	 * query.setSinceId(list.get(0).getId());
-	 * 
-	 * QueryResult result = null; try { result = mTwitter.search(query); } catch
-	 * (TwitterException e) { e.printStackTrace(); }
-	 * 
-	 * return !result.getTweets().isEmpty(); }
-	 */
+
+    public ArrayList<Status> search(String queryString) {
+        Query query = new Query();
+        query.setResultType(Query.RECENT);
+        query.setQuery(queryString);
+        query.setCount(100);
+        //query.setSinceId(list.get(0).getId());
+
+        List<Status> resultList = null;
+        try {
+            QueryResult result = mTwitter.search(query);
+            resultList = result.getTweets();
+        } catch
+                (TwitterException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>(resultList);
+    }
+
 
     public static Status buildTweet(String author, String text, String pictureUrl, String date, long id, String media) {
         try {

@@ -51,11 +51,10 @@
     <RelativeLayout
         android:layout_width="205dp"
         android:layout_height="205dp"
-        android:layout_alignEnd="@+id/tweet_send_file_choose_button"
-        android:layout_alignRight="@+id/tweet_send_file_choose_button"
         android:layout_below="@+id/tweet_add_photo_button"
         android:background="@android:color/black"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:id="@+id/tweet_photo_imageview"
@@ -64,7 +63,7 @@
             android:background="@android:color/white"
             android:contentDescription="@string/hint_text"
             android:padding="5dp"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 

@@ -6,7 +6,7 @@ import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.HomeTimelineFragment;
 import com.rtweel.fragments.TimelineFragment;
-import com.rtweel.sqlite.TweetDatabaseOpenHelper;
+import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.Timeline;
 
 import twitter4j.TwitterException;
@@ -37,12 +37,12 @@ public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
 		super.onPostExecute(result);
 
         mFragment.getActivity().getContentResolver().delete(
-                TweetDatabaseOpenHelper.Tweets.CONTENT_URI_HOME_DB,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "="
+                TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                TweetDatabase.Tweets._ID + "="
                         + String.valueOf(result), null);
         mFragment.getActivity().getContentResolver().delete(
-                TweetDatabaseOpenHelper.Tweets.CONTENT_URI_USER_DB,
-                TweetDatabaseOpenHelper.Tweets.COLUMN_ID + "="
+                TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                TweetDatabase.Tweets._ID + "="
                         + String.valueOf(result), null);
         Timeline.getDefaultTimeline().remove(mPosition);
 

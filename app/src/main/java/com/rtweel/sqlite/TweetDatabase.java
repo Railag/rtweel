@@ -7,20 +7,22 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
+public class TweetDatabase extends SQLiteOpenHelper {
 
 	public static final class Tweets implements BaseColumns {
-		public static final Uri CONTENT_URI_HOME_DB = Uri
-				.parse("content://com.rtweel.sqlite.TweetContentProvider/home_timeline");
+		public static final Uri CONTENT_URI_TWEET_DB = Uri
+				.parse("content://com.rtweel.sqlite.TweetContentProvider/all_timeline");
 		public static final Uri CONTENT_URI_USER_DB = Uri
 				.parse("content://com.rtweel.sqlite.TweetContentProvider/user_timeline");
-		public static final String TABLE_NAME_HOME = "home_timeline";
+
+        public static final String TABLE_NAME_TWEET = "all_timeline";
 		public static final String TABLE_NAME_USER = "user_timeline";
+
 		public static final String COLUMN_AUTHOR = "author";
 		public static final String COLUMN_TEXT = "text";
 		public static final String COLUMN_PICTURE = "picture_url";
 		public static final String COLUMN_DATE = "created_at";
-		public static final String COLUMN_ID = "id";
+		public static final String COLUMN_USER_ID = "user_id";
 		public static final String COLUMN_MEDIA = "media";
 	}
 
@@ -29,27 +31,27 @@ public class TweetDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static final String DB_NAME = "tweets.db";
 	private static final int VERSION = 1;
-	private static final String CREATE_TABLE_HOME = "CREATE TABLE "
-			+ Tweets.TABLE_NAME_HOME + "(" + Tweets._ID
+	private static final String CREATE_TABLE_TWEET = "CREATE TABLE "
+			+ Tweets.TABLE_NAME_TWEET + "(" + Tweets._ID
 			+ " INTEGER PRIMARY KEY, " + Tweets.COLUMN_AUTHOR + " TEXT, "
 			+ Tweets.COLUMN_TEXT + " TEXT, " + Tweets.COLUMN_PICTURE
 			+ " TEXT, " + Tweets.COLUMN_DATE + " TEXT, " + Tweets.COLUMN_MEDIA
-			+ " TEXT, " + Tweets.COLUMN_ID + " INTEGER)";
+			+ " TEXT, " + Tweets.COLUMN_USER_ID + " INTEGER)";
 	private static final String CREATE_TABLE_USER = "CREATE TABLE "
 			+ Tweets.TABLE_NAME_USER + "(" + Tweets._ID
 			+ " INTEGER PRIMARY KEY, " + Tweets.COLUMN_AUTHOR + " TEXT, "
 			+ Tweets.COLUMN_TEXT + " TEXT, " + Tweets.COLUMN_PICTURE
 			+ " TEXT, " + Tweets.COLUMN_DATE + " TEXT, " + Tweets.COLUMN_MEDIA
-			+ " TEXT, " + Tweets.COLUMN_ID + " INTEGER)";
+			+ " TEXT, " + Tweets.COLUMN_USER_ID + " INTEGER)";
 
-	public TweetDatabaseOpenHelper(Context context) {
+	public TweetDatabase(Context context) {
 		super(context, DB_NAME, null, VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.i("DEBUG", "onCreate DB");
-		db.execSQL(CREATE_TABLE_HOME);
+		db.execSQL(CREATE_TABLE_TWEET);
 		db.execSQL(CREATE_TABLE_USER);
 	}
 

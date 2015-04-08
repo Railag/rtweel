@@ -11,7 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.rtweel.BuildConfig;
-import com.rtweel.sqlite.TweetDatabaseOpenHelper;
+import com.rtweel.sqlite.TweetDatabase;
 
 public class App extends Application {
 
@@ -24,7 +24,7 @@ public class App extends Application {
 
 	private static SQLiteDatabase sDb;
 
-	private static TweetDatabaseOpenHelper sHelper;
+	private static TweetDatabase sHelper;
 
 	private static Bitmap sBitmap;
 
@@ -32,7 +32,7 @@ public class App extends Application {
 	public void onCreate() {
 		super.onCreate();
 		// Date first = new Date();
-		sHelper = new TweetDatabaseOpenHelper(this);
+		sHelper = new TweetDatabase(this);
 		sDb = sHelper.getWritableDatabase();
 		// Date second = new Date();
 		// Log.i("DEBUG", "DB initialization: " + (second.getTime() -
@@ -55,7 +55,7 @@ public class App extends Application {
 	}
 
 	public void createDb() {
-		sHelper = new TweetDatabaseOpenHelper(this);
+		sHelper = new TweetDatabase(this);
 		sDb = sHelper.getWritableDatabase();
 	}
 

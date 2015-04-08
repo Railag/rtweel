@@ -53,7 +53,5 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 						Toast.LENGTH_LONG).show();
 			}
 		}
-
-		// super.onPostExecute(result);
 	}
 }
