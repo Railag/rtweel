@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.UserTimeline;
 import com.rtweel.timelines.Timeline;
@@ -40,12 +41,12 @@ public class TweetService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent data) {
-		if (!isOnline()) {
+		if (!App.isOnline(getApplicationContext())) {
 			return;
 		}
 		String message = null;
 		Log.i("DEBUG", "onHandleIntent");
-		if (Timeline.getDefaultTimeline() != null) {
+		if (Timeline.getDefaultTimeline() != null) { //TODO create new timeline if it isn't exist
 			mTimeline = Timeline.getDefaultTimeline();
 		} else {
 			loadFromDB();
@@ -132,12 +133,6 @@ public class TweetService extends IntentService {
 				cursor.close();
 			}
 		}
-	}
-
-	private boolean isOnline() {
-		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-		return (networkInfo != null && networkInfo.isConnected());
 	}
 
 	public static void setNewTweets(int count) {

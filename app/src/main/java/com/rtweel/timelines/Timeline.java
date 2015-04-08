@@ -2,8 +2,10 @@ package com.rtweel.timelines;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -11,6 +13,7 @@ import com.rtweel.asynctasks.db.DbWriteTask;
 import com.rtweel.asynctasks.tweet.GetScreenNameTask;
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabase;
+import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
 
 import java.io.FileInputStream;
@@ -57,30 +60,12 @@ public abstract class Timeline implements Iterable<Status> {
 
     public Timeline(Context context, int timelineType) {
         mCurrentTimelineType = timelineType;
-        list = new ArrayList<twitter4j.Status>();
+        list = new ArrayList<>();
         mContext = context;
-        String accessTokenString = null;
-        String accessTokenSecret = null;
 
-        FileInputStream inputStream;
-        byte[] inputBytes;
-
-        String inputString = null;
-        try {
-            inputStream = new FileInputStream(
-                    Environment.getExternalStorageDirectory() + App.PATH);
-            inputBytes = new byte[inputStream.available()];
-            inputStream.read(inputBytes);
-            inputString = new String(inputBytes);
-
-            int position = inputString.indexOf(' ');
-            accessTokenString = inputString.substring(0, position);
-            accessTokenSecret = inputString.substring(position + 1,
-                    inputString.length());
-            inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String accessTokenString = prefs.getString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, null);
+        String accessTokenSecret = prefs.getString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, null);
 
         if (accessTokenString != null && accessTokenSecret != null) {
             AccessToken accessToken = new AccessToken(accessTokenString,
@@ -266,7 +251,7 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
 
-    private void getLastTweetFromDb() {
+    private void getLastTweetFromDb() { //TODO ABSTRACT
 
         String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
                 TweetDatabase.Tweets.COLUMN_TEXT,
@@ -277,7 +262,7 @@ public abstract class Timeline implements Iterable<Status> {
         ContentResolver resolver = mContext.getContentResolver();
 
         Cursor cursor = null;
-        switch(getCurrentTimelineType()) {
+        switch (getCurrentTimelineType()) {
             case USER_TIMELINE:
                 cursor = resolver.query(
                         TweetDatabase.Tweets.CONTENT_URI_USER_DB,

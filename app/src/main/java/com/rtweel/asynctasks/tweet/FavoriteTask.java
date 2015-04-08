@@ -3,6 +3,7 @@ package com.rtweel.asynctasks.tweet;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,21 +45,24 @@ public class FavoriteTask extends AsyncTask<Long, Void, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
 		super.onPostExecute(result);
-		mFragment.changeIsFavorited();
-		mIsFavorited = !mIsFavorited;
-		if (mIsFavorited) {
-            mFavoriteButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
-			mCountView.setText(String.valueOf(Long
-					.valueOf((String) mCountView.getText()) + 1));
-			Toast.makeText(mFragment.getActivity(), "Added to favorites", Toast.LENGTH_LONG)
-					.show();
-		} else {
-            mFavoriteButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
-			mCountView.setText(String.valueOf(Long
-					.valueOf((String) mCountView.getText()) - 1));
-			Toast.makeText(mFragment.getActivity(), "Removed from favorites",
-					Toast.LENGTH_LONG).show();
-		}
+        if(mFragment.getActivity() != null) {
+            mFragment.changeIsFavorited();
+            mIsFavorited = !mIsFavorited;
+            if (mIsFavorited) {
+                mFavoriteButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
+                mCountView.setText(String.valueOf(Long
+                        .valueOf((String) mCountView.getText()) + 1));
+                Toast.makeText(mFragment.getActivity(), "Added to favorites", Toast.LENGTH_LONG)
+                        .show();
+            } else {
+                mFavoriteButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                mCountView.setText(String.valueOf(Long
+                        .valueOf((String) mCountView.getText()) - 1));
+                Toast.makeText(mFragment.getActivity(), "Removed from favorites",
+                        Toast.LENGTH_LONG).show();
+            }
+        } else
+            Log.e("Exception", "FavoriteTask lost context");
 	}
 
 }

@@ -2,39 +2,30 @@
 <resources>
 
     <string name="app_name">Rtweel</string>
-    <string name="title_activity_detail">DetailActivity</string>
-    <string name="home_button">Home</string>
-    <string name="done_button">Done</string>
-    <string name="add_button">Add</string>
     <string name="delete_button">Delete</string>
     <string name="tweet_button">Tweets</string>
     <string name="hint_name">Name</string>
     <string name="hint_text">Text</string>
     <string name="hint_location">Location</string>
-    <string name="content_description">Photo</string>
-    <string name="tweet_media_description">Media</string>
     <string name="make_photo">Make Photo</string>
     <string name="tweet_hint">Input tweet here</string>
-    <string name="tweet">Tweet</string>
     <string name="logout">Logout</string>
     <string name="tweet_send_open">New tweet</string>
     <string name="tweet_send_ok">Send</string>
     <string name="tweet_send_back">Back</string>
     <string name="tweet_send_hint">Input text of your new tweet here</string>
-    <string name="switch_home_timeline">Switch to home timeline</string>
-    <string name="switch_user_timeline">Switch to user timeline</string>
-    <string name="authors_picture_description_content">Author\'s picture</string>
     <string name="logout_button">Logout</string>
     <string name="tweet_send_add_photo_button">Add photo</string>
     <string name="tweet_share">Share tweet</string>
     <string name="select_file">Select file</string>
-    <string name="pref_images_shown">Images preview \n In timeline</string>
-    <string name="pref_save_tweet">Tweet text saving \n Even after app closing or screen changing</string>
-
-    <string name="settings">Settings</string>
     <string name="loading">Loading..</string>
     <string name="tweet_refreshing">Tweet refreshing..</string>
     <string name="authorization">Authorization..</string>
+
+        <!--settings-->
+    <string name="pref_images_shown">Images preview \n In timeline</string>
+    <string name="pref_save_tweet">Tweet text saving \n Even after app closing or screen changing</string>
+
 
         <!--content descriptions-->
     <string name="cd_retweet_btn">Retweet button</string>
@@ -43,6 +34,9 @@
     <string name="drawer_closed">Closed drawer</string>
     <string name="cd_profile_background">Profile background image</string>
     <string name="cd_profile_picture">Profile picture</string>
+    <string name="cd_photo">Photo</string>
+    <string name="cd_authors_picture">Author\'s picture</string>
+    <string name="cd_tweet_media">Media</string>
 
         <!--nav drawer-->
     <string-array name="drawer_items">
@@ -53,7 +47,6 @@
     </string-array>
 
     <!--Toolbar titles-->
-    <string name="title_detail">Tweet</string>
     <string name="title_timeline">Home</string>
     <string name="title_file">Select File</string>
     <string name="title_login">Start</string>

@@ -24,17 +24,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.akexorcist.roundcornerprogressbar.IconRoundCornerProgressBar;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.rtweel.R;
-import com.rtweel.activities.MainActivity;
-import com.rtweel.asynctasks.tweet.TwitterSendTweetTask;
+import com.rtweel.asynctasks.tweet.SendTweetTask;
 import com.rtweel.cache.App;
 import com.rtweel.constant.Extras;
 
@@ -42,7 +39,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.prefs.PreferencesFactory;
 
 /**
  * Created by root on 22.3.15.
@@ -247,7 +243,7 @@ public class SendTweetFragment extends BaseFragment {
                     }
 
 
-                    new TwitterSendTweetTask(getActivity())
+                    new SendTweetTask(getActivity())
                             .execute(tweet);
                     mTweetEntry.setText("");
                 } else {

@@ -13,32 +13,33 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
-public class TwitterSendTweetTask extends AsyncTask<String, String, Boolean> {
+public class SendTweetTask extends AsyncTask<String, String, Boolean> {
 
-	private final Context sContext;
+	private final Context mContext;
 
-	public TwitterSendTweetTask(Context context) {
-		sContext = context;
+	public SendTweetTask(Context context) {
+		mContext = context;
 	}
 
 	@Override
 	protected Boolean doInBackground(String... params) {
 		try {
-			SharedPreferences sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(sContext);
-			String accessTokenString = sharedPreferences.getString(
+			SharedPreferences prefs = PreferenceManager
+					.getDefaultSharedPreferences(mContext);
+			String accessTokenString = prefs.getString(
 					ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
-			String accessTokenSecret = sharedPreferences.getString(
+			String accessTokenSecret = prefs.getString(
 					ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
 
 			if (accessTokenString != null && accessTokenSecret != null) {
 				AccessToken accessToken = new AccessToken(accessTokenString,
 						accessTokenSecret);
 				StatusUpdate update = new StatusUpdate(params[0]);
-				File file = new File(Environment.getExternalStorageDirectory()
+				File file = new File(Environment.getExternalStorageDirectory() //TODO CHANGE TO INTERNAL STORAGE
 						+ App.PHOTO_PATH + ".jpg");
 				if (file.exists()) {
 					update.setMedia(file);
@@ -58,16 +59,19 @@ public class TwitterSendTweetTask extends AsyncTask<String, String, Boolean> {
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		if (result) {
-			Toast toast = Toast.makeText(sContext, "Tweet successfully sended",
-					Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.CENTER, 0, 0);
-			toast.show();
-		} else {
-			Toast toast = Toast.makeText(sContext, "Tweet sending failed",
-					Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.CENTER, 0, 0);
-			toast.show();
-		}
+        if(mContext != null) {
+            if (result) {
+                Toast toast = Toast.makeText(mContext, "Tweet successfully sended",
+                        Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            } else {
+                Toast toast = Toast.makeText(mContext, "Tweet sending failed",
+                        Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        }  else
+            Log.e("Exception", "SendTweetTask lost context");
 	}
 }

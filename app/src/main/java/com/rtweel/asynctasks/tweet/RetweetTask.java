@@ -3,6 +3,7 @@ package com.rtweel.asynctasks.tweet;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,20 +47,24 @@ public class RetweetTask extends AsyncTask<Long, Void, Long> {
     @Override
     protected void onPostExecute(Long result) {
         super.onPostExecute(result);
-        mFragment.changeIsRetweeted();
-        mFragment.setRetweetId(result);
-        mIsRetweeted = !mIsRetweeted;
-        if (mIsRetweeted) {
-            mRetweetButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
-            mCountView.setText(String.valueOf(Long
-                    .valueOf((String) mCountView.getText()) + 1));
-            Toast.makeText(mFragment.getActivity(), "Retweeted", Toast.LENGTH_LONG).show();
-        } else {
-            mRetweetButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
-            mCountView.setText(String.valueOf(Long
-                    .valueOf((String) mCountView.getText()) - 1));
-            Toast.makeText(mFragment.getActivity(), "Unretweeted", Toast.LENGTH_LONG).show();
-        }
+
+        if (mFragment.getActivity() != null) {
+            mFragment.changeIsRetweeted();
+            mFragment.setRetweetId(result);
+            mIsRetweeted = !mIsRetweeted;
+            if (mIsRetweeted) {
+                mRetweetButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
+                mCountView.setText(String.valueOf(Long
+                        .valueOf((String) mCountView.getText()) + 1));
+                Toast.makeText(mFragment.getActivity(), "Retweeted", Toast.LENGTH_LONG).show();
+            } else {
+                mRetweetButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                mCountView.setText(String.valueOf(Long
+                        .valueOf((String) mCountView.getText()) - 1));
+                Toast.makeText(mFragment.getActivity(), "Unretweeted", Toast.LENGTH_LONG).show();
+            }
+        } else
+            Log.e("Exception", "RetweetTask lost context");
     }
 
 }

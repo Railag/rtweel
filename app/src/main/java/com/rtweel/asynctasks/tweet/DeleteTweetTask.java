@@ -1,6 +1,7 @@
 package com.rtweel.asynctasks.tweet;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
@@ -36,22 +37,25 @@ public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
 	protected void onPostExecute(Long result) {
 		super.onPostExecute(result);
 
-        mFragment.getActivity().getContentResolver().delete(
-                TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                TweetDatabase.Tweets._ID + "="
-                        + String.valueOf(result), null);
-        mFragment.getActivity().getContentResolver().delete(
-                TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                TweetDatabase.Tweets._ID + "="
-                        + String.valueOf(result), null);
-        Timeline.getDefaultTimeline().remove(mPosition);
+        if (mFragment.getActivity() != null) {
+            mFragment.getActivity().getContentResolver().delete(
+                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                    TweetDatabase.Tweets._ID + "="
+                            + String.valueOf(result), null);
+            mFragment.getActivity().getContentResolver().delete(
+                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                    TweetDatabase.Tweets._ID + "="
+                            + String.valueOf(result), null);
+            Timeline.getDefaultTimeline().remove(mPosition);
 
-		if (mFragment instanceof DetailFragment) {
-			mFragment.getMainActivity().setMainFragment(new HomeTimelineFragment());
-		} else if (mFragment instanceof TimelineFragment) {
-			TimelineFragment timelineFragment = (TimelineFragment) mFragment;
-			timelineFragment.getAdapter().notifyDataSetChanged();
-		}
+            if (mFragment instanceof DetailFragment) {
+                mFragment.getMainActivity().setMainFragment(new HomeTimelineFragment());
+            } else if (mFragment instanceof TimelineFragment) {
+                TimelineFragment timelineFragment = (TimelineFragment) mFragment;
+                timelineFragment.getAdapter().notifyDataSetChanged();
+            }
+        } else
+            Log.e("Exception", "DeleteTweetTask lost context");
 
 	}
 }

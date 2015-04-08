@@ -3,6 +3,7 @@ package com.rtweel.asynctasks.tweet;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,10 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
     @Override
     protected User doInBackground(Twitter... params) {
         Twitter twitter = params[0];
+
+        if (twitter == null)
+            return null;
+
         User user = null;
         try {
             String screenName = twitter.getScreenName();
@@ -60,28 +65,30 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
     protected void onPostExecute(User user) {
         super.onPostExecute(user);
 
-        //Picasso.with(mContext).load(user.getProfileBackgroundColor()).into(mBackground);
-        //Picasso.with(mContext).load(user.getProfileBackgroundImageURL()).into(mImage);
-        if(user != null) {
-            Transformation transformation = new RoundedTransformationBuilder()
-                    .borderColor(Color.BLACK)
-                    .borderWidthDp(2)
-                    .cornerRadiusDp(30)
-                    .oval(false)
-                    .build();
+        if (mContext != null) {
+            if (user != null) {
+                Transformation transformation = new RoundedTransformationBuilder()
+                        .borderColor(Color.BLACK)
+                        .borderWidthDp(2)
+                        .cornerRadiusDp(30)
+                        .oval(false)
+                        .build();
 
-            Picasso.with(mContext).load(user.getProfileBannerURL()).resize(mBackground.getMeasuredWidth(), mBackground.getMeasuredHeight()).into(mBackground);
-            Picasso.with(mContext).load(user.getBiggerProfileImageURL()).transform(transformation).into(mImage);
+                Picasso.with(mContext).load(user.getProfileBannerURL()).resize(mBackground.getMeasuredWidth(), mBackground.getMeasuredHeight()).into(mBackground);
+                Picasso.with(mContext).load(user.getBiggerProfileImageURL()).transform(transformation).into(mImage);
 
-            mUsername.setText(user.getName());
-            mUsername.setTextColor(Color.WHITE);//Color.parseColor("#" + user.getProfileTextColor()));
+                mUsername.setText(user.getName());
+                mUsername.setTextColor(Color.WHITE);//Color.parseColor("#" + user.getProfileTextColor()));
 
-            mUsernameLinked.setText("@" + user.getScreenName());
-            mUsernameLinked.setTextColor(Color.WHITE);//Color.parseColor("#" + user.getProfileTextColor()));
+                mUsernameLinked.setText("@" + user.getScreenName());
+                mUsernameLinked.setTextColor(Color.WHITE);//Color.parseColor("#" + user.getProfileTextColor()));
 
-            mDescription.setText(user.getDescription());
-            mDescription.setBackgroundColor(Color.parseColor("#" + user.getProfileBackgroundColor()));
+                mDescription.setText(user.getDescription());
+                mDescription.setBackgroundColor(Color.parseColor("#" + user.getProfileBackgroundColor()));
+            } else
+                Toast.makeText(mContext, "Network problems", Toast.LENGTH_SHORT).show();
         } else
-            Toast.makeText(mContext, "Network problems", Toast.LENGTH_SHORT).show();
+            Log.e("Exception", "GetUserDetailsTask lost context");
+
     }
 }

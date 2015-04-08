@@ -41,7 +41,7 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
 	}
 
 	@Override
-	protected void onPostExecute(Integer result) {
+	protected void onPostExecute(Integer result) { //TODO clear arg
 
 		mFragment.getAdapter().notifyDataSetChanged();
 

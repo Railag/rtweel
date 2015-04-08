@@ -2,41 +2,57 @@
 <resources>
 
     <string name="app_name">Rtweel</string>
-    <string name="title_activity_detail">Твит</string>
-    <string name="home_button">Назад</string>
-    <string name="done_button">Отправить</string>
-    <string name="add_button">Добавить</string>
     <string name="delete_button">Удалить</string>
     <string name="tweet_button">Твиты</string>
     <string name="hint_name">Автор</string>
     <string name="hint_text">Текст</string>
     <string name="hint_location">Расположение</string>
-    <string name="content_description">Фото</string>
-    <string name="tweet_media_description">Медиа</string>
     <string name="make_photo">Сделать снимок</string>
     <string name="tweet_hint">Расскажите, что происходит</string>
-    <string name="tweet">Твит</string>
     <string name="logout">Выйти из аккаунта</string>
     <string name="tweet_send_open">Написать</string>
     <string name="tweet_send_ok">Отправить</string>
     <string name="tweet_send_back">Назад</string>
     <string name="tweet_send_hint">Расскажите, что происходит</string>
-    <string name="switch_home_timeline">Домашняя лента</string>
-    <string name="switch_user_timeline">Своя лента</string>
-    <string name="authors_picture_description_content">Картинка автора</string>
     <string name="logout_button">Выйти из аккаунта</string>
     <string name="tweet_send_add_photo_button">Сделать снимок</string>
     <string name="tweet_share">Поделиться твитом</string>
     <string name="select_file">Выбрать фото с диска</string>
-    <string name="pref_images_shown">Превью картинок</string>
-    <string name="pref_images_shown_summary">Отображение в ленте</string>
-    <string name="settings">Настройки</string>
     <string name="loading">Загрузка..</string>
     <string name="tweet_refreshing">Открытие твита..</string>
     <string name="authorization">Авторизация..</string>
 
+        <!--settings-->
+    <string name="pref_images_shown">Превью картинок</string>
+    <string name="pref_save_tweet">Сохранять текущий текст твита, \n даже после закрытия приложения</string>
+
+
     <!--content descriptions-->
     <string name="cd_retweet_btn">Кнопка для ретвита</string>
     <string name="cd_fav_btn">Кнопка для избранного</string>
+    <string name="drawer_open">Навигация открыта</string>
+    <string name="drawer_closed">Навигация закрыта</string>
+    <string name="cd_profile_background">Баннер профиля</string>
+    <string name="cd_profile_picture">Лого профиля</string>
+    <string name="cd_photo">Фото</string>
+    <string name="cd_authors_picture">Картинка автора</string>
+    <string name="cd_tweet_media">Медиа</string>
+
+
+    <!--nav drawer-->
+    <string-array name="drawer_items">
+        <item name="profile">Профиль</item>
+        <item name="timeline">Лента</item>
+        <item name="send_tweet">Новый твит</item>
+        <item name="settings">Настройки</item>
+    </string-array>
+
+    <!--Toolbar titles-->
+    <string name="title_timeline">Главная</string>
+    <string name="title_file">Выбрать файл</string>
+    <string name="title_login">Авторизация</string>
+    <string name="title_profile">Профиль</string>
+    <string name="title_settings">Настройки</string>
+    <string name="title_send_tweet">Новый твит</string>
 
 </resources>

@@ -17,7 +17,6 @@ public class App extends Application {
 
 
     public static final String BUILD = BuildConfig.APPLICATION_ID;
-	public static final String PATH = "/Android/data/" + BUILD +"/sp";
 	public static final String PHOTO_PATH = "/Android/data/" + BUILD + "/photo";
 
 	private static DiskCache sDiskCache;
@@ -31,12 +30,10 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		// Date first = new Date();
+
 		sHelper = new TweetDatabase(this);
 		sDb = sHelper.getWritableDatabase();
-		// Date second = new Date();
-		// Log.i("DEBUG", "DB initialization: " + (second.getTime() -
-		// first.getTime()));
+
 		new MemoryCache();
 		sDiskCache = new DiskCache(getApplicationContext(), "thumbnails",
 				10 * 1024 * 1024, CompressFormat.JPEG, 100);
