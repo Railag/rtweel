@@ -4,21 +4,24 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.view.ViewHelper;
 import com.rtweel.R;
-import com.rtweel.sqlite.TweetDatabase;
-import com.rtweel.timelines.HomeTimeline;
 import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
-import com.rtweel.timelines.Timeline;
+import com.rtweel.sqlite.TweetDatabase;
+import com.rtweel.timelines.HomeTimeline;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 /**
  * Created by root on 5.4.15.
@@ -36,8 +39,6 @@ public class HomeTimelineFragment extends TimelineFragment {
     @Override
     protected void instantiateTimeline() {
         mTimeline = new HomeTimeline(getActivity().getApplicationContext());
-
-        Timeline.setDefaultTimeline(mTimeline);
     }
 
     protected void updateUp() {
@@ -80,36 +81,27 @@ public class HomeTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.tweet_send_open: {
-                getMainActivity().setMainFragment(new SendTweetFragment());
-                break;
-            }
-            case R.id.logout_button: {
-                App app = (App) getActivity().getApplication();
+    protected void loadingAnim() {
+        list.setVisibility(View.GONE);
 
-                boolean dbDeleted = getActivity().deleteDatabase(TweetDatabase
-                        .getDbName());
-                Log.i("DEBUG", "DB DELETED = " + dbDeleted);
+        mContentLoaded = !mContentLoaded;
 
-                app.createDb();
+        final View showView = mContentLoaded ? getLoadingBar() : list;
+        final View hideView = mContentLoaded ? list : getLoadingBar();
 
-                SharedPreferences sharedPreferences = PreferenceManager
-                        .getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
-                editor.putString(
-                        ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
-                editor.putBoolean(ConstantValues.PREFERENCE_TWITTER_IS_LOGGED_IN,
-                        false);
-                editor.commit();
+        ViewHelper.setAlpha(list, 0f);
 
-                TwitterUtil.getInstance().reset();
-                getMainActivity().finish();
-                break;
-            }
-        }
-        return true;
+        showView.setVisibility(View.VISIBLE);
+
+        animate(showView).alpha(1f).setDuration(200)
+                .setListener(null);
+
+        animate(hideView).alpha(0f).setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        hideView.setVisibility(View.GONE);
+                    }
+                });
     }
 }

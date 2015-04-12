@@ -44,7 +44,7 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
                 mFragment.getAdapter().notifyDataSetChanged();
 
 
-                mFragment.crossfade();
+                mFragment.startLoadingAnim();
             }
         } else
             Log.e("Exception", "LoadTimelineTask lost context");

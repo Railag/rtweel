@@ -1,13 +1,14 @@
 package com.rtweel.fragments;
 
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,21 +17,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.view.ViewHelper;
 import com.rtweel.R;
+import com.rtweel.cache.App;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.services.TweetService;
+import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.Timeline;
 import com.rtweel.tweet.TweetAdapter;
-
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+import com.rtweel.twitteroauth.ConstantValues;
+import com.rtweel.twitteroauth.TwitterUtil;
 
 /**
  * Created by root on 21.3.15.
@@ -83,6 +84,8 @@ public abstract class TimelineFragment extends BaseFragment {
     protected abstract void loadTweets();
 
     protected abstract void instantiateTimeline();
+
+    protected abstract void loadingAnim();
 
     private void initList(View v) {
 
@@ -151,8 +154,7 @@ public abstract class TimelineFragment extends BaseFragment {
         list.setLayoutManager(mLayoutManager);
         list.setItemAnimator(new DefaultItemAnimator());
 
-        list.setVisibility(View.GONE);
-        crossfade();
+        loadingAnim();
 
         Log.i("DEBUG", "timelineType=" + mTimeline.getCurrentTimelineType());
         adapter = new TweetAdapter(mTimeline, getActivity());
@@ -206,29 +208,6 @@ public abstract class TimelineFragment extends BaseFragment {
         inflater.inflate(R.menu.main, menu);
     }
 
-    public void crossfade() {
-        mContentLoaded = !mContentLoaded;
-
-        final View showView = mContentLoaded ? getLoadingBar() : list;
-        final View hideView = mContentLoaded ? list : getLoadingBar();
-
-        ViewHelper.setAlpha(list, 0f);
-
-        showView.setVisibility(View.VISIBLE);
-
-        animate(showView).alpha(1f).setDuration(200)
-                .setListener(null);
-
-        animate(hideView).alpha(0f).setDuration(200)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        hideView.setVisibility(View.GONE);
-                    }
-                });
-
-    }
-
     public void blink() {
 
         ValueAnimator fade = new ValueAnimator();
@@ -246,6 +225,41 @@ public abstract class TimelineFragment extends BaseFragment {
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.tweet_send_open: {
+                getMainActivity().setMainFragment(new SendTweetFragment());
+                break;
+            }
+            case R.id.logout_button: {
+                App app = (App) getActivity().getApplication();
+
+                boolean dbDeleted = getActivity().deleteDatabase(TweetDatabase
+                        .getDbName());
+                Log.i("DEBUG", "DB DELETED = " + dbDeleted);
+
+                app.createDb();
+
+                SharedPreferences sharedPreferences = PreferenceManager
+                        .getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
+                editor.putString(
+                        ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
+                editor.putBoolean(ConstantValues.PREFERENCE_TWITTER_IS_LOGGED_IN,
+                        false);
+                editor.commit();
+
+                TwitterUtil.getInstance().reset();
+                getMainActivity().finish();
+                break;
+            }
+        }
+        return true;
+    }
+
+
     public RecyclerView getList() {
         return list;
     }
@@ -260,6 +274,10 @@ public abstract class TimelineFragment extends BaseFragment {
 
     public void setHideHeaderListener(HideHeaderOnScrollListener listener) {
         mListener = listener;
+    }
+
+    public void startLoadingAnim() {
+        loadingAnim();
     }
 
 }

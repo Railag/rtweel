@@ -70,4 +70,9 @@ public class AnswersTimelineFragment extends TimelineFragment {
         mDownTask = new TimelineDownTask(AnswersTimelineFragment.this);
         mDownTask.execute(mTimeline);
     }
+
+    @Override
+    protected void loadingAnim() {
+        //TODO
+    }
 }

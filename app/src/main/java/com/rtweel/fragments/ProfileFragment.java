@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.R;
+import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.asynctasks.tweet.GetUserDetailsTask;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.timelines.Timeline;
@@ -70,9 +71,8 @@ public class ProfileFragment extends BaseFragment {
         mProfileNameNormal.setText(Timeline.getUserName());
         mProfileNameLink.setText(Timeline.getScreenUserName());
 
-        Timeline timeline = Timeline.getDefaultTimeline();
         GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription);
-        task.execute(timeline.getTwitter());
+        task.execute(Tweets.getTwitter(getActivity()));
 
 
 
@@ -109,7 +109,7 @@ public class ProfileFragment extends BaseFragment {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return instantiateFragment(new HomeTimelineFragment());
+                        return instantiateFragment(new UserTimelineFragment());
                     case 1:
                         return instantiateFragment(new AnswersTimelineFragment());
                     case 2:

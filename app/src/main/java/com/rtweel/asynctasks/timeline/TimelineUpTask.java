@@ -22,7 +22,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
         Timeline timeline = params[0];
         List<twitter4j.Status> downloadedList = timeline.downloadTimeline(Timeline.UP_TWEETS);
 
-        timeline.updateTimelineUp(downloadedList);
+        timeline.updateTimelineUpDb(downloadedList);
 
         int size = downloadedList.size();
         Log.i("DEBUG", "Finished downloading up task");
@@ -33,7 +33,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
     protected void onPostExecute(Integer result) {
         mFragment.getAdapter().notifyDataSetChanged();
         // adapter.notifyDataSetInvalidated();
-        // mActivity.crossfade();
+        // mActivity.loadingAnim();
         // Toast.makeText(mActivity, "Finished", Toast.LENGTH_LONG).show();
 
         if (mFragment.getActivity() != null) {

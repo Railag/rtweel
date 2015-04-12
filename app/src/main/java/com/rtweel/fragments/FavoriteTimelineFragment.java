@@ -27,8 +27,6 @@ public class FavoriteTimelineFragment extends TimelineFragment {
     @Override
     protected void instantiateTimeline() {
         mTimeline = new FavoriteTimeline(getActivity().getApplicationContext());
-
-        Timeline.setDefaultTimeline(mTimeline);
     }
 
     protected void updateUp() {
@@ -68,6 +66,12 @@ public class FavoriteTimelineFragment extends TimelineFragment {
                 return;
         mDownTask = new TimelineDownTask(FavoriteTimelineFragment.this);
         mDownTask.execute(mTimeline);
+    }
+
+
+    @Override
+    protected void loadingAnim() {
+        //TODO
     }
 
 }

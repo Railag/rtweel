@@ -8,9 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.fragments.DetailFragment;
 import com.rtweel.timelines.Timeline;
 
+import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
 public class RetweetTask extends AsyncTask<Long, Void, Long> {
@@ -29,14 +31,15 @@ public class RetweetTask extends AsyncTask<Long, Void, Long> {
 
     @Override
     protected Long doInBackground(Long... params) {
-        Timeline timeline = Timeline.getDefaultTimeline();
         Long result = 0L;
+        Twitter twitter = Tweets.getTwitter(mFragment.getActivity());
+
         try {
             if (mIsRetweeted) {
-                timeline.getTwitter().destroyStatus(params[1]);
+                twitter.destroyStatus(params[1]);
                 result = 0L;
             } else {
-                result = timeline.getTwitter().retweetStatus(params[0]).getId();
+                result = twitter.retweetStatus(params[0]).getId();
             }
         } catch (TwitterException e) {
             e.printStackTrace();

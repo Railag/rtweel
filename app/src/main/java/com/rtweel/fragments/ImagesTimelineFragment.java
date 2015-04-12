@@ -68,4 +68,10 @@ public class ImagesTimelineFragment extends TimelineFragment {
         mDownTask = new TimelineDownTask(ImagesTimelineFragment.this);
         mDownTask.execute(mTimeline);
     }
+
+    @Override
+    protected void loadingAnim() {
+        //TODO
+    }
+
 }

@@ -8,9 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.fragments.DetailFragment;
 import com.rtweel.timelines.Timeline;
 
+import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
 public class FavoriteTask extends AsyncTask<Long, Void, Void> {
@@ -29,12 +31,12 @@ public class FavoriteTask extends AsyncTask<Long, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Long... params) {
-		Timeline timeline = Timeline.getDefaultTimeline();
-		try {
+        Twitter twitter = Tweets.getTwitter(mFragment.getActivity());
+        try {
 			if (mIsFavorited) {
-				timeline.getTwitter().destroyFavorite(params[0]);
+				twitter.destroyFavorite(params[0]);
 			} else {
-				timeline.getTwitter().createFavorite(params[0]);
+				twitter.createFavorite(params[0]);
 			}
 		} catch (TwitterException e) {
 			e.printStackTrace();

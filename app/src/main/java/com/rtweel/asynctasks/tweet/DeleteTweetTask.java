@@ -3,10 +3,12 @@ package com.rtweel.asynctasks.tweet;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.HomeTimelineFragment;
 import com.rtweel.fragments.TimelineFragment;
+import com.rtweel.fragments.UserTimelineFragment;
 import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.Timeline;
 
@@ -24,9 +26,8 @@ public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
 
 	@Override
 	protected Long doInBackground(Long... params) {
-		Timeline timeline = Timeline.getDefaultTimeline();
 		try {
-			timeline.getTwitter().destroyStatus(params[0]);
+            Tweets.getTwitter(mFragment.getActivity()).destroyStatus(params[0]);
 		} catch (TwitterException e) {
 			e.printStackTrace();
 		}
@@ -46,12 +47,12 @@ public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
                     TweetDatabase.Tweets.CONTENT_URI_USER_DB,
                     TweetDatabase.Tweets._ID + "="
                             + String.valueOf(result), null);
-            Timeline.getDefaultTimeline().remove(mPosition);
 
             if (mFragment instanceof DetailFragment) {
-                mFragment.getMainActivity().setMainFragment(new HomeTimelineFragment());
+                mFragment.getMainActivity().setMainFragment(new UserTimelineFragment());
             } else if (mFragment instanceof TimelineFragment) {
                 TimelineFragment timelineFragment = (TimelineFragment) mFragment;
+                timelineFragment.getTimeline().remove(mPosition);
                 timelineFragment.getAdapter().notifyDataSetChanged();
             }
         } else

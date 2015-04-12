@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.rtweel.activities.MainActivity;
+import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.constant.Extras;
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
@@ -31,7 +32,7 @@ public class RefreshTweetTask extends AsyncTask<Long, Void, twitter4j.Status> {
     @Override
     protected twitter4j.Status doInBackground(Long... params) {
         mId = params[0];
-        Twitter twitter = Timeline.getDefaultTimeline().getTwitter();
+        Twitter twitter = Tweets.getTwitter(mActivity);
         TweetsResources tw = twitter.tweets();
         twitter4j.Status result = null;
         try {

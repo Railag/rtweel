@@ -49,12 +49,8 @@ public abstract class Timeline implements Iterable<Status> {
 
     protected List<twitter4j.Status> list;
 
-    protected Twitter mTwitter;
-
     private int mCurrentTimelineType;
     private final Context mContext;
-
-    private static Timeline sTimeline;
 
     private static String sUserName;
     private static String sScreenUserName;
@@ -64,33 +60,10 @@ public abstract class Timeline implements Iterable<Status> {
         list = new ArrayList<>();
         mContext = context;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String accessTokenString = prefs.getString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, null);
-        String accessTokenSecret = prefs.getString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, null);
 
-        if (accessTokenString != null && accessTokenSecret != null) {
-            AccessToken accessToken = new AccessToken(accessTokenString,
-                    accessTokenSecret);
-            mTwitter = TwitterUtil.getInstance().getTwitterFactory()
-                    .getInstance(accessToken);
-            mTwitter.addRateLimitStatusListener(new RateLimitStatusListener() {
-                @Override
-                public void onRateLimitStatus(RateLimitStatusEvent event) {
-                    Log.i("LIMIT", "limit = " + event.getRateLimitStatus().getLimit());
-                    Log.i("LIMIT", "remaining: " + event.getRateLimitStatus().getRemaining());
-                    Log.i("LIMIT", "secondsUntilReset: " + event.getRateLimitStatus().getSecondsUntilReset());
-                }
+        new GetScreenNameTask().execute(Tweets.getTwitter(mContext));
+        Log.i("DEBUG", "timeline construction finished");
 
-                @Override
-                public void onRateLimitReached(RateLimitStatusEvent event) {
-                    Log.i("LIMIT", "BLOCKED");
-                }
-            });
-
-
-            new GetScreenNameTask().execute(mTwitter);
-            Log.i("DEBUG", "timeline construction finished");
-        }
     }
 
     public void loadTimeline() {
@@ -101,6 +74,7 @@ public abstract class Timeline implements Iterable<Status> {
                 Log.i("DEBUG", "No network in loadTimeline()");
                 return;
             }
+
             list.addAll(downloadTimeline(Timeline.INITIALIZATION_TWEETS));
 
             new DbWriteTask(mContext, list, mCurrentTimelineType).execute();
@@ -108,14 +82,12 @@ public abstract class Timeline implements Iterable<Status> {
         }
     }
 
-    public void updateTimelineUp(List<Status> downloadedList) {
+    public void updateTimelineUpDb(List<Status> downloadedList) {
 
-        if (downloadedList == null) {
-            return;
-        } else if (downloadedList.isEmpty()) {
+        if (downloadedList == null || downloadedList.size() == 0) {
             return;
         }
-        Log.i("DEBUG", "downloading up");
+
         int prevSize = list.size();
         list.addAll(0, downloadedList);
         Log.i("DEBUG", "New tweets: " + (list.size() - prevSize));
@@ -148,30 +120,31 @@ public abstract class Timeline implements Iterable<Status> {
                 page.setPage(1);
                 break;
             case UP_TWEETS:
-            //    if (list == null || list.isEmpty())
+                //    if (list == null || list.isEmpty())
                 getLastTweetFromDb();
                 if (list.size() > 0)
                     page.setSinceId(list.get(0).getId());
                 break;
             case DOWN_TWEETS:
-             //   if (list == null || list.isEmpty())
+                //   if (list == null || list.isEmpty())
                 getOldestTweetFromDb();
                 if (list.size() > 0)
                     page.setMaxId(list.get(0).getId());//(list.size() - 1).getId());
                 break;
         }
 
+        Twitter twitter = Tweets.getTwitter(mContext);
         switch (mCurrentTimelineType) {
             case Timeline.HOME_TIMELINE:
                 try {
-                    downloadedList = mTwitter.getHomeTimeline(page);
+                    downloadedList = twitter.getHomeTimeline(page);
                 } catch (TwitterException | NullPointerException e) {
                     e.printStackTrace();
                 }
                 break;
             case Timeline.USER_TIMELINE:
                 try {
-                    downloadedList = mTwitter.getUserTimeline(page);
+                    downloadedList = twitter.getUserTimeline(page);
                     //mTwitter.users(). //TODO
                 } catch (TwitterException | NullPointerException e) {
                     e.printStackTrace();
@@ -179,21 +152,21 @@ public abstract class Timeline implements Iterable<Status> {
                 break;
             case Timeline.FAVORITE_TIMELINE:
                 try {
-                    downloadedList = mTwitter.getFavorites(page);
+                    downloadedList = twitter.getFavorites(page);
                 } catch (TwitterException | NullPointerException e) {
                     e.printStackTrace();
                 }
                 break;
             case Timeline.ANSWERS_TIMELINE:
                 try {
-                    downloadedList = mTwitter.getMentionsTimeline(page); //TODO change
+                    downloadedList = twitter.getMentionsTimeline(page); //TODO change
                 } catch (TwitterException | NullPointerException e) {
                     e.printStackTrace();
                 }
                 break;
             case Timeline.IMAGES_TIMELINE:
                 try {
-                    List<Status> download = mTwitter.getHomeTimeline(page);
+                    List<Status> download = twitter.getHomeTimeline(page);
 
                     for (Status s : download)
                         if (s.getMediaEntities().length > 0 && s.getUser().getScreenName().equals(getScreenUserName()))
@@ -223,6 +196,7 @@ public abstract class Timeline implements Iterable<Status> {
                     TweetDatabase.Tweets.CONTENT_URI_USER_DB,
                     projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
         }
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 String author = cursor.getString(cursor
@@ -436,7 +410,7 @@ public abstract class Timeline implements Iterable<Status> {
 
         List<Status> resultList = null;
         try {
-            QueryResult result = mTwitter.search(query);
+            QueryResult result = Tweets.getTwitter(mContext).search(query);
             resultList = result.getTweets();
         } catch
                 (TwitterException e) {
@@ -450,45 +424,32 @@ public abstract class Timeline implements Iterable<Status> {
     public static Status buildTweet(String author, String text, String pictureUrl, String date, long id, String media) {
         try {
             StringBuilder builder = new StringBuilder();
-            builder.append("{text='");
-            builder.append(text);
-            builder.append("', id='");
-            builder.append(id);
-            builder.append("', created_at='");
-            builder.append(date);
+            builder.append("{text='")
+                    .append(text)
+                    .append("', id='")
+                    .append(id)
+                    .append("', created_at='")
+                    .append(date)
+                    .append("'");
             if (!TextUtils.isEmpty(media)) {
 //						builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
-                builder.append("',\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"");
-                builder.append(media);
-                builder.append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]}");
-                //	builder.append("'}]}");
-            } else {
-                builder.append("'");
+                builder.append(",\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"")
+                        .append(media)
+                        .append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]}");
+//                      .append("'}]}");
             }
-            builder.append(",user={name='");
-            builder.append(author);
-            builder.append("', profile_image_url='");
-            builder.append(pictureUrl);
-            builder.append("'}}");
+
+            builder.append(",user={name='")
+                    .append(author)
+                    .append("', profile_image_url='")
+                    .append(pictureUrl)
+                    .append("'}}");
             return TwitterObjectFactory.createStatus(builder
                     .toString());
         } catch (TwitterException e1) {
             e1.printStackTrace();
             return null;
         }
-    }
-
-    public Twitter getTwitter() {
-        return mTwitter;
-    }
-
-    public static void setDefaultTimeline(Timeline timeline) {
-        sTimeline = timeline;
-        sTimeline.mCurrentTimelineType = timeline.getCurrentTimelineType();
-    }
-
-    public static Timeline getDefaultTimeline() {
-        return sTimeline;
     }
 
     public int getCurrentTimelineType() {
