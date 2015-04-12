@@ -18,45 +18,49 @@ import android.util.Log;
 
 public class TweetReceiver extends BroadcastReceiver {
 
-	public static final String BROADCAST_ACTION = "com.rtweel.services.TweetReceiver.BROADCAST_ACTION";
-	public static final String CANCEL_NOTIFICATION_ACTION = "com.rtweel.services.TweetReceiver.CANCEL_NOTIFICATION_ACTION";
+    public static final String BROADCAST_ACTION = "com.rtweel.services.TweetReceiver.BROADCAST_ACTION";
+    public static final String CANCEL_NOTIFICATION_ACTION = "com.rtweel.services.TweetReceiver.CANCEL_NOTIFICATION_ACTION";
     public static final String BOOT_WAKEUP_ACTION = "android.intent.action.BOOT_COMPLETED";
 
-	public TweetReceiver() {
-	}
+    public TweetReceiver() {
+    }
 
-	@Override
-	public void onReceive(Context context, Intent data) {
+    @Override
+    public void onReceive(Context context, Intent data) {
         Log.i("DEBUG", "onReceive");
         String actionString = data.getAction();
 
-        switch(actionString) {
+        switch (actionString) {
 
             case BROADCAST_ACTION:
                 String message = data.getStringExtra(TweetService.MESSAGE);
                 String title = data.getStringExtra(TweetService.TITLE);
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                        context).setSmallIcon(com.rtweel.R.drawable.rtweel)
-                        .setContentTitle(title).setContentText(message);
-                builder.setAutoCancel(true);
-                builder.setSound(RingtoneManager.getActualDefaultRingtoneUri(
-                        context, RingtoneManager.TYPE_NOTIFICATION));
-                Intent resultIntent = new Intent(context, MainActivity.class);
 
+
+                Intent resultIntent = new Intent(context, MainActivity.class);
                 PendingIntent resultPendingIntent = PendingIntent
                         .getActivity(context, 0, resultIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-                builder.setContentIntent(resultPendingIntent);
-                builder.setLights(Color.CYAN, 1000, 4000);
+
                 Intent intent = new Intent(CANCEL_NOTIFICATION_ACTION);
                 PendingIntent deleteIntent = PendingIntent.getBroadcast(context, 0,
                         intent, 0);
-                builder.setDeleteIntent(deleteIntent);
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                        context).setSmallIcon(com.rtweel.R.drawable.rtweel)
+                        .setContentTitle(title).setContentText(message)
+                        .setAutoCancel(true)
+                        .setSound(RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION))
+                        .setContentIntent(resultPendingIntent)
+                        .setLights(Color.CYAN, 1000, 4000)
+                        .setDeleteIntent(deleteIntent);
+
 
                 int mNotificationId = 1;
                 NotificationManager mNotifyMgr = (NotificationManager) context
                         .getSystemService(Context.NOTIFICATION_SERVICE);
+
                 Notification notification = builder.build();
                 mNotifyMgr.notify(mNotificationId, notification);
                 break;
@@ -79,6 +83,6 @@ public class TweetReceiver extends BroadcastReceiver {
 
         }
 
-	}
+    }
 
 }

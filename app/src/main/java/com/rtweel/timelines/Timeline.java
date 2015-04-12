@@ -187,14 +187,33 @@ public abstract class Timeline implements Iterable<Status> {
         ContentResolver resolver = mContext.getContentResolver();
 
         Cursor cursor = null;
-        if (getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                    projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
-        } else if (getCurrentTimelineType() == Timeline.USER_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                    projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+
+        switch (getCurrentTimelineType()) {
+            case USER_TIMELINE:
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                break;
+            case HOME_TIMELINE:
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                break;
+            case FAVORITE_TIMELINE: //TODO impl
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                break;
+            case ANSWERS_TIMELINE: //TODO impl
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                break;
+            case IMAGES_TIMELINE: //TODO impl
+                cursor = resolver.query(
+                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
+                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                break;
         }
 
         if (cursor != null) {

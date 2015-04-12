@@ -108,11 +108,20 @@ public class TweetService extends IntentService {
                 long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
 
                 try {
-                    String creation = "{text='" + text + "', id='" + id
-                            + "', created_at='" + date
-                            + "',user={name='" + author
-                            + "', profile_image_url='" + pictureUrl + "'}}";
-                    Status insert = TwitterObjectFactory.createStatus(creation);
+                    StringBuilder tweet = new StringBuilder()
+                            .append("{text='")
+                            .append(text)
+                            .append("', id='")
+                            .append(id)
+                            .append("', created_at='")
+                            .append(date)
+                            .append("',user={name='")
+                            .append(author)
+                            .append("', profile_image_url='")
+                            .append(pictureUrl)
+                            .append("'}}");
+
+                    Status insert = TwitterObjectFactory.createStatus(tweet.toString());
                     mTimeline.getTweets().add(insert);
                 } catch (TwitterException e1) {
                     e1.printStackTrace();

@@ -17,17 +17,8 @@ public class GetScreenNameTask extends AsyncTask<Twitter, Void, Void> {
     protected Void doInBackground(Twitter... params) {
         Twitter twitter = params[0];
         try {
-            Map<String, RateLimitStatus> rates = null;
-            try {
-                rates =  twitter.getRateLimitStatus();
-            } catch (TwitterException e) {
-                e.printStackTrace();
-            }
-
-            if (TextUtils.isEmpty(Timeline.getUserName()))
                 Timeline.setScreenUserName(twitter.getScreenName());
 
-            if (TextUtils.isEmpty(Timeline.getScreenUserName()))
                 Timeline.setUserName(twitter.showUser(
                         Timeline.getScreenUserName()).getName());
 

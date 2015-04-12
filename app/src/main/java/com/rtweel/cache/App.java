@@ -19,11 +19,9 @@ public class App extends Application {
     public static final String BUILD = BuildConfig.APPLICATION_ID;
 	public static final String PHOTO_PATH = "/Android/data/" + BUILD + "/photo";
 
-	private static DiskCache sDiskCache;
+//	private static DiskCache sDiskCache;
 
 	private static SQLiteDatabase sDb;
-
-	private static TweetDatabase sHelper;
 
 	private static Bitmap sBitmap;
 
@@ -31,29 +29,28 @@ public class App extends Application {
 	public void onCreate() {
 		super.onCreate();
 
-		sHelper = new TweetDatabase(this);
-		sDb = sHelper.getWritableDatabase();
+        createDb();
 
 		new MemoryCache();
-		sDiskCache = new DiskCache(getApplicationContext(), "thumbnails",
-				10 * 1024 * 1024, CompressFormat.JPEG, 100);
-		Options opts = new Options();
-		opts.inSampleSize = 4;
-		setBitmap(BitmapFactory.decodeResource(getResources(),
-				com.rtweel.R.drawable.rtweel, opts));
+//		sDiskCache = new DiskCache(getApplicationContext(), "thumbnails",
+//				10 * 1024 * 1024, CompressFormat.JPEG, 100);
+//		Options opts = new Options();
+//		opts.inSampleSize = 4;
+//		setBitmap(BitmapFactory.decodeResource(getResources(),
+//				com.rtweel.R.drawable.rtweel, opts));
 	}
 
-	public DiskCache getDiskCache() {
-		return sDiskCache;
-	}
+//	public static DiskCache getDiskCache() {
+//		return sDiskCache;
+//	}
 
-	public SQLiteDatabase getDB() {
+	public static SQLiteDatabase getDB() {
 		return sDb;
 	}
 
 	public void createDb() {
-		sHelper = new TweetDatabase(this);
-		sDb = sHelper.getWritableDatabase();
+		TweetDatabase dbHelper = new TweetDatabase(getApplicationContext());
+		sDb = dbHelper.getWritableDatabase();
 	}
 
 	public static boolean isOnline(Context context) {
@@ -62,12 +59,12 @@ public class App extends Application {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 
-	public static Bitmap getBitmap() {
-		return sBitmap;
-	}
+//	public static Bitmap getBitmap() {
+//		return sBitmap;
+//	}
 
-	public static void setBitmap(Bitmap sBitmap) {
-		App.sBitmap = sBitmap;
-	}
+//	public static void setBitmap(Bitmap sBitmap) {
+//		App.sBitmap = sBitmap;
+//	}
 
 }
