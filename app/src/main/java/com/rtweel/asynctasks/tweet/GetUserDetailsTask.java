@@ -3,7 +3,9 @@ package com.rtweel.asynctasks.tweet;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,8 +85,12 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
                 mUsernameLinked.setText("@" + user.getScreenName());
                 mUsernameLinked.setTextColor(Color.WHITE);//Color.parseColor("#" + user.getProfileTextColor()));
 
-                mDescription.setText(user.getDescription());
-                mDescription.setBackgroundColor(Color.parseColor("#" + user.getProfileBackgroundColor()));
+                if(TextUtils.isEmpty(user.getDescription()))
+                    mDescription.setVisibility(View.GONE);
+                else {
+                    mDescription.setText(user.getDescription());
+                    mDescription.setBackgroundColor(Color.parseColor("#" + user.getProfileBackgroundColor()));
+                }
             } else
                 Toast.makeText(mContext, "Network problems", Toast.LENGTH_SHORT).show();
         } else

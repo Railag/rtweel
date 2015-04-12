@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.UserTimeline;
@@ -30,16 +31,20 @@ public class TweetService extends IntentService {
 	private Timeline mTimeline;
 
 	public TweetService() {
-		super("TestService");
-		mTimeline = new UserTimeline(getApplicationContext());
+		super("TweetService");
 	}
 
 	public TweetService(String name, int type) {
 		super(name);
-		mTimeline = new UserTimeline(getApplicationContext());
 	}
 
-	@Override
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mTimeline = new UserTimeline(getApplicationContext());
+    }
+
+    @Override
 	protected void onHandleIntent(Intent data) {
 		if (!App.isOnline(getApplicationContext())) {
 			return;
@@ -86,11 +91,8 @@ public class TweetService extends IntentService {
 	}
 
 	private void loadFromDB() {
-		String[] projection = { TweetDatabase.Tweets.COLUMN_AUTHOR,
-				TweetDatabase.Tweets.COLUMN_TEXT,
-				TweetDatabase.Tweets.COLUMN_PICTURE,
-				TweetDatabase.Tweets.COLUMN_DATE,
-				TweetDatabase.Tweets._ID};
+
+        String[] projection = Tweets.getProjection();
 
 		ContentResolver resolver = getContentResolver();
 

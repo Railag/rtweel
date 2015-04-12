@@ -27,7 +27,6 @@ import com.rtweel.timelines.Timeline;
  * Created by root on 25.3.15.
  */
 public class ProfileFragment extends BaseFragment {
-    //TODO
 
     private final static int PAGER_SIZE = 4;
     private final static int ANIMATION_TIME = 2000;

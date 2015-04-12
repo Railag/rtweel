@@ -33,22 +33,22 @@ import twitter4j.Status;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
-    private static List<Status> sData;
-    private static Context sContext;
+    private final List<Status> mData;
+    private final Context mContext;
 
     public TweetAdapter(List<Status> data, Context context) {
-        sData = data;
-        sContext = context;
+        mData = data;
+        mContext = context;
     }
 
     public TweetAdapter(Timeline timeline, Context context) {
-        sData = timeline.getTweets();
-        sContext = context;
+        mData = timeline.getTweets();
+        mContext = context;
     }
 
     @Override
     public int getItemCount() {
-        return sData.size();
+        return mData.size();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public TweetAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                       int viewType) {
 
-        LinearLayout v = (LinearLayout) LayoutInflater.from(sContext)
+        LinearLayout v = (LinearLayout) LayoutInflater.from(mContext)
                 .inflate(R.layout.list_item, parent, false);
 
         TextView text = (TextView) v
@@ -81,9 +81,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Status tweet = sData.get(position);
+        Status tweet = mData.get(position);
         SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(sContext);
+                .getDefaultSharedPreferences(mContext);
         String url = null;
         if (preferences.getBoolean(SettingsFragment.IMAGES_SHOWN_PREFS, true)) {
             MediaEntity[] entities = tweet.getMediaEntities();
@@ -91,7 +91,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 url = entities[0].getMediaURL();
         }
 
-        Picasso.with(sContext).load(url)
+        Picasso.with(mContext).load(url)
                 .placeholder(R.drawable.placeholder).resize(200, 200).into(holder.getMediaView());
 
         String imageUri = tweet.getUser().getProfileImageURL();
@@ -103,7 +103,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 .oval(false)
                 .build();
 
-        Picasso.with(sContext).load(imageUri)
+        Picasso.with(mContext).load(imageUri)
                 .placeholder(R.drawable.placeholder).transform(transformation).into(holder.getPictureView());
 
         holder.getAuthorView().setText(tweet.getUser().getName());
@@ -124,23 +124,27 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         private final RoundedImageView mPictureView;
         private final ImageView mMediaView;
 
-        public ViewHolder(View main, TextView user, TextView text, TextView date,
+        public ViewHolder(final View main, TextView user, TextView text, TextView date,
                           RoundedImageView picture, ImageView media) {
             super(main);
             main.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getPosition();
-                    Status tweet = sData.get(position);
 
-                    new RefreshTweetTask(sContext, position).execute(tweet.getId());
+                    RecyclerView rv = (RecyclerView) main.getParent();
+                    TweetAdapter adapter = (TweetAdapter) rv.getAdapter();
+
+                    Status tweet = adapter.mData.get(position);
+
+                    new RefreshTweetTask(adapter.mContext, position).execute(tweet.getId());
 
                     DetailFragment fragment = new DetailFragment();
                     Bundle args = new Bundle();
                     args.putSerializable(Extras.TWEET, tweet);
                     args.putInt(Extras.POSITION, position);
                     fragment.setArguments(args);
-                    ((MainActivity) sContext).setMainFragment(fragment);
+                    ((MainActivity) adapter.mContext).setMainFragment(fragment);
 
 
                 }

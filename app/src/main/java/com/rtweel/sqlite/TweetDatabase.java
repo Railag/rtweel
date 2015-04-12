@@ -18,12 +18,18 @@ public class TweetDatabase extends SQLiteOpenHelper {
         public static final String TABLE_NAME_TWEET = "all_timeline";
 		public static final String TABLE_NAME_USER = "user_timeline";
 
+        //for user timeline
 		public static final String COLUMN_AUTHOR = "author";
 		public static final String COLUMN_TEXT = "text";
 		public static final String COLUMN_PICTURE = "picture_url";
 		public static final String COLUMN_DATE = "created_at";
-		public static final String COLUMN_USER_ID = "user_id";
 		public static final String COLUMN_MEDIA = "media";
+
+        //for other tweets
+        public static final String COLUMN_USER_ID = "user_id";
+        public static final String COLUMN_IS_RETWEET = "is_retweet";
+
+
 	}
 
     public final static String SELECTION_ASC = " ASC ";

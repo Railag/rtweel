@@ -1,59 +1,40 @@
 package com.rtweel.asynctasks.timeline;
 
-import java.util.List;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.rtweel.fragments.TimelineFragment;
 import com.rtweel.timelines.Timeline;
 
-public class TimelineDownTask extends AsyncTask<Timeline, Void, Integer> {
+import java.util.List;
 
-	private TimelineFragment mFragment;
+public class TimelineDownTask extends AsyncTask<Timeline, Void, Void> {
 
-	public TimelineDownTask(TimelineFragment fragment) {
-		mFragment = fragment;
-	}
+    private TimelineFragment mFragment;
 
-	@Override
-	protected void onPreExecute() {
+    public TimelineDownTask(TimelineFragment fragment) {
+        mFragment = fragment;
+    }
 
-		super.onPreExecute();
-	}
+    @Override
+    protected Void doInBackground(Timeline... params) {
+        Timeline timeline = params[0];
+        List<twitter4j.Status> downloadedList = null;
+        int size = timeline.updateFromDb();
+        if (size == 0) {
+            downloadedList = timeline.downloadTimeline(
+                    Timeline.DOWN_TWEETS);
+            timeline.updateTimelineDown(downloadedList);
 
-	@Override
-	protected Integer doInBackground(Timeline... params) {
-		Timeline timeline = params[0];
-		List<twitter4j.Status> downloadedList = null;
-		int size = timeline.updateFromDb();
-		if (size == 0) {
-			downloadedList = timeline.downloadTimeline(
-				//	Timeline.getTweetsCount(), Timeline.getTweetsPerPage(),
-					Timeline.DOWN_TWEETS);
-			timeline.updateTimelineDown(downloadedList);
-		
-		Log.i("DEBUG", "finished updating");
-		return downloadedList.size();
-		} else {
-			return size;
-		}
-	}
+            Log.i("DEBUG", "finished updating down ");
+        }
+        return null;
+    }
 
-	@Override
-	protected void onPostExecute(Integer result) { //TODO clear arg
+    @Override
+    protected void onPostExecute(Void result) {
 
-		mFragment.getAdapter().notifyDataSetChanged();
+        mFragment.getAdapter().notifyDataSetChanged();
 
-		// mActivity.crossfade();
-/*
-		if (result != 0) {
-			Toast.makeText(mFragment.getActivity(), "New tweets: " + result,
-					Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(mFragment.getActivity(), "No new tweets", Toast.LENGTH_LONG)
-					.show();
-		}
-*/
-	}
+    }
 }

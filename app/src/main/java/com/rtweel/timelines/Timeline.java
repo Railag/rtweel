@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.rtweel.asynctasks.db.DbWriteTask;
+import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.asynctasks.tweet.GetScreenNameTask;
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabase;
@@ -147,16 +148,16 @@ public abstract class Timeline implements Iterable<Status> {
                 page.setPage(1);
                 break;
             case UP_TWEETS:
-                if (list == null || list.isEmpty())
-                    getLastTweetFromDb();
+            //    if (list == null || list.isEmpty())
+                getLastTweetFromDb();
                 if (list.size() > 0)
                     page.setSinceId(list.get(0).getId());
                 break;
             case DOWN_TWEETS:
-                if (list == null || list.isEmpty())
-                    getOldestTweetFromDb();
+             //   if (list == null || list.isEmpty())
+                getOldestTweetFromDb();
                 if (list.size() > 0)
-                    page.setMaxId(list.get(list.size() - 1).getId());
+                    page.setMaxId(list.get(0).getId());//(list.size() - 1).getId());
                 break;
         }
 
@@ -208,11 +209,7 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
     private void getOldestTweetFromDb() {
-        String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
-                TweetDatabase.Tweets.COLUMN_TEXT,
-                TweetDatabase.Tweets.COLUMN_PICTURE,
-                TweetDatabase.Tweets.COLUMN_DATE,
-                TweetDatabase.Tweets._ID};
+        String[] projection = Tweets.getProjection();
 
         ContentResolver resolver = mContext.getContentResolver();
 
@@ -253,11 +250,7 @@ public abstract class Timeline implements Iterable<Status> {
 
     private void getLastTweetFromDb() { //TODO ABSTRACT
 
-        String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
-                TweetDatabase.Tweets.COLUMN_TEXT,
-                TweetDatabase.Tweets.COLUMN_PICTURE,
-                TweetDatabase.Tweets.COLUMN_DATE,
-                TweetDatabase.Tweets._ID};
+        String[] projection = Tweets.getProjection();
 
         ContentResolver resolver = mContext.getContentResolver();
 
@@ -343,12 +336,7 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
     private void preparingUpdate() {
-        String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
-                TweetDatabase.Tweets.COLUMN_TEXT,
-                TweetDatabase.Tweets.COLUMN_PICTURE,
-                TweetDatabase.Tweets.COLUMN_DATE,
-                TweetDatabase.Tweets._ID,
-                TweetDatabase.Tweets.COLUMN_MEDIA};
+        String[] projection = Tweets.getProjection(true);
 
         ContentResolver resolver = mContext.getContentResolver();
 
@@ -391,12 +379,7 @@ public abstract class Timeline implements Iterable<Status> {
 
     public int updateFromDb() {
         int result = 0;
-        String[] projection = {TweetDatabase.Tweets.COLUMN_AUTHOR,
-                TweetDatabase.Tweets.COLUMN_TEXT,
-                TweetDatabase.Tweets.COLUMN_PICTURE,
-                TweetDatabase.Tweets.COLUMN_DATE,
-                TweetDatabase.Tweets._ID,
-                TweetDatabase.Tweets.COLUMN_MEDIA};
+        String[] projection = Tweets.getProjection(true);
 
         ContentResolver resolver = mContext.getContentResolver();
 

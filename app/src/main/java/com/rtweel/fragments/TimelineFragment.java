@@ -1,5 +1,6 @@
 package com.rtweel.fragments;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,9 +51,6 @@ public abstract class TimelineFragment extends BaseFragment {
 
     private HideHeaderOnScrollListener mListener;
 
-//    private float lastY;
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +71,8 @@ public abstract class TimelineFragment extends BaseFragment {
 
         initList(v);
 
+        initFloatingButton(v);
+
         return v;
     }
 
@@ -86,9 +87,6 @@ public abstract class TimelineFragment extends BaseFragment {
     private void initList(View v) {
 
         list = (RecyclerView) v.findViewById(R.id.list);
-
-        //list.setDivider(getResources().getDrawable(android.R.drawable.divider_horizontal_textfield));
-
 
         list.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -149,26 +147,6 @@ public abstract class TimelineFragment extends BaseFragment {
             }
         });
 
-//        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                Log.i("DEBUG", "Coords:" + dx + dy);
-//                super.onScrolled(recyclerView, dx, dy);
-////                mLastYChange = dy;
-//
-//            }
-//
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                Log.i("DEBUG", "Axis y scroll");
-//                super.onScrollStateChanged(recyclerView, newState);
-//     //           if (newState == RecyclerView.SCROLL_AXIS_VERTICAL)
-//
-//                //    if(== RecyclerView.SCROLL_STATE_IDLE && mLastYChange);
-//            }
-//        });
-
-
         mLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(mLayoutManager);
         list.setItemAnimator(new DefaultItemAnimator());
@@ -176,39 +154,14 @@ public abstract class TimelineFragment extends BaseFragment {
         list.setVisibility(View.GONE);
         crossfade();
 
-
-        /*
-        list.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == SCROLL_STATE_IDLE && mLastFirstVisibleItem == 0)
-                    updateUp();
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem == 0 && mLastFirstVisibleItem > firstVisibleItem) {
-                    updateUp();
-                    mLastFirstVisibleItem = 0;
-                    return;
-                }
-                if (firstVisibleItem > mLastFirstVisibleItem && (totalItemCount - firstVisibleItem) < 5) {
-                    updateDown();
-                    mLastFirstVisibleItem = firstVisibleItem;
-                    return;
-                }
-
-                mLastFirstVisibleItem = firstVisibleItem;
-            }
-        });
-    */
-
+        Log.i("DEBUG", "timelineType=" + mTimeline.getCurrentTimelineType());
         adapter = new TweetAdapter(mTimeline, getActivity());
 
 
         list.setAdapter(adapter);
+    }
 
-
+    private void initFloatingButton(View v) {
         final FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
         fab.setType(1);
         fab.setColorNormal(R.color.green);
@@ -263,19 +216,17 @@ public abstract class TimelineFragment extends BaseFragment {
 
         showView.setVisibility(View.VISIBLE);
 
-        int mShortAnimationDuration = getResources().getInteger(
-                android.R.integer.config_shortAnimTime);
-
-        animate(showView).alpha(1f).setDuration(mShortAnimationDuration)
+        animate(showView).alpha(1f).setDuration(200)
                 .setListener(null);
 
-        animate(hideView).alpha(0f).setDuration(mShortAnimationDuration)
+        animate(hideView).alpha(0f).setDuration(200)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         hideView.setVisibility(View.GONE);
                     }
                 });
+
     }
 
     public void blink() {
@@ -302,14 +253,6 @@ public abstract class TimelineFragment extends BaseFragment {
     public TweetAdapter getAdapter() {
         return adapter;
     }
-
-//    public AdapterView<ListAdapter> getAdapterView() {
-//        return mAdapter;
-//    }
-//
-//    public void setAdapterView(ListView list) {
-//        mAdapter = list;
-//    }
 
     public Timeline getTimeline() {
         return mTimeline;
