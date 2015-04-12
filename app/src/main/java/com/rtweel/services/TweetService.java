@@ -50,7 +50,7 @@ public class TweetService extends IntentService {
 
         String message = null;
         Log.i("DEBUG", "onHandleIntent");
-        //loadFromDB();
+        loadFromDB();
         try {
             List<twitter4j.Status> downloadedList = mTimeline.downloadTimeline(
                     Timeline.UP_TWEETS);

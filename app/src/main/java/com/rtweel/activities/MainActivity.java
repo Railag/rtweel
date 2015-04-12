@@ -139,7 +139,7 @@ public class MainActivity extends ActionBarActivity {
 
         final FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        if (!(fragment instanceof LoginFragment))
+        if (!(fragment instanceof LoginFragment || mCurrentFragment instanceof LoginFragment))
             fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.replace(R.id.main_frame, fragment).commit();
@@ -150,7 +150,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (mFragmentManager.getBackStackEntryCount() == 1)
+        if (mFragmentManager.getBackStackEntryCount() == 0)
             super.onBackPressed();
         else
             mFragmentManager.popBackStackImmediate();
