@@ -1,15 +1,18 @@
 package com.rtweel.asynctasks.db;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.Timeline;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import twitter4j.UserMentionEntity;
 
 public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 
@@ -51,29 +54,31 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
                 values.put(TweetDatabase.Tweets.COLUMN_MEDIA, "");
             }
 
-            switch (mTimelineType) {
-                case Timeline.HOME_TIMELINE:
+            if (mTimelineType == Timeline.USER_TIMELINE) {
+                resolver.insert(
+                        TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                        values);
+            } else {
+                values.put(TweetDatabase.Tweets.COLUMN_IS_FAVORITE, s.isFavorited() ? 1 : 0);
+                values.put(TweetDatabase.Tweets.COLUMN_USER_ID, s.getUser().getId());
+                values.put(TweetDatabase.Tweets.COLUMN_IS_RETWEET, s.isRetweet() ? 1 : 0);
+
+
+                UserMentionEntity[] mentions = s.getUserMentionEntities();
+                boolean hasMentions = mentions != null && mentions.length > 0;
+                values.put(TweetDatabase.Tweets.COLUMN_MENTIONS, hasMentions ? mentions[0].getText() : "");
+                //TODO ALL MENTIONS PROCESSING
+                if (!App.existsInDb(s.getId(), TweetDatabase.Tweets.TABLE_NAME_TWEET))
                     resolver.insert(
                             TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                             values);
-                    break;
-                case Timeline.USER_TIMELINE:
-                    resolver.insert(
-                            TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                            values);
-                    break;
-                case Timeline.FAVORITE_TIMELINE:
-                    //TODO
-                    break;
-                case Timeline.ANSWERS_TIMELINE:
-                    //TODO
-                    break;
-                case Timeline.IMAGES_TIMELINE:
-                    //TODO
-                    break;
+                else
+                    resolver.update(TweetDatabase.Tweets.CONTENT_URI_TWEET_DB, values, "_ID=?", new String[] {String.valueOf(s.getId())});
+
             }
         }
 
         return null;
     }
+
 }
