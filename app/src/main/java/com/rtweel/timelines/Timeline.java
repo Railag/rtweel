@@ -217,11 +217,6 @@ public abstract class Timeline implements Iterable<Status> {
         return new ArrayList<>(resultList);
     }
 
-
-    public static Status buildTweet(String author, String text, String pictureUrl, String date, long id) {
-        return buildTweet(author, text, pictureUrl, date, id, "");
-    }
-
     public static Status buildTweet(String author, String text, String pictureUrl, String date, long id, String media) {
         try {
             StringBuilder builder = new StringBuilder();
@@ -245,7 +240,6 @@ public abstract class Timeline implements Iterable<Status> {
                     .append("', profile_image_url='")
                     .append(pictureUrl)
                     .append("'}}");
-            Log.i("CreateStatus", builder.toString());
             return TwitterObjectFactory.createStatus(builder
                     .toString());
         } catch (TwitterException e1) {

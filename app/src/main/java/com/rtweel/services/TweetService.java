@@ -8,8 +8,8 @@ import android.util.Log;
 
 import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.cache.App;
-import com.rtweel.timelines.HomeTimeline;
 import com.rtweel.timelines.Timeline;
+import com.rtweel.timelines.UserTimeline;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class TweetService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        mTimeline = new HomeTimeline(getApplicationContext());
+        mTimeline = new UserTimeline(getApplicationContext());
     }
 
     @Override
