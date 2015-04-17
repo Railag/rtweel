@@ -16,7 +16,6 @@
     <string name="tweet_send_hint">Input text of your new tweet here</string>
     <string name="logout_button">Logout</string>
     <string name="tweet_send_add_photo_button">Add photo</string>
-    <string name="tweet_share">Share tweet</string>
     <string name="select_file">Select file</string>
     <string name="loading">Loading..</string>
     <string name="tweet_refreshing">Tweet refreshing..</string>
@@ -37,6 +36,7 @@
     <string name="cd_photo">Photo</string>
     <string name="cd_authors_picture">Author\'s picture</string>
     <string name="cd_tweet_media">Media</string>
+    <string name="cd_detail_share">Share</string>
 
         <!--nav drawer-->
     <string-array name="drawer_items">

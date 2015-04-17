@@ -156,7 +156,6 @@ public abstract class TimelineFragment extends BaseFragment {
 
         loadingAnim();
 
-        Log.i("DEBUG", "timelineType=" + mTimeline.getCurrentTimelineType());
         adapter = new TweetAdapter(mTimeline, getActivity());
 
 

@@ -20,13 +20,13 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 
     private List<twitter4j.Status> mList = new ArrayList<twitter4j.Status>();
 
-    private int mTimelineType;
+    private boolean mIsUserTimeline;
 
     public DbWriteTask(Context context, List<twitter4j.Status> list,
-                       int timelineType) {
+                       boolean isUserTimeline) {
         sContext = context;
         mList.addAll(list);
-        mTimelineType = timelineType;
+        mIsUserTimeline = isUserTimeline;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
                 values.put(TweetDatabase.Tweets.COLUMN_MEDIA, "");
             }
 
-            if (mTimelineType == Timeline.USER_TIMELINE) {
+            if (mIsUserTimeline) {
                 resolver.insert(
                         TweetDatabase.Tweets.CONTENT_URI_USER_DB,
                         values);

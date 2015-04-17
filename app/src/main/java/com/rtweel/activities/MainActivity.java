@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.rtweel.R;
 import com.rtweel.cache.App;
+import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.HomeTimelineFragment;
 import com.rtweel.fragments.LoginFragment;
 import com.rtweel.fragments.ProfileFragment;
@@ -144,6 +145,9 @@ public class MainActivity extends ActionBarActivity {
 
         fragmentTransaction.replace(R.id.main_frame, fragment).commit();
 
+        if (mCurrentFragment instanceof DetailFragment)
+            show();
+
         mCurrentFragment = fragment;
 
     }
@@ -152,8 +156,11 @@ public class MainActivity extends ActionBarActivity {
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 0)
             super.onBackPressed();
-        else
+        else {
+            if (mCurrentFragment instanceof DetailFragment)
+                show();
             mFragmentManager.popBackStackImmediate();
+        }
     }
 
     @Override

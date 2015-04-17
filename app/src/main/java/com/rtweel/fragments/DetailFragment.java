@@ -1,10 +1,17 @@
 package com.rtweel.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +39,14 @@ import com.squareup.picasso.Transformation;
 
 import org.apache.http.protocol.HTTP;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.zip.GZIPInputStream;
 
 import twitter4j.MediaEntity;
 import twitter4j.Status;
@@ -55,10 +69,15 @@ public class DetailFragment extends BaseFragment {
     private TextView dateView;
     private ImageView retweetsButton;
     private ImageView favsButton;
+    private ImageView shareButton;
     private ImageView deleteButton;
     private TextView retweetsCountView;
     private TextView favsCountView;
     private RoundedImageView profilePictureView;
+
+    private int mediaIds[] = {0, 1, 2, 3, 4};
+
+    private static String sPath;
 
     @Nullable
     @Override
@@ -70,13 +89,13 @@ public class DetailFragment extends BaseFragment {
     }
 
     private void initViews(View v) {
-        //setTitle(getString(R.string.title_detail));
         getMainActivity().hide();
         nameView = (TextView) v.findViewById(R.id.detail_name);
         textView = (TextView) v.findViewById(R.id.detail_text);
         dateView = (TextView) v.findViewById(R.id.detail_date);
         retweetsButton = (ImageView) v.findViewById(R.id.detail_retweet_button);
         favsButton = (ImageView) v.findViewById(R.id.detail_favorited_button);
+        shareButton = (ImageView) v.findViewById(R.id.detail_share_button);
         deleteButton = (ImageView) v.findViewById(R.id.detail_delete);
         retweetsCountView = (TextView) v.findViewById(R.id.detail_retweet_count);
         favsCountView = (TextView) v.findViewById(R.id.detail_favorited_count);
@@ -90,42 +109,6 @@ public class DetailFragment extends BaseFragment {
         Bundle start = getArguments();
         init(start);
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.detail_tweet_share: {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);// _MULTIPLE);
-                shareIntent.setType(HTTP.PLAIN_TEXT_TYPE);
-                // shareIntent.setType("image/*");
-                // shareIntent.addCategory(Intent.CATEGORY_APP_MESSAGING);
-                // shareIntent.addCategory(Intent.CATEGORY_APP_EMAIL);
-                // ArrayList<CharSequence> text = new ArrayList<CharSequence>();
-                // text.add(mTweet.getText());
-                shareIntent
-                        .putExtra(Intent.EXTRA_TITLE, mTweet.getUser().getName());
-                // shareIntent.putCharSequenceArrayListExtra(Intent.EXTRA_TEXT,
-                // text);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, mTweet.getText());
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, mTweet.getUser()
-                        .getName() + "'s tweet");
-                File file = new File(getActivity().getExternalCacheDir() + " tmp.jpg");
-                // Log.i("DEBUG", getExternalCacheDir() + " tmp.jpg");
-                // ArrayList<Uri> imageUris = new ArrayList<Uri>();
-                // imageUris.add(Uri.fromFile(file));
-                // shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,
-                // imageUris);// Uri.fromFile(file));//("content://" +
-                // getExternalCacheDir() + "tmp.jpg"));
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                String title = "Choose an app to share the tweet";
-                Intent chooser = Intent.createChooser(shareIntent, title);
-                startActivity(chooser);
-                break;
-            }
-            default:
-        }
-        return true;
     }
 
     private void refresh(Bundle args) {
@@ -179,7 +162,10 @@ public class DetailFragment extends BaseFragment {
     }
 
     private void init(Bundle start) {
+
         if (start != null) {
+            sPath = Environment.getExternalStorageDirectory() + "/"
+                    + getActivity().getPackageName() + "/" + "tmp" + ".jpg";
             mTweet = (Status) start.getSerializable(Extras.TWEET);
             final String name = mTweet.getUser().getName();
             String text = mTweet.getText();
@@ -192,6 +178,32 @@ public class DetailFragment extends BaseFragment {
             final long id = mTweet.getId();
 
             mRetweetId = mTweet.getCurrentUserRetweetId();
+
+            shareButton.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+            shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);// _MULTIPLE);
+                    shareIntent.setType(HTTP.PLAIN_TEXT_TYPE);
+                    shareIntent.setType("*/*");
+                    shareIntent
+                            .putExtra(Intent.EXTRA_TITLE, mTweet.getUser().getName());
+
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, mTweet.getText());
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, mTweet.getUser()
+                            .getName() + "'s tweet");
+
+                    ImageView mediaView = (ImageView) mView.findViewById(mediaIds[0]);
+                    saveToFile(mediaView);
+                    File file = new File(sPath);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                    String title = "Choose an app to share the tweet";
+                    Intent chooser = Intent.createChooser(shareIntent, title);
+
+                    startActivity(chooser);
+                }
+            });
 
             if (name.equals(Timeline.getUserName())) {
                 deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -217,8 +229,8 @@ public class DetailFragment extends BaseFragment {
                 for (int i = 0; i < entities.length; i++) {
                     urls[i] = entities[i].getMediaURL();
 
-
                     views[i] = new ImageView(getActivity());
+                    views[i].setId(mediaIds[i]);
 
                     Picasso.with(getActivity()).load(urls[0]).into(views[i]);
                     //views[i].setImageBitmap(bitmap);
@@ -247,9 +259,54 @@ public class DetailFragment extends BaseFragment {
             textView.setText(text);
             dateView.setText(date);
 
-
-
         }
+    }
+
+    private void saveToFile(ImageView v) {
+            Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(),
+                    Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(b);
+            v.draw(c);
+            v.invalidate();
+        String tempFilePath = sPath;
+        File tempFile = new File(tempFilePath);
+        if (!tempFile.exists()) {
+            if (!tempFile.getParentFile().exists()) {
+                tempFile.getParentFile().mkdirs();
+            }
+        }
+
+        tempFile.delete();
+
+        try {
+            tempFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int quality = 100;
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(tempFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
+        b.compress(Bitmap.CompressFormat.JPEG, quality, bos);
+
+        try {
+            bos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        b.recycle();
     }
 
 
@@ -263,18 +320,6 @@ public class DetailFragment extends BaseFragment {
 
     public void setRetweetId(Long id) {
         mRetweetId = id;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.detail, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getMainActivity().show();
     }
 
     public void setResult(Bundle args) {

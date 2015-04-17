@@ -8,15 +8,12 @@ import android.util.Log;
 
 import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.cache.App;
-import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.HomeTimeline;
 import com.rtweel.timelines.Timeline;
 
 import java.util.List;
 
 import twitter4j.Status;
-import twitter4j.TwitterException;
-import twitter4j.TwitterObjectFactory;
 
 public class TweetService extends IntentService {
 
@@ -30,10 +27,6 @@ public class TweetService extends IntentService {
 
     public TweetService() {
         super("TweetService");
-    }
-
-    public TweetService(String name, int type) {
-        super(name);
     }
 
     @Override
@@ -85,54 +78,10 @@ public class TweetService extends IntentService {
 
         ContentResolver resolver = getContentResolver();
 
-        Cursor cursor = null;
-        if (mTimeline.getCurrentTimelineType() == Timeline.HOME_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
-        } else if (mTimeline.getCurrentTimelineType() == Timeline.USER_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
-        }
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String author = cursor.getString(cursor
-                        .getColumnIndex(projection[0]));
-                String text = cursor.getString(cursor
-                        .getColumnIndex(projection[1])).replace("\\n", "\n");
-                String pictureUrl = cursor.getString(cursor
-                        .getColumnIndex(projection[2]));
-                String date = cursor.getString(cursor
-                        .getColumnIndex(projection[3]));
-                long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
+        Cursor cursor = mTimeline.getNewestTweet(resolver, projection);
 
-                try {
-                    StringBuilder tweet = new StringBuilder()
-                            .append("{text='")
-                            .append(text)
-                            .append("', id='")
-                            .append(id)
-                            .append("', created_at='")
-                            .append(date)
-                            .append("',user={name='")
-                            .append(author)
-                            .append("', profile_image_url='")
-                            .append(pictureUrl)
-                            .append("'}}");
-
-                    Status insert = TwitterObjectFactory.createStatus(tweet.toString());
-                    mTimeline.getTweets().add(insert);
-                } catch (TwitterException e1) {
-                    e1.printStackTrace();
-                }
-
-            }
-
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
+        List<Status> tweets = Timeline.buildTweets(cursor, true);
+        mTimeline.getTweets().addAll(tweets);
     }
 
     public static void setNewTweets(int count) {

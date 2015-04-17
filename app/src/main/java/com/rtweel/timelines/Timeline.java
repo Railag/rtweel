@@ -2,10 +2,7 @@ package com.rtweel.timelines;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,11 +10,7 @@ import com.rtweel.asynctasks.db.DbWriteTask;
 import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.asynctasks.tweet.GetScreenNameTask;
 import com.rtweel.cache.App;
-import com.rtweel.sqlite.TweetDatabase;
-import com.rtweel.twitteroauth.ConstantValues;
-import com.rtweel.twitteroauth.TwitterUtil;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,21 +18,12 @@ import java.util.List;
 import twitter4j.Paging;
 import twitter4j.Query;
 import twitter4j.QueryResult;
-import twitter4j.RateLimitStatusEvent;
-import twitter4j.RateLimitStatusListener;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
-import twitter4j.auth.AccessToken;
 
 public abstract class Timeline implements Iterable<Status> {
-
-    public static final int USER_TIMELINE = 0;
-    public static final int HOME_TIMELINE = 1;
-    public static final int FAVORITE_TIMELINE = 2;
-    public static final int ANSWERS_TIMELINE = 3;
-    public static final int IMAGES_TIMELINE = 4;
 
     public static final int UP_TWEETS = 0;
     public static final int DOWN_TWEETS = 1;
@@ -49,17 +33,28 @@ public abstract class Timeline implements Iterable<Status> {
 
     protected List<twitter4j.Status> list;
 
-    private int mCurrentTimelineType;
     private final Context mContext;
 
     private static String sUserName;
     private static String sScreenUserName;
 
-    public Timeline(Context context, int timelineType) {
-        mCurrentTimelineType = timelineType;
+
+    protected abstract List<Status> getNewTweets(Twitter twitter, Paging page);
+
+    protected abstract boolean isUserTimeline();
+
+    protected abstract Cursor getPreparedTweets(ContentResolver resolver, String[] projection);
+
+    protected abstract Cursor getDownTweetsFromDb(ContentResolver resolver, String[] projection);
+
+    public abstract Cursor getOldestTweet(ContentResolver resolver, String[] projection);
+
+    public abstract Cursor getNewestTweet(ContentResolver resolver, String[] projection);
+
+
+    public Timeline(Context context) {
         list = new ArrayList<>();
         mContext = context;
-
 
         new GetScreenNameTask().execute(Tweets.getTwitter(mContext));
         Log.i("DEBUG", "timeline construction finished");
@@ -77,7 +72,7 @@ public abstract class Timeline implements Iterable<Status> {
 
             list.addAll(downloadTimeline(Timeline.INITIALIZATION_TWEETS));
 
-            new DbWriteTask(mContext, list, mCurrentTimelineType).execute();
+            new DbWriteTask(mContext, list, isUserTimeline()).execute();
 
         }
     }
@@ -91,7 +86,7 @@ public abstract class Timeline implements Iterable<Status> {
         int prevSize = list.size();
         list.addAll(0, downloadedList);
         Log.i("DEBUG", "New tweets: " + (list.size() - prevSize));
-        new DbWriteTask(mContext, downloadedList, mCurrentTimelineType)
+        new DbWriteTask(mContext, downloadedList, isUserTimeline())
                 .execute();
     }
 
@@ -103,15 +98,13 @@ public abstract class Timeline implements Iterable<Status> {
             return;
         }
         list.addAll(downloadedList);
-        new DbWriteTask(mContext, downloadedList, mCurrentTimelineType)
+        new DbWriteTask(mContext, downloadedList, isUserTimeline())
                 .execute();
     }
 
     public List<twitter4j.Status> downloadTimeline(int flag)
             throws NullPointerException {
         Log.i("DEBUG", "downloading timeline..");
-
-        List<twitter4j.Status> downloadedList = new ArrayList<Status>();
 
         Paging page = new Paging();
         page.setCount(TWEETS_PER_PAGE);
@@ -120,65 +113,19 @@ public abstract class Timeline implements Iterable<Status> {
                 page.setPage(1);
                 break;
             case UP_TWEETS:
-                //    if (list == null || list.isEmpty())
                 getLastTweetFromDb();
                 if (list.size() > 0)
                     page.setSinceId(list.get(0).getId());
                 break;
             case DOWN_TWEETS:
-                //   if (list == null || list.isEmpty())
                 getOldestTweetFromDb();
                 if (list.size() > 0)
-                    page.setMaxId(list.get(0).getId());//(list.size() - 1).getId());
+                    page.setMaxId(list.get(0).getId());
                 break;
         }
 
         Twitter twitter = Tweets.getTwitter(mContext);
-        switch (mCurrentTimelineType) {
-            case Timeline.HOME_TIMELINE:
-                try {
-                    downloadedList = twitter.getHomeTimeline(page);
-                } catch (TwitterException | NullPointerException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case Timeline.USER_TIMELINE:
-                try {
-                    downloadedList = twitter.getUserTimeline(page);
-                    //mTwitter.users(). //TODO
-                } catch (TwitterException | NullPointerException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case Timeline.FAVORITE_TIMELINE:
-                try {
-                    downloadedList = twitter.getFavorites(page);
-                } catch (TwitterException | NullPointerException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case Timeline.ANSWERS_TIMELINE:
-                try {
-                    downloadedList = twitter.getMentionsTimeline(page); //TODO change
-                } catch (TwitterException | NullPointerException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case Timeline.IMAGES_TIMELINE:
-                try {
-                    List<Status> download = twitter.getHomeTimeline(page);
-
-                    for (Status s : download)
-                        if (s.getMediaEntities().length > 0 && s.getUser().getScreenName().equals(getScreenUserName()))
-                            downloadedList.add(s);
-
-                } catch (TwitterException | NullPointerException e) {
-                    e.printStackTrace();
-                }
-                break;
-
-        }
-        return downloadedList;
+        return getNewTweets(twitter, page);
     }
 
     private void getOldestTweetFromDb() {
@@ -186,60 +133,12 @@ public abstract class Timeline implements Iterable<Status> {
 
         ContentResolver resolver = mContext.getContentResolver();
 
-        Cursor cursor = null;
+        Cursor cursor = getOldestTweet(resolver, projection);
 
-        switch (getCurrentTimelineType()) {
-            case USER_TIMELINE:
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
-                break;
-            case HOME_TIMELINE:
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
-                break;
-            case FAVORITE_TIMELINE: //TODO impl
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
-                break;
-            case ANSWERS_TIMELINE: //TODO impl
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
-                break;
-            case IMAGES_TIMELINE: //TODO impl
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                        projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
-                break;
-        }
+        ArrayList<Status> tweets = new ArrayList<Status>(buildTweets(cursor, true));
+        list.addAll(tweets);
 
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String author = cursor.getString(cursor
-                        .getColumnIndex(projection[0]));
-                String text = cursor.getString(cursor
-                        .getColumnIndex(projection[1])).replace("\\n", "\n");
-                String pictureUrl = cursor.getString(cursor
-                        .getColumnIndex(projection[2]));
-                String date = cursor.getString(cursor
-                        .getColumnIndex(projection[3]));
-                long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
-
-                Status tweet = buildTweet(author, text, pictureUrl, date, id, "");
-                if (tweet != null)
-                    getTweets().add(tweet);
-
-            }
-
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
     }
-
 
     private void getLastTweetFromDb() { //TODO ABSTRACT
 
@@ -247,60 +146,10 @@ public abstract class Timeline implements Iterable<Status> {
 
         ContentResolver resolver = mContext.getContentResolver();
 
-        Cursor cursor = null;
-        switch (getCurrentTimelineType()) {
-            case USER_TIMELINE:
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
-                break;
-            case HOME_TIMELINE:
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
-                break;
-            case FAVORITE_TIMELINE: //TODO impl
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
-                break;
-            case ANSWERS_TIMELINE: //TODO impl
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
-                break;
-            case IMAGES_TIMELINE: //TODO impl
-                cursor = resolver.query(
-                        TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                        projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
-                break;
-        }
+        Cursor cursor = getNewestTweet(resolver, projection);
 
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String author = cursor.getString(cursor
-                        .getColumnIndex(projection[0]));
-                String text = cursor.getString(cursor
-                        .getColumnIndex(projection[1])).replace("\\n", "\n");
-                String pictureUrl = cursor.getString(cursor
-                        .getColumnIndex(projection[2]));
-                String date = cursor.getString(cursor
-                        .getColumnIndex(projection[3]));
-                long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
-
-                Status tweet = buildTweet(author, text, pictureUrl, date, id, "");
-                if (tweet != null)
-                    getTweets().add(tweet);
-            }
-
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    public Status get(int position) {
-        return list.get(position);
+        ArrayList<Status> tweets = new ArrayList<Status>(buildTweets(cursor, false));
+        list.addAll(tweets);
     }
 
     public void remove(int position) {
@@ -316,14 +165,6 @@ public abstract class Timeline implements Iterable<Status> {
         list.clear();
     }
 
-    public void addAll(List<Status> tweets) {
-        list.addAll(tweets);
-    }
-
-    public void setTimelineType(int type) {
-        mCurrentTimelineType = type;
-    }
-
     public List<Status> getTweets() {
         return list;
     }
@@ -333,88 +174,25 @@ public abstract class Timeline implements Iterable<Status> {
 
         ContentResolver resolver = mContext.getContentResolver();
 
-        Cursor cursor = null;
-        if (mCurrentTimelineType == HOME_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
-        } else if (mCurrentTimelineType == USER_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                    projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
-        }
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String author = cursor.getString(cursor
-                        .getColumnIndex(projection[0]));
-                String text = cursor.getString(cursor
-                        .getColumnIndex(projection[1])).replace("\n", "\\n");
-                String pictureUrl = cursor.getString(cursor
-                        .getColumnIndex(projection[2]));
-                String date = cursor.getString(cursor
-                        .getColumnIndex(projection[3]));
-                long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
-                String media = cursor.getString(cursor
-                        .getColumnIndex(projection[5]));
+        Cursor cursor = getPreparedTweets(resolver, projection);
 
-                Status tweet = buildTweet(author, text, pictureUrl, date, id, media);
-                if (tweet != null)
-                    list.add(tweet);
-
-            }
-            if (cursor != null) {
-                cursor.close();
-            }
-
-        }
+        ArrayList<Status> tweets = new ArrayList<Status>(buildTweets(cursor, true));
+        list.addAll(tweets);
 
     }
 
     public int updateFromDb() {
-        int result = 0;
+
         String[] projection = Tweets.getProjection(true);
 
         ContentResolver resolver = mContext.getContentResolver();
 
-        Cursor cursor = null;
-        if (mCurrentTimelineType == HOME_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                    projection, TweetDatabase.Tweets._ID + "<"
-                            + list.get(list.size() - 1).getId(), null,
-                    TweetDatabase.SELECTION_DESC + "LIMIT 100");
-        } else if (mCurrentTimelineType == USER_TIMELINE) {
-            cursor = resolver.query(
-                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
-                    projection, TweetDatabase.Tweets._ID + "<"
-                            + list.get(list.size() - 1).getId(), null,
-                    TweetDatabase.SELECTION_DESC + "LIMIT 100");
-        }
-        if (cursor != null) {
-            result = cursor.getCount();
-            while (cursor.moveToNext()) {
-                String author = cursor.getString(cursor
-                        .getColumnIndex(projection[0]));
-                String text = cursor.getString(cursor
-                        .getColumnIndex(projection[1])).replace("\n", "\\n");
-                String pictureUrl = cursor.getString(cursor
-                        .getColumnIndex(projection[2]));
-                String date = cursor.getString(cursor
-                        .getColumnIndex(projection[3]));
-                long id = cursor.getLong(cursor.getColumnIndex(projection[4]));
-                String media = cursor.getString(cursor
-                        .getColumnIndex(projection[5]));
+        Cursor cursor = getDownTweetsFromDb(resolver, projection);
 
-                Status tweet = buildTweet(author, text, pictureUrl, date, id, media);
-                if (tweet != null)
-                    list.add(tweet);
+        ArrayList<Status> tweets = new ArrayList<Status>(buildTweets(cursor, true));
+        list.addAll(tweets);
 
-            }
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return result;
+        return tweets.size();
 
     }
 
@@ -440,6 +218,10 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
 
+    public static Status buildTweet(String author, String text, String pictureUrl, String date, long id) {
+        return buildTweet(author, text, pictureUrl, date, id, "");
+    }
+
     public static Status buildTweet(String author, String text, String pictureUrl, String date, long id, String media) {
         try {
             StringBuilder builder = new StringBuilder();
@@ -463,16 +245,13 @@ public abstract class Timeline implements Iterable<Status> {
                     .append("', profile_image_url='")
                     .append(pictureUrl)
                     .append("'}}");
+            Log.i("CreateStatus", builder.toString());
             return TwitterObjectFactory.createStatus(builder
                     .toString());
         } catch (TwitterException e1) {
             e1.printStackTrace();
             return null;
         }
-    }
-
-    public int getCurrentTimelineType() {
-        return mCurrentTimelineType;
     }
 
     public static String getUserName() {
@@ -490,4 +269,45 @@ public abstract class Timeline implements Iterable<Status> {
     public static void setScreenUserName(String screenName) {
         sScreenUserName = screenName;
     }
+
+    public static List<Status> buildTweets(Cursor cursor, boolean withMedia) {
+        ArrayList<Status> tweets = new ArrayList<>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String author = getColumnString(0, cursor);
+                String text = getColumnString(1, cursor).replace("\n", "\\n");
+                String pictureUrl = getColumnString(2, cursor);
+                String date = getColumnString(3, cursor);
+                long id = getColumnLong(4, cursor);
+
+                String media = "";
+                if (withMedia)
+                    media = getColumnString(5, cursor);
+
+                Status tweet = buildTweet(author, text, pictureUrl, date, id, media);
+                if (tweet != null)
+                    tweets.add(tweet);
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+
+        }
+
+        return tweets;
+
+    }
+
+    private static String getColumnString(int position, Cursor cursor) {
+        String[] projection = Tweets.getProjection(true);
+        return cursor.getString(cursor.getColumnIndex(projection[position]));
+    }
+
+    private static long getColumnLong(int position, Cursor cursor) {
+        String[] projection = Tweets.getProjection(true);
+        return cursor.getLong(cursor.getColumnIndex(projection[position]));
+    }
+
+
 }
