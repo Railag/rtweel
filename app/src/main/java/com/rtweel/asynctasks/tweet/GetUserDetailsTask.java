@@ -50,12 +50,9 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
 
         User user = null;
         try {
-            String screenName = twitter.getScreenName(); //TODO caching details
-            Timeline.setScreenUserName(screenName);
+            String screenName = mUsernameLinked.getText().toString();
 
             user = twitter.showUser(screenName);
-
-            Timeline.setUserName(user.getName());
 
         } catch (IllegalStateException | TwitterException e) {
             e.printStackTrace();

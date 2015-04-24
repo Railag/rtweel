@@ -12,4 +12,9 @@ public class Extras {
     //files
 	public static final String FILE_URI = "file_uri";
     public static final String TWEET_TEXT = "tweet_text";
+
+    //profile
+    public static final String USERNAME = "username";
+    public static final String SCREEN_USERNAME = "screen_username";
+    public static final String USER_ID = "user_id";
 }

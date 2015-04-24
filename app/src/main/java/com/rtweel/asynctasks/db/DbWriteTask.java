@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabase;
-import com.rtweel.timelines.Timeline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +19,13 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
 
     private List<twitter4j.Status> mList = new ArrayList<twitter4j.Status>();
 
-    private boolean mIsUserTimeline;
+    private boolean mIsHomeTimeline;
 
     public DbWriteTask(Context context, List<twitter4j.Status> list,
-                       boolean isUserTimeline) {
+                       boolean isHomeTimeline) {
         sContext = context;
         mList.addAll(list);
-        mIsUserTimeline = isUserTimeline;
+        mIsHomeTimeline = isHomeTimeline;
     }
 
     @Override
@@ -54,9 +53,9 @@ public class DbWriteTask extends AsyncTask<Void, Void, Void> {
                 values.put(TweetDatabase.Tweets.COLUMN_MEDIA, "");
             }
 
-            if (mIsUserTimeline) {
+            if (mIsHomeTimeline) {
                 resolver.insert(
-                        TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                        TweetDatabase.Tweets.CONTENT_URI_HOME_DB,
                         values);
             } else {
                 values.put(TweetDatabase.Tweets.COLUMN_IS_FAVORITE, s.isFavorited() ? 1 : 0);

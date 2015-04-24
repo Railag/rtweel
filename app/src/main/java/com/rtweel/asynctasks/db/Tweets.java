@@ -5,7 +5,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.rtweel.asynctasks.tweet.GetScreenNameTask;
 import com.rtweel.sqlite.TweetDatabase;
+import com.rtweel.timelines.Timeline;
+import com.rtweel.twitteroauth.AppUser;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterGetAccessTokenTask;
 import com.rtweel.twitteroauth.TwitterUtil;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import twitter4j.RateLimitStatusEvent;
 import twitter4j.RateLimitStatusListener;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 
 /**
@@ -72,6 +76,8 @@ public class Tweets {
                 }
             });
         }
+
+        new GetScreenNameTask(context, null, null).execute(sTwitter);
 
         return sTwitter;
         }

@@ -6,11 +6,9 @@ import android.util.Log;
 import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
-import com.rtweel.fragments.HomeTimelineFragment;
 import com.rtweel.fragments.TimelineFragment;
 import com.rtweel.fragments.UserTimelineFragment;
 import com.rtweel.sqlite.TweetDatabase;
-import com.rtweel.timelines.Timeline;
 
 import twitter4j.TwitterException;
 
@@ -44,7 +42,7 @@ public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
                     TweetDatabase.Tweets._ID + "="
                             + String.valueOf(result), null);
             mFragment.getActivity().getContentResolver().delete(
-                    TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                    TweetDatabase.Tweets.CONTENT_URI_HOME_DB,
                     TweetDatabase.Tweets._ID + "="
                             + String.valueOf(result), null);
 

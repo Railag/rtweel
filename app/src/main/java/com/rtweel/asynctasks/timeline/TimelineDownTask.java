@@ -19,7 +19,7 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Void> {
     @Override
     protected Void doInBackground(Timeline... params) {
         Timeline timeline = params[0];
-        List<twitter4j.Status> downloadedList = null;
+        List<twitter4j.Status> downloadedList;
         int size = timeline.updateFromDb();
         if (size == 0) {
             downloadedList = timeline.downloadTimeline(

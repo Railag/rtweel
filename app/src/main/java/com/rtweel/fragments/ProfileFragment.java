@@ -21,6 +21,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.R;
 import com.rtweel.asynctasks.db.Tweets;
 import com.rtweel.asynctasks.tweet.GetUserDetailsTask;
+import com.rtweel.constant.Extras;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.timelines.Timeline;
 
@@ -68,16 +69,17 @@ public class ProfileFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
 
-        mProfileNameNormal.setText(Timeline.getUserName());
-        mProfileNameLink.setText(Timeline.getScreenUserName());
+        Bundle args = getArguments();
+        if (args != null) {
+            mProfileNameNormal.setText(args.getString(Extras.USERNAME));
+            mProfileNameLink.setText(args.getString(Extras.SCREEN_USERNAME));
+        }
 
         GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription);
         task.execute(Tweets.getTwitter(getActivity()));
 
 
-
         initPagerAdapter();
-
 
     }
 
@@ -134,7 +136,7 @@ public class ProfileFragment extends BaseFragment {
 
                 switch (position) {
                     case 0:
-                        title = getString(R.string.timeline_home);
+                        title = getString(R.string.timeline_user);
                         break;
                     case 1:
                         title = getString(R.string.timeline_answers);
@@ -168,6 +170,11 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private Fragment instantiateFragment(TimelineFragment timelineFragment) {
+
+        Bundle args = new Bundle();
+        args.putString(Extras.USERNAME, mProfileNameNormal.getText().toString());
+        args.putString(Extras.SCREEN_USERNAME, mProfileNameLink.getText().toString());
+        timelineFragment.setArguments(args);
 
         mListener = new HideHeaderOnScrollListener() {
             @Override

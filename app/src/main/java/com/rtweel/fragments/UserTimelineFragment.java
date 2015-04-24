@@ -13,6 +13,7 @@ import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabase;
+import com.rtweel.timelines.FavoriteTimeline;
 import com.rtweel.timelines.UserTimeline;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
@@ -31,8 +32,11 @@ public class UserTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    protected void instantiateTimeline() {
+    protected void instantiateTimeline(String username, String screenUserName, long userId) {
         mTimeline = new UserTimeline(getActivity().getApplicationContext());
+        mTimeline.setUserName(username);
+        mTimeline.setScreenUserName(screenUserName);
+        mTimeline.setUserId(userId);
     }
 
     protected void updateUp() {

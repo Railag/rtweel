@@ -40,7 +40,7 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
             } else {
                 mFragment.getAdapter().notifyDataSetChanged();
 
-
+                Log.i("Anim", "anim from loadtimelinetask");
                 mFragment.startLoadingAnim();
             }
         } else

@@ -35,35 +35,35 @@ public class UserTimeline extends Timeline {
     }
 
     @Override
-    protected boolean isUserTimeline() {
-        return true;
+    protected boolean isHomeTimeline() {
+        return false;
     }
 
     @Override
     public Cursor getOldestTweet(ContentResolver resolver, String[] projection) {
         return resolver.query(
-                TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
     }
 
     @Override
     public Cursor getNewestTweet(ContentResolver resolver, String[] projection) {
         return resolver.query(
-                TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
     }
 
     @Override
     protected Cursor getPreparedTweets(ContentResolver resolver, String[] projection) {
         return resolver.query(
-                TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
     }
 
     @Override
     protected Cursor getDownTweetsFromDb(ContentResolver resolver, String[] projection) {
         return resolver.query(
-                TweetDatabase.Tweets.CONTENT_URI_USER_DB,
+                TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, TweetDatabase.Tweets._ID + "<"
                         + list.get(list.size() - 1).getId(), null,
                 TweetDatabase.SELECTION_DESC + "LIMIT 100");

@@ -12,13 +12,13 @@ public class TweetDatabase extends SQLiteOpenHelper {
     public static final class Tweets implements BaseColumns {
         public static final Uri CONTENT_URI_TWEET_DB = Uri
                 .parse("content://com.rtweel.sqlite.TweetContentProvider/all_timeline");
-        public static final Uri CONTENT_URI_USER_DB = Uri
-                .parse("content://com.rtweel.sqlite.TweetContentProvider/user_timeline");
+        public static final Uri CONTENT_URI_HOME_DB = Uri
+                .parse("content://com.rtweel.sqlite.TweetContentProvider/home_timeline");
 
         public static final String TABLE_NAME_TWEET = "all_timeline";
-        public static final String TABLE_NAME_USER = "user_timeline";
+        public static final String TABLE_NAME_HOME = "home_timeline";
 
-        //for user timeline
+        //for home timeline
         public static final String COLUMN_AUTHOR = "author";
         public static final String COLUMN_TEXT = "text";
         public static final String COLUMN_PICTURE = "picture_url";
@@ -66,7 +66,7 @@ public class TweetDatabase extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_USER = new StringBuilder()
             .append("CREATE TABLE ")
-            .append(Tweets.TABLE_NAME_USER)
+            .append(Tweets.TABLE_NAME_HOME)
             .append("(").append(Tweets._ID)
             .append(" INTEGER PRIMARY KEY, ")
             .append(Tweets.COLUMN_AUTHOR)

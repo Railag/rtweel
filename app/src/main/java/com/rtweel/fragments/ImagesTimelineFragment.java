@@ -24,10 +24,11 @@ public class ImagesTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    protected void instantiateTimeline() {
+    protected void instantiateTimeline(String username, String screenUserName, long userId) {
         mTimeline = new ImagesTimeline(getActivity().getApplicationContext());
-
-        //    Timeline.setDefaultTimeline(mTimeline);
+        mTimeline.setUserName(username);
+        mTimeline.setScreenUserName(screenUserName);
+        mTimeline.setUserId(userId);
     }
 
     protected void updateUp() {

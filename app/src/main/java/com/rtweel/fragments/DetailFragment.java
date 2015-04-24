@@ -27,6 +27,7 @@ import com.rtweel.asynctasks.tweet.RetweetTask;
 import com.rtweel.constant.Extras;
 import com.rtweel.parsers.DateParser;
 import com.rtweel.timelines.Timeline;
+import com.rtweel.twitteroauth.AppUser;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -127,7 +128,7 @@ public class DetailFragment extends BaseFragment {
 
                 @Override
                 public void onClick(View v) {
-                    if (!name.equals(Timeline.getUserName())) {
+                    if (!name.equals(AppUser.getUserName(getActivity()))) {
                         new RetweetTask(DetailFragment.this, retweetsButton, retweetsCountView,
                                 mIsRetweeted).execute(id, mRetweetId);
                     } else {
@@ -195,7 +196,7 @@ public class DetailFragment extends BaseFragment {
                 }
             });
 
-            if (name.equals(Timeline.getUserName())) {
+            if (name.equals(AppUser.getUserName(getActivity()))) {
                 deleteButton.setOnClickListener(new View.OnClickListener() {
 
                     @Override

@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.rtweel.asynctasks.db.DbWriteTask;
 import com.rtweel.asynctasks.db.Tweets;
-import com.rtweel.asynctasks.tweet.GetScreenNameTask;
 import com.rtweel.cache.App;
 
 import java.util.ArrayList;
@@ -35,13 +34,14 @@ public abstract class Timeline implements Iterable<Status> {
 
     private final Context mContext;
 
-    private static String sUserName;
-    private static String sScreenUserName;
+    private String mUserName;
+    private String mScreenUserName;
+    private long mUserId;
 
 
     protected abstract List<Status> getNewTweets(Twitter twitter, Paging page);
 
-    protected abstract boolean isUserTimeline();
+    protected abstract boolean isHomeTimeline();
 
     protected abstract Cursor getPreparedTweets(ContentResolver resolver, String[] projection);
 
@@ -56,7 +56,6 @@ public abstract class Timeline implements Iterable<Status> {
         list = new ArrayList<>();
         mContext = context;
 
-        new GetScreenNameTask().execute(Tweets.getTwitter(mContext));
         Log.i("DEBUG", "timeline construction finished");
 
     }
@@ -72,7 +71,7 @@ public abstract class Timeline implements Iterable<Status> {
 
             list.addAll(downloadTimeline(Timeline.INITIALIZATION_TWEETS));
 
-            new DbWriteTask(mContext, list, isUserTimeline()).execute();
+            new DbWriteTask(mContext, list, isHomeTimeline()).execute();
 
         }
     }
@@ -86,19 +85,17 @@ public abstract class Timeline implements Iterable<Status> {
         int prevSize = list.size();
         list.addAll(0, downloadedList);
         Log.i("DEBUG", "New tweets: " + (list.size() - prevSize));
-        new DbWriteTask(mContext, downloadedList, isUserTimeline())
+        new DbWriteTask(mContext, downloadedList, isHomeTimeline())
                 .execute();
     }
 
     public void updateTimelineDown(List<Status> downloadedList) {
 
-        if (downloadedList == null) {
+        if (downloadedList == null || downloadedList.isEmpty())
             return;
-        } else if (downloadedList.isEmpty()) {
-            return;
-        }
+
         list.addAll(downloadedList);
-        new DbWriteTask(mContext, downloadedList, isUserTimeline())
+        new DbWriteTask(mContext, downloadedList, isHomeTimeline())
                 .execute();
     }
 
@@ -108,19 +105,35 @@ public abstract class Timeline implements Iterable<Status> {
 
         Paging page = new Paging();
         page.setCount(TWEETS_PER_PAGE);
+
+        long id;
         switch (flag) {
             case INITIALIZATION_TWEETS:
                 page.setPage(1);
                 break;
             case UP_TWEETS:
-                getLastTweetFromDb();
-                if (list.size() > 0)
-                    page.setSinceId(list.get(0).getId());
+                Status lastTweet = getLastTweetFromDb();
+
+                if (lastTweet != null)
+                    id = lastTweet.getId();
+                else if (list != null && list.size() > 0)
+                    id = list.get(0).getId();
+                else
+                    id = 0;
+
+                page.setSinceId(id);
                 break;
             case DOWN_TWEETS:
-                getOldestTweetFromDb();
-                if (list.size() > 0)
-                    page.setMaxId(list.get(0).getId());
+                Status oldestTweet = getOldestTweetFromDb();
+
+                if (oldestTweet != null)
+                    id = oldestTweet.getId();
+                else if (list != null && list.size() > 0)
+                    id = list.get(list.size() - 1).getId();
+                else
+                    id = Long.MAX_VALUE;
+
+                page.setMaxId(id);
                 break;
         }
 
@@ -128,19 +141,19 @@ public abstract class Timeline implements Iterable<Status> {
         return getNewTweets(twitter, page);
     }
 
-    private void getOldestTweetFromDb() {
+    private Status getOldestTweetFromDb() {
         String[] projection = Tweets.getProjection();
 
         ContentResolver resolver = mContext.getContentResolver();
 
         Cursor cursor = getOldestTweet(resolver, projection);
 
-        ArrayList<Status> tweets = new ArrayList<Status>(buildTweets(cursor, true));
-        list.addAll(tweets);
+        ArrayList<Status> tweets = new ArrayList<Status>(buildTweets(cursor, false));
 
+        return tweets.size() > 0 ? tweets.get(0) : null;
     }
 
-    private void getLastTweetFromDb() { //TODO ABSTRACT
+    private Status getLastTweetFromDb() {
 
         String[] projection = Tweets.getProjection();
 
@@ -149,7 +162,8 @@ public abstract class Timeline implements Iterable<Status> {
         Cursor cursor = getNewestTweet(resolver, projection);
 
         ArrayList<Status> tweets = new ArrayList<Status>(buildTweets(cursor, false));
-        list.addAll(tweets);
+
+        return tweets.size() > 0 ? tweets.get(0) : null;
     }
 
     public void remove(int position) {
@@ -248,20 +262,28 @@ public abstract class Timeline implements Iterable<Status> {
         }
     }
 
-    public static String getUserName() {
-        return sUserName;
+    public String getUserName() {
+        return mUserName;
     }
 
-    public static void setUserName(String name) {
-        sUserName = name;
+    public void setUserName(String name) {
+        mUserName = name;
     }
 
-    public static String getScreenUserName() {
-        return sScreenUserName;
+    public String getScreenUserName() {
+        return mScreenUserName;
     }
 
-    public static void setScreenUserName(String screenName) {
-        sScreenUserName = screenName;
+    public void setScreenUserName(String screenName) {
+        mScreenUserName = screenName;
+    }
+
+    public long getUserId() {
+        return mUserId;
+    }
+
+    public void setUserId(long id) {
+        mUserId = id;
     }
 
     public static List<Status> buildTweets(Cursor cursor, boolean withMedia) {

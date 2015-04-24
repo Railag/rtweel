@@ -6,20 +6,18 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
 public class TweetContentProvider extends ContentProvider {
 
     private static final int TWEET = 1;
-    private static final int USER = 2;
+    private static final int HOME = 2;
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
         uriMatcher.addURI(TweetDatabase.Tweets.CONTENT_URI_TWEET_DB.getAuthority(), TweetDatabase.Tweets.TABLE_NAME_TWEET, TWEET);
-        uriMatcher.addURI(TweetDatabase.Tweets.CONTENT_URI_USER_DB.getAuthority(), TweetDatabase.Tweets.TABLE_NAME_USER, USER);
+        uriMatcher.addURI(TweetDatabase.Tweets.CONTENT_URI_HOME_DB.getAuthority(), TweetDatabase.Tweets.TABLE_NAME_HOME, HOME);
     }
 
     @Override
@@ -40,8 +38,8 @@ public class TweetContentProvider extends ContentProvider {
                         TweetDatabase.Tweets._ID + sortOrder);
 
                 break;
-            case USER:
-                result = App.getDB().query(TweetDatabase.Tweets.TABLE_NAME_USER, projection,
+            case HOME:
+                result = App.getDB().query(TweetDatabase.Tweets.TABLE_NAME_HOME, projection,
                         selection, selectionArgs, null, null,
                         TweetDatabase.Tweets._ID + sortOrder);
 
@@ -63,8 +61,8 @@ public class TweetContentProvider extends ContentProvider {
             case TWEET:
                 App.getDB().insert(TweetDatabase.Tweets.TABLE_NAME_TWEET, null, values);
                 break;
-            case USER:
-                App.getDB().insert(TweetDatabase.Tweets.TABLE_NAME_USER, null, values);
+            case HOME:
+                App.getDB().insert(TweetDatabase.Tweets.TABLE_NAME_HOME, null, values);
                 break;
         }
 
@@ -81,8 +79,8 @@ public class TweetContentProvider extends ContentProvider {
             case TWEET:
                 result = App.getDB().delete(TweetDatabase.Tweets.TABLE_NAME_TWEET, selection, selectionArgs);
                 break;
-            case USER:
-                result = App.getDB().delete(TweetDatabase.Tweets.TABLE_NAME_USER, selection, selectionArgs);
+            case HOME:
+                result = App.getDB().delete(TweetDatabase.Tweets.TABLE_NAME_HOME, selection, selectionArgs);
                 break;
         }
 
@@ -101,8 +99,8 @@ public class TweetContentProvider extends ContentProvider {
             case TWEET:
                 result = App.getDB().update(TweetDatabase.Tweets.TABLE_NAME_TWEET, values, selection, selectionArgs);
                 break;
-            case USER:
-                result = App.getDB().update(TweetDatabase.Tweets.TABLE_NAME_USER, values, selection, selectionArgs);
+            case HOME:
+                result = App.getDB().update(TweetDatabase.Tweets.TABLE_NAME_HOME, values, selection, selectionArgs);
                 break;
         }
 

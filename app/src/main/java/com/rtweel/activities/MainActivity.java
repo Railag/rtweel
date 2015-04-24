@@ -22,12 +22,14 @@ import android.widget.TextView;
 
 import com.rtweel.R;
 import com.rtweel.cache.App;
+import com.rtweel.constant.Extras;
 import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.HomeTimelineFragment;
 import com.rtweel.fragments.LoginFragment;
 import com.rtweel.fragments.ProfileFragment;
 import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.fragments.SettingsFragment;
+import com.rtweel.twitteroauth.AppUser;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -93,7 +95,12 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        setMainFragment(new ProfileFragment());
+                        ProfileFragment fragment = new ProfileFragment();
+                        Bundle args = new Bundle();
+                        args.putString(Extras.USERNAME, AppUser.getUserName(MainActivity.this));
+                        args.putString(Extras.SCREEN_USERNAME, AppUser.getScreenUserName(MainActivity.this));
+                        fragment.setArguments(args);
+                        setMainFragment(fragment);
                         break;
                     case 1:
                         setMainFragment(new HomeTimelineFragment());

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -25,11 +26,13 @@ import android.view.ViewGroup;
 import com.melnykov.fab.FloatingActionButton;
 import com.rtweel.R;
 import com.rtweel.cache.App;
+import com.rtweel.constant.Extras;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.services.TweetService;
 import com.rtweel.sqlite.TweetDatabase;
 import com.rtweel.timelines.Timeline;
 import com.rtweel.tweet.TweetAdapter;
+import com.rtweel.twitteroauth.AppUser;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
 
@@ -37,6 +40,8 @@ import com.rtweel.twitteroauth.TwitterUtil;
  * Created by root on 21.3.15.
  */
 public abstract class TimelineFragment extends BaseFragment {
+
+    protected static final long ANIM_TIME = 200; //TODO fix with eternal loading when 400ms
 
     protected TweetAdapter adapter;
 
@@ -52,6 +57,12 @@ public abstract class TimelineFragment extends BaseFragment {
 
     private HideHeaderOnScrollListener mListener;
 
+    private boolean isAnimLocked;
+
+    private Handler mHandler;
+    private Runnable mAnimLockRunnable;
+    private Runnable mRetryAnim;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,13 +73,26 @@ public abstract class TimelineFragment extends BaseFragment {
         if (isLoading())
             stopLoading();
 
-        instantiateTimeline();
+        Bundle args = getArguments();
+        if (args != null) {
+            String username = args.getString(Extras.USERNAME);
+            String userScreenName = args.getString(Extras.SCREEN_USERNAME);
+            long userId = args.getLong(Extras.USER_ID);
+            instantiateTimeline(username, userScreenName, userId);
+        } else {
+            String userName = AppUser.getUserName(getActivity());
+            String screenUserName = AppUser.getScreenUserName(getActivity());
+            long userId = AppUser.getUserId(getActivity());
+            instantiateTimeline(userName, screenUserName, userId);
+        }
 
         setTitle(getString(R.string.title_timeline));
 
         addTweetService();
 
         loadTweets();
+
+        initHandler();
 
         initList(v);
 
@@ -77,13 +101,29 @@ public abstract class TimelineFragment extends BaseFragment {
         return v;
     }
 
+    private void initHandler() {
+        mHandler = new Handler();
+        mAnimLockRunnable = new Runnable() {
+            @Override
+            public void run() {
+                isAnimLocked = false;
+            }
+        };
+        mRetryAnim = new Runnable() {
+            @Override
+            public void run() {
+                startLoadingAnim();
+            }
+        };
+    }
+
     protected abstract void updateUp();
 
     protected abstract void updateDown();
 
     protected abstract void loadTweets();
 
-    protected abstract void instantiateTimeline();
+    protected abstract void instantiateTimeline(String username, String userScreenName, long userId);
 
     protected abstract void loadingAnim();
 
@@ -154,7 +194,8 @@ public abstract class TimelineFragment extends BaseFragment {
         list.setLayoutManager(mLayoutManager);
         list.setItemAnimator(new DefaultItemAnimator());
 
-        loadingAnim();
+        Log.i("Anim", "anim from timelinefragment");
+        startLoadingAnim();
 
         adapter = new TweetAdapter(mTimeline, getActivity());
 
@@ -275,8 +316,27 @@ public abstract class TimelineFragment extends BaseFragment {
         mListener = listener;
     }
 
-    public void startLoadingAnim() {
-        loadingAnim();
+    public void startLoadingAnim()
+    {
+        if (isAnimLocked)
+            mHandler.postDelayed(mRetryAnim, ANIM_TIME/2);
+        else {
+            isAnimLocked = true;
+            loadingAnim();
+            mHandler.postDelayed(mAnimLockRunnable, ANIM_TIME);
+        }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initHandler();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mHandler.removeCallbacks(mAnimLockRunnable);
+        mHandler.removeCallbacks(mRetryAnim);
+    }
 }

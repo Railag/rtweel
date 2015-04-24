@@ -1,5 +1,7 @@
 package com.rtweel.fragments;
 
+import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -17,6 +19,7 @@ import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
 import com.rtweel.sqlite.TweetDatabase;
+import com.rtweel.timelines.FavoriteTimeline;
 import com.rtweel.timelines.HomeTimeline;
 import com.rtweel.twitteroauth.ConstantValues;
 import com.rtweel.twitteroauth.TwitterUtil;
@@ -37,8 +40,11 @@ public class HomeTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    protected void instantiateTimeline() {
+    protected void instantiateTimeline(String username, String screenUserName, long userId) {
         mTimeline = new HomeTimeline(getActivity().getApplicationContext());
+        mTimeline.setUserName(username);
+        mTimeline.setScreenUserName(screenUserName);
+        mTimeline.setUserId(userId);
     }
 
     protected void updateUp() {
@@ -82,26 +88,23 @@ public class HomeTimelineFragment extends TimelineFragment {
 
     @Override
     protected void loadingAnim() {
-        list.setVisibility(View.GONE);
 
+        final View showView = mContentLoaded ? list : getLoadingBar();
+        final View hideView = mContentLoaded ? getLoadingBar() : list;
         mContentLoaded = !mContentLoaded;
-
-        final View showView = mContentLoaded ? getLoadingBar() : list;
-        final View hideView = mContentLoaded ? list : getLoadingBar();
-
-        ViewHelper.setAlpha(list, 0f);
 
         showView.setVisibility(View.VISIBLE);
 
-        animate(showView).alpha(1f).setDuration(200)
-                .setListener(null);
+        ObjectAnimator.ofFloat(showView, "alpha", 0f, 1f).setDuration(ANIM_TIME).start();
 
-        animate(hideView).alpha(0f).setDuration(200)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        hideView.setVisibility(View.GONE);
-                    }
-                });
+        ObjectAnimator hideAnim = ObjectAnimator.ofFloat(hideView, "alpha", 1f, 0f).setDuration(ANIM_TIME);
+        hideAnim.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                hideView.setVisibility(View.GONE);
+            }
+        });
+        hideAnim.start();
+
     }
 }

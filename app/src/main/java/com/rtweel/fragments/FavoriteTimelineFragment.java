@@ -9,6 +9,7 @@ import com.rtweel.asynctasks.timeline.LoadTimelineTask;
 import com.rtweel.asynctasks.timeline.TimelineDownTask;
 import com.rtweel.asynctasks.timeline.TimelineUpTask;
 import com.rtweel.cache.App;
+import com.rtweel.timelines.ImagesTimeline;
 import com.rtweel.timelines.Timeline;
 
 /**
@@ -25,9 +26,13 @@ public class FavoriteTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    protected void instantiateTimeline() {
+    protected void instantiateTimeline(String username, String screenUserName, long userId) {
         mTimeline = new FavoriteTimeline(getActivity().getApplicationContext());
+        mTimeline.setUserName(username);
+        mTimeline.setScreenUserName(screenUserName);
+        mTimeline.setUserId(userId);
     }
+
 
     protected void updateUp() {
 

@@ -33,7 +33,7 @@ public class AnswersTimeline extends Timeline {
     }
 
     @Override
-    protected boolean isUserTimeline() {
+    protected boolean isHomeTimeline() {
         return false;
     }
 
@@ -49,14 +49,14 @@ public class AnswersTimeline extends Timeline {
         //TODO impl
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                projection, TweetDatabase.Tweets.COLUMN_MENTIONS + " NOT NULL", null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
     }
 
     @Override
     protected Cursor getPreparedTweets(ContentResolver resolver, String[] projection) { //TODO impl
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, null, null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
+                projection, TweetDatabase.Tweets.COLUMN_MENTIONS + " NOT NULL", null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
     }
 
     @Override
@@ -64,7 +64,7 @@ public class AnswersTimeline extends Timeline {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, TweetDatabase.Tweets._ID + "<"
-                        + list.get(list.size() - 1).getId(), null,
+                        + list.get(list.size() - 1).getId() + " AND " + TweetDatabase.Tweets.COLUMN_MENTIONS + " NOT NULL", null,
                 TweetDatabase.SELECTION_DESC + "LIMIT 100");
     }
 }
