@@ -264,6 +264,7 @@ public abstract class Timeline implements Iterable<Status> {
                     .append("', profile_image_url='")
                     .append(pictureUrl)
                     .append("'}}");
+            //TODO add isfavorited, mentions, etc
             return TwitterObjectFactory.createStatus(builder
                     .toString());
         } catch (TwitterException e1) {
@@ -318,8 +319,6 @@ public abstract class Timeline implements Iterable<Status> {
                 if (withMedia)
                     media = MediaParser.deserialize(getColumnString(5, cursor));
 
-                for(String s : media)
-                    Log.i("Media", s);
                 Status tweet = buildTweet(author, text, pictureUrl, date, id, media);
                 if (tweet != null)
                     tweets.add(tweet);

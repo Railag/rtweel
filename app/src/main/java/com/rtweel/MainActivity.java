@@ -96,6 +96,7 @@ public class MainActivity extends ActionBarActivity {
                         Bundle args = new Bundle();
                         args.putString(Const.USERNAME, AppUser.getUserName(MainActivity.this));
                         args.putString(Const.SCREEN_USERNAME, AppUser.getScreenUserName(MainActivity.this));
+                        args.putLong(Const.USER_ID, AppUser.getUserId(MainActivity.this));
                         fragment.setArguments(args);
                         setMainFragment(fragment);
                         break;

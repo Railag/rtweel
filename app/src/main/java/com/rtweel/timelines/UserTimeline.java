@@ -43,21 +43,21 @@ public class UserTimeline extends Timeline {
     public Cursor getOldestTweet(ContentResolver resolver, String[] projection) {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_USER_ID + " != " + getUserId(), null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                projection, TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
     }
 
     @Override
     public Cursor getNewestTweet(ContentResolver resolver, String[] projection) {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_USER_ID + " != " + getUserId(), null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                projection, TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
     }
 
     @Override
     protected Cursor getPreparedTweets(ContentResolver resolver, String[] projection) {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_USER_ID + " != " + getUserId(), null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
+                projection, TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UserTimeline extends Timeline {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, TweetDatabase.Tweets._ID + "<"
-                        + list.get(list.size() - 1).getId() + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " != " + getUserId(), null,
+                        + list.get(list.size() - 1).getId() + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null,
                 TweetDatabase.SELECTION_DESC + "LIMIT 100");
     }
 }

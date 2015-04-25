@@ -18,11 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.storage.Tweets;
 import com.rtweel.tasks.tweet.GetUserDetailsTask;
-import com.rtweel.Const;
-import com.rtweel.listeners.HideHeaderOnScrollListener;
 
 /**
  * Created by root on 25.3.15.
@@ -36,10 +36,13 @@ public class ProfileFragment extends BaseFragment {
 
     private ViewPager mPager;
 
+    private FragmentCollection mCollection;
+
     private PagerAdapter mPagerAdapter;
 
     private TextView mProfileNameNormal;
     private TextView mProfileNameLink;
+    private Long mProfileId = 0L;
 
     private ImageView mBackground;
     private RoundedImageView mLogo;
@@ -72,9 +75,10 @@ public class ProfileFragment extends BaseFragment {
         if (args != null) {
             mProfileNameNormal.setText(args.getString(Const.USERNAME));
             mProfileNameLink.setText(args.getString(Const.SCREEN_USERNAME));
+            mProfileId = args.getLong(Const.USER_ID);
         }
 
-        GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription);
+        GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription, mProfileId);
         task.execute(Tweets.getTwitter(getActivity()));
 
 
@@ -102,6 +106,8 @@ public class ProfileFragment extends BaseFragment {
 
         mHeaderLayout = mView.findViewById(R.id.header_layout);
 
+        mCollection = new FragmentCollection();
+
         return mView;
     }
 
@@ -112,13 +118,13 @@ public class ProfileFragment extends BaseFragment {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return instantiateFragment(new UserTimelineFragment());
+                        return mCollection.getUser();
                     case 1:
-                        return instantiateFragment(new AnswersTimelineFragment());
+                        return mCollection.getAnswers();
                     case 2:
-                        return instantiateFragment(new FavoriteTimelineFragment());
+                        return mCollection.getFav();
                     case 3:
-                        return instantiateFragment(new ImagesTimelineFragment());
+                        return mCollection.getImages();
                     default:
                         return null;
                 }
@@ -173,18 +179,19 @@ public class ProfileFragment extends BaseFragment {
         Bundle args = new Bundle();
         args.putString(Const.USERNAME, mProfileNameNormal.getText().toString());
         args.putString(Const.SCREEN_USERNAME, mProfileNameLink.getText().toString());
+        args.putLong(Const.USER_ID, mProfileId);
         timelineFragment.setArguments(args);
 
         mListener = new HideHeaderOnScrollListener() {
             @Override
             public void onScrollDown() {
-                if(!mIsBlocked)
+                if (!mIsBlocked)
                     hideHeader();
             }
 
             @Override
             public void onTop() {
-                if(!mIsBlocked)
+                if (!mIsBlocked)
                     showHeader();
             }
 
@@ -198,7 +205,6 @@ public class ProfileFragment extends BaseFragment {
 
         return timelineFragment;
     }
-
 
 
     private void blockHiding() {
@@ -358,7 +364,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(mHandler != null) {
+        if (mHandler != null) {
             mHandler.removeCallbacks(mRunnable);
         }
     }
@@ -399,4 +405,89 @@ public class ProfileFragment extends BaseFragment {
             }
         }
     }
+
+    private class FragmentCollection {
+        UserTimelineFragment user;
+        AnswersTimelineFragment answers;
+        FavoriteTimelineFragment fav;
+        ImagesTimelineFragment images;
+
+
+        public void saveFragment(TimelineFragment fragment) {
+            if (fragment instanceof UserTimelineFragment) {
+                if (user == null)
+                    user = (UserTimelineFragment) fragment;
+                else {
+                    Bundle args = fragment.getArguments();
+                    if (args.getLong(Const.USER_ID) != user.getTimeline().getUserId())
+                        user = (UserTimelineFragment) fragment;
+                }
+            } else if (fragment instanceof AnswersTimelineFragment) {
+                if (answers == null)
+                    answers = (AnswersTimelineFragment) fragment;
+                else {
+                    Bundle args = fragment.getArguments();
+                    if (args.getLong(Const.USER_ID) != answers.getTimeline().getUserId())
+                        answers = (AnswersTimelineFragment) fragment;
+                }
+            } else if (fragment instanceof FavoriteTimelineFragment) {
+                if (fav == null)
+                    fav = (FavoriteTimelineFragment) fragment;
+                else {
+                    Bundle args = fragment.getArguments();
+                    if (args.getLong(Const.USER_ID) != fav.getTimeline().getUserId())
+                        fav = (FavoriteTimelineFragment) fragment;
+                }
+            } else if (fragment instanceof ImagesTimelineFragment) {
+                if (images == null)
+                    images = (ImagesTimelineFragment) fragment;
+                else {
+                    Bundle args = fragment.getArguments();
+                    if (args.getLong(Const.USER_ID) != images.getTimeline().getUserId())
+                        images = (ImagesTimelineFragment) fragment;
+                }
+            }
+        }
+
+        public Fragment getUser() {
+            if (user != null)
+                return user;
+            else {
+                Fragment fragment = instantiateFragment(new UserTimelineFragment());
+                saveFragment((TimelineFragment) fragment);
+                return fragment;
+            }
+        }
+
+        public Fragment getAnswers() {
+            if (answers != null)
+                return answers;
+            else {
+                Fragment fragment = instantiateFragment(new AnswersTimelineFragment());
+                saveFragment((TimelineFragment) fragment);
+                return fragment;
+            }
+        }
+
+        public Fragment getFav() {
+            if (fav != null)
+                return fav;
+            else {
+                Fragment fragment = instantiateFragment(new FavoriteTimelineFragment());
+                saveFragment((TimelineFragment) fragment);
+                return fragment;
+            }
+        }
+
+        public Fragment getImages() {
+            if (images != null)
+                return images;
+            else {
+                Fragment fragment = instantiateFragment(new ImagesTimelineFragment());
+                saveFragment((TimelineFragment) fragment);
+                return fragment;
+            }
+        }
+    }
+
 }

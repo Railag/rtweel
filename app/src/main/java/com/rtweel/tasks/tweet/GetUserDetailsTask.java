@@ -30,14 +30,16 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
     private final TextView mUsername;
     private final TextView mUsernameLinked;
     private final TextView mDescription;
+    private Long mId;
 
-    public GetUserDetailsTask(Context context, ImageView background, RoundedImageView image, TextView username, TextView usernameLinked, TextView description) {
+    public GetUserDetailsTask(Context context, ImageView background, RoundedImageView image, TextView username, TextView usernameLinked, TextView description, Long id ) {
         mContext = context;
         mBackground = background;
         mImage = image;
         mUsername = username;
         mUsernameLinked = usernameLinked;
         mDescription = description;
+        mId = id;
     }
 
     @Override
@@ -74,6 +76,8 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
 
                 Picasso.with(mContext).load(user.getProfileBannerURL()).resize(mBackground.getMeasuredWidth(), mBackground.getMeasuredHeight()).into(mBackground);
                 Picasso.with(mContext).load(user.getBiggerProfileImageURL()).transform(transformation).into(mImage);
+
+                mId = user.getId();
 
                 mUsername.setText(user.getName());
                 mUsername.setTextColor(Color.WHITE);//Color.parseColor("#" + user.getProfileTextColor()));
