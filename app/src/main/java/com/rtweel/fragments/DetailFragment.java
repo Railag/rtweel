@@ -65,7 +65,7 @@ public class DetailFragment extends BaseFragment {
     private TextView favsCountView;
     private RoundedImageView profilePictureView;
 
-    private int mediaIds[] = {0, 1, 2, 3, 4};
+    private int mediaIds[] = {1, 2, 3, 4, 5};
 
     private static String sPath;
 
@@ -214,21 +214,24 @@ public class DetailFragment extends BaseFragment {
 
             RelativeLayout relativeLayout = (RelativeLayout) mView.findViewById(R.id.detail_layout);
             if (entities.length > 0) {
-                Log.i("DEBUG", "Entities length: " + entities.length);
-                String cacheName = "entity_" + mTweet.getId();
                 for (int i = 0; i < entities.length; i++) {
                     urls[i] = entities[i].getMediaURL();
 
                     views[i] = new ImageView(getActivity());
                     views[i].setId(mediaIds[i]);
 
-                    Picasso.with(getActivity()).load(urls[0]).into(views[i]);
+                    Picasso.with(getActivity()).load(urls[i]).into(views[i]);
                     //views[i].setImageBitmap(bitmap);
                     RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                    p.addRule(RelativeLayout.BELOW, R.id.detail_retweet_count);
+                    if (i == 0)
+                        p.addRule(RelativeLayout.BELOW, R.id.detail_retweet_count);
+                    else {
+                        p.addRule(RelativeLayout.BELOW, mediaIds[i - 1]);
+                        p.topMargin = 10;
+                    }
 
                     views[i].setLayoutParams(p);
                     relativeLayout.addView(views[i]);

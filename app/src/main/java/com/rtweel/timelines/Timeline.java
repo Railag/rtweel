@@ -140,7 +140,7 @@ public abstract class Timeline implements Iterable<Status> {
                 else
                     id = Long.MAX_VALUE;
 
-                page.setMaxId(id-1);
+                page.setMaxId(id - 1);
                 break;
         }
 
@@ -250,7 +250,7 @@ public abstract class Timeline implements Iterable<Status> {
                     .append("'");
             if (media.length > 0 && !TextUtils.isEmpty(media[0])) {
 //						builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
-                builder.append(",\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[");
+                builder.append(",\"extended_entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[");
 
                 for (int i = 0; i < media.length; i++)
                     builder.append(constructMedia(media[i], i == media.length - 1));
@@ -275,8 +275,8 @@ public abstract class Timeline implements Iterable<Status> {
     private static String constructMedia(String media, boolean isLast) {
         StringBuilder builder = new StringBuilder("{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"")
                 .append(media)
-                .append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]")
-                .append(isLast ? "}" : ",");
+                .append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}")
+                .append(isLast ? "]}" : ",");
         return builder.toString();
     }
 

@@ -83,7 +83,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 .getDefaultSharedPreferences(mContext);
         String url = null;
         if (preferences.getBoolean(SettingsFragment.IMAGES_SHOWN_PREFS, true)) {
-            MediaEntity[] entities = tweet.getMediaEntities();
+            MediaEntity[] entities = tweet.getExtendedMediaEntities();
             if (entities.length > 0)
                 url = entities[0].getMediaURL();
         }
