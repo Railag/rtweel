@@ -65,7 +65,7 @@ public class UserTimeline extends Timeline {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, TweetDatabase.Tweets._ID + "<"
-                        + list.get(list.size() - 1).getId() + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null,
+                        + getLastItemIdOrMax() + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null,
                 TweetDatabase.SELECTION_DESC + "LIMIT 100");
     }
 }

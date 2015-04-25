@@ -126,7 +126,7 @@ public abstract class Timeline implements Iterable<Status> {
                 else if (list != null && list.size() > 0)
                     id = list.get(0).getId();
                 else
-                    id = 0;
+                    id = 1;
 
                 page.setSinceId(id);
                 break;
@@ -344,5 +344,11 @@ public abstract class Timeline implements Iterable<Status> {
         return cursor.getLong(cursor.getColumnIndex(projection[position]));
     }
 
+    public long getLastItemIdOrMax() {
+        if (list != null && list.size()  > 0)
+            return list.get(list.size() - 1).getId();
+        else
+            return Long.MAX_VALUE;
+    }
 
 }

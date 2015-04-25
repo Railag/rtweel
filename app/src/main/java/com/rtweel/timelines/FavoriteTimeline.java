@@ -64,7 +64,7 @@ public class FavoriteTimeline extends Timeline {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, TweetDatabase.Tweets._ID + "<"
-                        + list.get(list.size() - 1).getId() + " AND " + TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0'", null,
+                        + getLastItemIdOrMax() + " AND " + TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0'", null,
                 TweetDatabase.SELECTION_DESC + "LIMIT 100");
     }
 }

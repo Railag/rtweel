@@ -63,7 +63,7 @@ public class HomeTimeline extends Timeline {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_HOME_DB,
                 projection, TweetDatabase.Tweets._ID + "<"
-                        + list.get(list.size() - 1).getId(), null,
+                        + getLastItemIdOrMax(), null,
                 TweetDatabase.SELECTION_DESC + "LIMIT 100");
     }
 
