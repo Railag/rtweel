@@ -80,7 +80,7 @@ public class TweetService extends IntentService {
 
         Cursor cursor = mTimeline.getNewestTweet(resolver, projection);
 
-        List<Status> tweets = Timeline.buildTweets(cursor, true);
+        List<Status> tweets = Timeline.buildTweets(cursor, false);
         mTimeline.getTweets().addAll(tweets);
     }
 
