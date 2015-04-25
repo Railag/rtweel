@@ -25,16 +25,15 @@ import android.view.ViewGroup;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rtweel.R;
-import com.rtweel.cache.App;
-import com.rtweel.constant.Extras;
+import com.rtweel.storage.App;
+import com.rtweel.storage.AppUser;
+import com.rtweel.Const;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.services.TweetService;
-import com.rtweel.sqlite.TweetDatabase;
+import com.rtweel.storage.TweetDatabase;
 import com.rtweel.timelines.Timeline;
-import com.rtweel.tweet.TweetAdapter;
-import com.rtweel.twitteroauth.AppUser;
-import com.rtweel.twitteroauth.ConstantValues;
-import com.rtweel.twitteroauth.TwitterUtil;
+import com.rtweel.TweetAdapter;
+import com.rtweel.utils.TwitterUtil;
 
 /**
  * Created by root on 21.3.15.
@@ -75,9 +74,9 @@ public abstract class TimelineFragment extends BaseFragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            String username = args.getString(Extras.USERNAME);
-            String userScreenName = args.getString(Extras.SCREEN_USERNAME);
-            long userId = args.getLong(Extras.USER_ID);
+            String username = args.getString(Const.USERNAME);
+            String userScreenName = args.getString(Const.SCREEN_USERNAME);
+            long userId = args.getLong(Const.USER_ID);
             instantiateTimeline(username, userScreenName, userId);
         } else {
             String userName = AppUser.getUserName(getActivity());
@@ -152,7 +151,7 @@ public abstract class TimelineFragment extends BaseFragment {
                         }
 
                     //hiding profile header swipe
-                    if (firstVisibleItem > 0 && detectSwipeDown(y, historicalY) ) {
+                    if (firstVisibleItem > 0 && detectSwipeDown(y, historicalY)) {
                         if (mListener != null && !mListener.isHidden()) {
                             mListener.onScrollDown();
                             return true;
@@ -161,11 +160,11 @@ public abstract class TimelineFragment extends BaseFragment {
 
                     //basic swipe up updating at top
                     if (firstVisibleItem < 1 && mLastFirstVisibleItem == 0) {
-                            if (detectSwipeUp(y, historicalY)) {
-                                updateUp();
-                                mLastFirstVisibleItem = firstVisibleItem;
-                                return true;
-                            }
+                        if (detectSwipeUp(y, historicalY)) {
+                            updateUp();
+                            mLastFirstVisibleItem = firstVisibleItem;
+                            return true;
+                        }
                     }
 
                     //basic swipe down updating
@@ -194,7 +193,6 @@ public abstract class TimelineFragment extends BaseFragment {
         list.setLayoutManager(mLayoutManager);
         list.setItemAnimator(new DefaultItemAnimator());
 
-        Log.i("Anim", "anim from timelinefragment");
         startLoadingAnim();
 
         adapter = new TweetAdapter(mTimeline, getActivity());
@@ -284,10 +282,10 @@ public abstract class TimelineFragment extends BaseFragment {
                 SharedPreferences sharedPreferences = PreferenceManager
                         .getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
+                editor.putString(Const.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
                 editor.putString(
-                        ConstantValues.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
-                editor.putBoolean(ConstantValues.PREFERENCE_TWITTER_IS_LOGGED_IN,
+                        Const.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
+                editor.putBoolean(Const.PREFERENCE_TWITTER_IS_LOGGED_IN,
                         false);
                 editor.commit();
 
@@ -316,10 +314,9 @@ public abstract class TimelineFragment extends BaseFragment {
         mListener = listener;
     }
 
-    public void startLoadingAnim()
-    {
+    public void startLoadingAnim() {
         if (isAnimLocked)
-            mHandler.postDelayed(mRetryAnim, ANIM_TIME/2);
+            mHandler.postDelayed(mRetryAnim, ANIM_TIME / 2);
         else {
             isAnimLocked = true;
             loadingAnim();

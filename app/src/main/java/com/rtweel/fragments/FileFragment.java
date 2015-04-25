@@ -10,8 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.rtweel.R;
-import com.rtweel.cache.App;
-import com.rtweel.constant.Extras;
+import com.rtweel.storage.App;
+import com.rtweel.Const;
 import com.rtweel.filechooser.FileAdapter;
 import com.rtweel.filechooser.Line;
 
@@ -48,7 +48,7 @@ public class FileFragment extends BaseFragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            mTweetText = args.getString(Extras.TWEET_TEXT);
+            mTweetText = args.getString(Const.TWEET_TEXT);
         }
 
         mCurrentPath = Environment.getExternalStorageDirectory();
@@ -163,8 +163,8 @@ public class FileFragment extends BaseFragment {
 
         SendTweetFragment fragment = new SendTweetFragment();
         Bundle args = new Bundle();
-        args.putString(Extras.FILE_URI, line.getPath());
-        args.putString(Extras.TWEET_TEXT, mTweetText);
+        args.putString(Const.FILE_URI, line.getPath());
+        args.putString(Const.TWEET_TEXT, mTweetText);
         fragment.setArguments(args);
         getMainActivity().setMainFragment(fragment);
     }

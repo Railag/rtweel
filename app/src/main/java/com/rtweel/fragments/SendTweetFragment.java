@@ -31,9 +31,9 @@ import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.rtweel.R;
-import com.rtweel.asynctasks.tweet.SendTweetTask;
-import com.rtweel.cache.App;
-import com.rtweel.constant.Extras;
+import com.rtweel.tasks.tweet.SendTweetTask;
+import com.rtweel.storage.App;
+import com.rtweel.Const;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,14 +72,14 @@ public class SendTweetFragment extends BaseFragment {
         Bundle args = getArguments();
 
         if(args != null) {
-            String path = args.getString(Extras.FILE_URI);
+            String path = args.getString(Const.FILE_URI);
             Bitmap bitmap = BitmapFactory.decodeFile(path);
             setImage(bitmap);
 
             mCurrentMax = 117;
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String tweetText = prefs.getString(Extras.TWEET_TEXT, "");
+            String tweetText = prefs.getString(Const.TWEET_TEXT, "");
             mTweetEntry.setText(tweetText);
         }
 
@@ -150,7 +150,7 @@ public class SendTweetFragment extends BaseFragment {
             public void onClick(View v) {
                 FileFragment fragment = new FileFragment();
                 Bundle args = new Bundle();
-                args.putString(Extras.TWEET_TEXT, mTweetEntry.getText().toString());
+                args.putString(Const.TWEET_TEXT, mTweetEntry.getText().toString());
                 fragment.setArguments(args);
                 getMainActivity().setMainFragment(fragment);
             }
@@ -328,9 +328,9 @@ public class SendTweetFragment extends BaseFragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = prefs.edit();
         if (prefs.getBoolean(SettingsFragment.SAVE_TWEET_PREFS, true))
-            editor.putString(Extras.TWEET_TEXT, mTweetEntry.getText().toString());
+            editor.putString(Const.TWEET_TEXT, mTweetEntry.getText().toString());
         else
-            editor.putString(Extras.TWEET_TEXT, "");
+            editor.putString(Const.TWEET_TEXT, "");
         editor.apply();
         super.onPause();
     }
@@ -340,7 +340,7 @@ public class SendTweetFragment extends BaseFragment {
         super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (prefs.getBoolean(SettingsFragment.SAVE_TWEET_PREFS, true)) {
-            String tweetText = prefs.getString(Extras.TWEET_TEXT, "");
+            String tweetText = prefs.getString(Const.TWEET_TEXT, "");
             mTweetEntry.setText(tweetText);
         }
     }

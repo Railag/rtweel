@@ -4,7 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.rtweel.sqlite.TweetDatabase;
+import com.rtweel.storage.TweetDatabase;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class HomeTimeline extends Timeline {
     public Cursor getOldestTweet(ContentResolver resolver, String[] projection) {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_HOME_DB,
-                projection, TweetDatabase.Tweets.COLUMN_USER_ID + " != " + getUserId(), null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                projection, null, null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
     }
 
     @Override

@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.rtweel.R;
-import com.rtweel.asynctasks.auth.TwitterAuthenticateTask;
-import com.rtweel.twitteroauth.ConstantValues;
-import com.rtweel.twitteroauth.TwitterGetAccessTokenTask;
+import com.rtweel.tasks.auth.TwitterAuthenticateTask;
+import com.rtweel.Const;
+import com.rtweel.tasks.tweet.TwitterGetAccessTokenTask;
 
 /**
  * Created by root on 21.3.15.
@@ -51,16 +51,16 @@ public class LoginFragment extends BaseFragment {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getActivity());
         if (!sharedPreferences.getBoolean(
-                ConstantValues.PREFERENCE_TWITTER_IS_LOGGED_IN, false)) {
+                Const.PREFERENCE_TWITTER_IS_LOGGED_IN, false)) {
             startLoading(getResources().getString(R.string.authorization));
 
             try {
                 Uri uri = getActivity().getIntent().getData();
                 if (uri != null
                         && uri.toString().startsWith(
-                        ConstantValues.TWITTER_CALLBACK_URL)) {
+                        Const.TWITTER_CALLBACK_URL)) {
                     String verifier = uri
-                            .getQueryParameter(ConstantValues.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
+                            .getQueryParameter(Const.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
                     Log.i("DEBUG", "Verification..");
                     new TwitterGetAccessTokenTask(getActivity())
                             .execute(verifier).get();

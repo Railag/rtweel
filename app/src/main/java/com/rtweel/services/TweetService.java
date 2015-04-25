@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.rtweel.asynctasks.db.Tweets;
-import com.rtweel.cache.App;
+import com.rtweel.storage.Tweets;
+import com.rtweel.storage.App;
 import com.rtweel.timelines.Timeline;
 import com.rtweel.timelines.UserTimeline;
 

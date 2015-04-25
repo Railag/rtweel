@@ -2,7 +2,6 @@ package com.rtweel.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.rtweel.R;
-import com.rtweel.activities.MainActivity;
 
 /**
  * Created by root on 25.3.15.

@@ -4,7 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.rtweel.sqlite.TweetDatabase;
+import com.rtweel.storage.TweetDatabase;
 
 import java.util.List;
 

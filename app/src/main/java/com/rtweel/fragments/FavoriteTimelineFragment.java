@@ -5,12 +5,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.rtweel.timelines.FavoriteTimeline;
-import com.rtweel.asynctasks.timeline.LoadTimelineTask;
-import com.rtweel.asynctasks.timeline.TimelineDownTask;
-import com.rtweel.asynctasks.timeline.TimelineUpTask;
-import com.rtweel.cache.App;
-import com.rtweel.timelines.ImagesTimeline;
-import com.rtweel.timelines.Timeline;
+import com.rtweel.tasks.timeline.LoadTimelineTask;
+import com.rtweel.tasks.timeline.TimelineDownTask;
+import com.rtweel.tasks.timeline.TimelineUpTask;
+import com.rtweel.storage.App;
 
 /**
  * Created by root on 6.4.15.

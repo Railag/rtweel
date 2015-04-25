@@ -1,6 +1,5 @@
 package com.rtweel.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
@@ -8,7 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.widget.ProgressBar;
 
 import com.rtweel.R;
-import com.rtweel.activities.MainActivity;
+import com.rtweel.MainActivity;
 
 /**
  * Created by root on 21.3.15.

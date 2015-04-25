@@ -6,9 +6,10 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.rtweel.asynctasks.db.DbWriteTask;
-import com.rtweel.asynctasks.db.Tweets;
-import com.rtweel.cache.App;
+import com.rtweel.tasks.db.DbWriteTask;
+import com.rtweel.storage.Tweets;
+import com.rtweel.storage.App;
+import com.rtweel.utils.MediaParser;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -69,9 +70,15 @@ public abstract class Timeline implements Iterable<Status> {
                 return;
             }
 
-            list.addAll(downloadTimeline(Timeline.INITIALIZATION_TWEETS));
 
-            new DbWriteTask(mContext, list, isHomeTimeline()).execute();
+            List<Status> tweets = downloadTimeline(Timeline.INITIALIZATION_TWEETS);
+
+            if (tweets != null && tweets.size() > 0) {
+
+                list.addAll(tweets);
+
+                new DbWriteTask(mContext, list, isHomeTimeline()).execute();
+            }
 
         }
     }
@@ -133,7 +140,7 @@ public abstract class Timeline implements Iterable<Status> {
                 else
                     id = Long.MAX_VALUE;
 
-                page.setMaxId(id);
+                page.setMaxId(id-1);
                 break;
         }
 
@@ -231,7 +238,7 @@ public abstract class Timeline implements Iterable<Status> {
         return new ArrayList<>(resultList);
     }
 
-    public static Status buildTweet(String author, String text, String pictureUrl, String date, long id, String media) {
+    public static Status buildTweet(String author, String text, String pictureUrl, String date, long id, String[] media) {
         try {
             StringBuilder builder = new StringBuilder();
             builder.append("{text='")
@@ -241,11 +248,14 @@ public abstract class Timeline implements Iterable<Status> {
                     .append("', created_at='")
                     .append(date)
                     .append("'");
-            if (!TextUtils.isEmpty(media)) {
+            if (media.length > 0 && !TextUtils.isEmpty(media[0])) {
 //						builder.append("', hashtags=[], symbols=[], urls=[], user_mentions=[], entities={media=[{indices=[], sizes=[],media_url='");
-                builder.append(",\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"")
-                        .append(media)
-                        .append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]}");
+                builder.append(",\"entities\":{\"hashtags\":[],\"symbols\":[],\"urls\":[],\"user_mentions\":[],\"media\":[");
+
+                for (int i = 0; i < media.length; i++)
+                    builder.append(constructMedia(media[i], i == media.length - 1));
+
+           //     Log.i("DEBUG", builder.toString());
 //                      .append("'}]}");
             }
 
@@ -260,6 +270,14 @@ public abstract class Timeline implements Iterable<Status> {
             e1.printStackTrace();
             return null;
         }
+    }
+
+    private static String constructMedia(String media, boolean isLast) {
+        StringBuilder builder = new StringBuilder("{\"indices\":[-1, -2],\"url\":\"\",\"expanded_url\":\"\",\"display_url\":\"\",\"media_url_https\":\"\",\"media_url\":\"")
+                .append(media)
+                .append("\",\"type\":\"photo\",\"sizes\":{\"large\":{\"w\":1024,\"h\":575,\"resize\":\"fit\"},\"small\":{\"w\":340,\"h\":191,\"resize\":\"fit\"},\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"medium\":{\"w\":600,\"h\":337,\"resize\":\"fit\"}}}]")
+                .append(isLast ? "}" : ",");
+        return builder.toString();
     }
 
     public String getUserName() {
@@ -296,10 +314,12 @@ public abstract class Timeline implements Iterable<Status> {
                 String date = getColumnString(3, cursor);
                 long id = getColumnLong(4, cursor);
 
-                String media = "";
+                String[] media = {};
                 if (withMedia)
-                    media = getColumnString(5, cursor);
+                    media = MediaParser.deserialize(getColumnString(5, cursor));
 
+                for(String s : media)
+                    Log.i("Media", s);
                 Status tweet = buildTweet(author, text, pictureUrl, date, id, media);
                 if (tweet != null)
                     tweets.add(tweet);

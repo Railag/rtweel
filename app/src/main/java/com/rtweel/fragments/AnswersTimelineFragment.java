@@ -4,13 +4,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rtweel.asynctasks.timeline.LoadTimelineTask;
-import com.rtweel.asynctasks.timeline.TimelineDownTask;
-import com.rtweel.asynctasks.timeline.TimelineUpTask;
-import com.rtweel.cache.App;
+import com.rtweel.tasks.timeline.LoadTimelineTask;
+import com.rtweel.tasks.timeline.TimelineDownTask;
+import com.rtweel.tasks.timeline.TimelineUpTask;
+import com.rtweel.storage.App;
 import com.rtweel.timelines.AnswersTimeline;
-import com.rtweel.timelines.FavoriteTimeline;
-import com.rtweel.timelines.UserTimeline;
 
 /**
  * Created by root on 6.4.15.

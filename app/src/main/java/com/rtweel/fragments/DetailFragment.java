@@ -21,13 +21,12 @@ import android.widget.Toast;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.R;
-import com.rtweel.asynctasks.tweet.DeleteTweetTask;
-import com.rtweel.asynctasks.tweet.FavoriteTask;
-import com.rtweel.asynctasks.tweet.RetweetTask;
-import com.rtweel.constant.Extras;
-import com.rtweel.parsers.DateParser;
-import com.rtweel.timelines.Timeline;
-import com.rtweel.twitteroauth.AppUser;
+import com.rtweel.tasks.tweet.DeleteTweetTask;
+import com.rtweel.tasks.tweet.FavoriteTask;
+import com.rtweel.tasks.tweet.RetweetTask;
+import com.rtweel.Const;
+import com.rtweel.utils.DateParser;
+import com.rtweel.storage.AppUser;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -105,7 +104,7 @@ public class DetailFragment extends BaseFragment {
     private void refresh(Bundle args) {
         if (args != null) {
 
-            mTweet = (Status) args.getSerializable(Extras.TWEET);
+            mTweet = (Status) args.getSerializable(Const.TWEET);
             final String name = mTweet.getUser().getName();
             final long id = mTweet.getId();
 
@@ -157,13 +156,13 @@ public class DetailFragment extends BaseFragment {
         if (start != null) {
             sPath = Environment.getExternalStorageDirectory() + "/"
                     + getActivity().getPackageName() + "/" + "tmp" + ".jpg";
-            mTweet = (Status) start.getSerializable(Extras.TWEET);
+            mTweet = (Status) start.getSerializable(Const.TWEET);
             final String name = mTweet.getUser().getName();
             String text = mTweet.getText();
             String date = DateParser.parse(mTweet.getCreatedAt().toString());
 
 
-            final int position = start.getInt(Extras.POSITION);
+            final int position = start.getInt(Const.POSITION);
 
             String imageUri = mTweet.getUser().getBiggerProfileImageURL();
             final long id = mTweet.getId();
@@ -209,7 +208,7 @@ public class DetailFragment extends BaseFragment {
                 deleteButton.setVisibility(View.GONE);
             }
 
-            MediaEntity[] entities = mTweet.getMediaEntities();
+            MediaEntity[] entities = mTweet.getExtendedMediaEntities();
             String[] urls = new String[entities.length];
             ImageView[] views = new ImageView[entities.length];
 

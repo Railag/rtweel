@@ -1,22 +1,14 @@
 package com.rtweel.fragments;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.rtweel.R;
-import com.rtweel.asynctasks.timeline.LoadTimelineTask;
-import com.rtweel.asynctasks.timeline.TimelineDownTask;
-import com.rtweel.asynctasks.timeline.TimelineUpTask;
-import com.rtweel.cache.App;
-import com.rtweel.sqlite.TweetDatabase;
-import com.rtweel.timelines.FavoriteTimeline;
+import com.rtweel.tasks.timeline.LoadTimelineTask;
+import com.rtweel.tasks.timeline.TimelineDownTask;
+import com.rtweel.tasks.timeline.TimelineUpTask;
+import com.rtweel.storage.App;
 import com.rtweel.timelines.UserTimeline;
-import com.rtweel.twitteroauth.ConstantValues;
-import com.rtweel.twitteroauth.TwitterUtil;
 
 /**
  * Created by root on 5.4.15.

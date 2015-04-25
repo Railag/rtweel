@@ -1,6 +1,6 @@
 package com.rtweel.services;
 
-import com.rtweel.activities.MainActivity;
+import com.rtweel.MainActivity;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.appcompat.R;
 import android.util.Log;
 
 public class TweetReceiver extends BroadcastReceiver {

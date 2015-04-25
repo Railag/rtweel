@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rtweel"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="1" >
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -14,13 +13,13 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
-        android:name="com.rtweel.cache.App"
+        android:name="com.rtweel.storage.App"
         android:allowBackup="true"
         android:icon="@drawable/rtweel"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.rtweel.activities.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" >
             <intent-filter>
@@ -64,8 +63,8 @@
         </receiver>
 
         <provider
-            android:name="com.rtweel.sqlite.TweetContentProvider"
-            android:authorities="com.rtweel.sqlite.TweetContentProvider"
+            android:name=".storage.TweetContentProvider"
+            android:authorities="com.rtweel.storage.TweetContentProvider"
             android:exported="false" />
     </application>
 

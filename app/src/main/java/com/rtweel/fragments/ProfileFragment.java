@@ -19,11 +19,10 @@ import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.R;
-import com.rtweel.asynctasks.db.Tweets;
-import com.rtweel.asynctasks.tweet.GetUserDetailsTask;
-import com.rtweel.constant.Extras;
+import com.rtweel.storage.Tweets;
+import com.rtweel.tasks.tweet.GetUserDetailsTask;
+import com.rtweel.Const;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
-import com.rtweel.timelines.Timeline;
 
 /**
  * Created by root on 25.3.15.
@@ -71,8 +70,8 @@ public class ProfileFragment extends BaseFragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            mProfileNameNormal.setText(args.getString(Extras.USERNAME));
-            mProfileNameLink.setText(args.getString(Extras.SCREEN_USERNAME));
+            mProfileNameNormal.setText(args.getString(Const.USERNAME));
+            mProfileNameLink.setText(args.getString(Const.SCREEN_USERNAME));
         }
 
         GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription);
@@ -172,8 +171,8 @@ public class ProfileFragment extends BaseFragment {
     private Fragment instantiateFragment(TimelineFragment timelineFragment) {
 
         Bundle args = new Bundle();
-        args.putString(Extras.USERNAME, mProfileNameNormal.getText().toString());
-        args.putString(Extras.SCREEN_USERNAME, mProfileNameLink.getText().toString());
+        args.putString(Const.USERNAME, mProfileNameNormal.getText().toString());
+        args.putString(Const.SCREEN_USERNAME, mProfileNameLink.getText().toString());
         timelineFragment.setArguments(args);
 
         mListener = new HideHeaderOnScrollListener() {
