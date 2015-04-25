@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/lib/rtweel"
     android:id="@+id/tweet_layout"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="start|top"
     android:orientation="vertical">
 
 
@@ -12,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/tweet_author_picture"
@@ -21,32 +21,35 @@
             android:layout_gravity="start"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
-            android:contentDescription="@string/cd_authors_picture" />
+            android:contentDescription="@string/cd_authors_picture"
+            android:layout_weight="0.05"
+            android:scaleType="fitStart"/>
 
 
         <TextView
             android:id="@+id/tweet_author"
             android:layout_width="210dp"
             android:layout_height="58dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:gravity="start|top"
-            android:orientation="horizontal"
+            android:gravity="start"
+            android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
             android:textColor="#008080"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_weight="0.85"/>
 
         <TextView
             android:id="@+id/tweet_date"
             android:layout_width="80dp"
             android:layout_height="58dp"
             android:layout_gravity="end"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:gravity="fill_horizontal"
-            android:orientation="horizontal"
+            android:gravity="end"
             android:paddingBottom="10dp"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingEnd="2dp"
+            android:layout_weight="0.1"/>
 
     </LinearLayout>
 
@@ -87,4 +90,5 @@
             android:textColor="#008080"
             android:textSize="14sp" />
     </android.support.v7.widget.CardView>
+
 </LinearLayout>
