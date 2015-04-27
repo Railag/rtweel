@@ -1,5 +1,7 @@
 package com.rtweel.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,10 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,13 +23,13 @@ import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.storage.AppUser;
 import com.rtweel.tasks.tweet.DeleteTweetTask;
 import com.rtweel.tasks.tweet.FavoriteTask;
 import com.rtweel.tasks.tweet.RetweetTask;
-import com.rtweel.Const;
 import com.rtweel.utils.DateParser;
-import com.rtweel.storage.AppUser;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -232,8 +231,28 @@ public class DetailFragment extends BaseFragment {
 
                     @Override
                     public void onClick(View v) {
-                        new DeleteTweetTask(DetailFragment.this,
-                                position).execute(id);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Are you sure you want to delete this tweet?");
+                        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new DeleteTweetTask(DetailFragment.this,
+                                        position).execute(id);
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                dialog.cancel();
+                            }
+                        });
+                        builder.create().show();
                     }
                 });
             } else {
