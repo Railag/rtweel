@@ -13,6 +13,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +168,7 @@ public class DetailFragment extends BaseFragment {
                     + getActivity().getPackageName() + "/" + "tmp" + ".jpg";
             mTweet = (Status) start.getSerializable(Const.TWEET);
             final String name = mTweet.getUser().getName();
-            String text = mTweet.getText();
+            makeSpannableText(mTweet.getText());
             String date = DateParser.parse(mTweet.getCreatedAt().toString());
 
 
@@ -300,11 +305,38 @@ public class DetailFragment extends BaseFragment {
             Picasso.with(getActivity()).load(imageUri).transform(transformation).into(profilePictureView);
 
             nameView.setText(name);
-            textView.setText(text);
+      //      textView.setText(text);
             dateView.setText(date);
 
         }
     }
+
+    private void makeSpannableText(final String text) {
+        SpannableString ss = new SpannableString(text);
+        int fi = 0;
+        int fiEnd = 0;
+        while (true) {
+            fi = text.indexOf('@', fiEnd + 1);
+            if (fi != -1) {
+                fiEnd = text.indexOf(' ', fi + 1);
+                final ConsistentClickableSpan clickableSpan = new ConsistentClickableSpan();
+                clickableSpan.mFi = fi + 1; // for @
+                clickableSpan.mFiEnd = fiEnd;
+
+                TextPaint textPaint = new TextPaint();
+                textPaint.baselineShift = 2;
+                clickableSpan.updateDrawState(textPaint);
+
+                ss.setSpan(clickableSpan, fi, fiEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else
+                break;
+        }
+
+
+        textView.setText(ss);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
 
     private void saveToFile(ImageView v) {
         Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(),
@@ -367,5 +399,20 @@ public class DetailFragment extends BaseFragment {
 
     public void setResult(Bundle args) {
         refresh(args);
+    }
+
+
+
+    private class ConsistentClickableSpan extends ClickableSpan {
+        private int mFi, mFiEnd;
+
+        @Override
+        public void onClick(View widget) {
+            ProfileFragment fragment = new ProfileFragment();
+            Bundle args = new Bundle();
+            args.putString(Const.SCREEN_USERNAME, ((TextView) widget).getText().subSequence(mFi, mFiEnd).toString());
+            fragment.setArguments(args);
+            getMainActivity().setMainFragment(fragment);
+        }
     }
 }
