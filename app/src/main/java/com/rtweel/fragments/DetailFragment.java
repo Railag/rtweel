@@ -195,6 +195,19 @@ public class DetailFragment extends BaseFragment {
                 }
             });
 
+            profilePictureView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProfileFragment fragment = new ProfileFragment();
+                    Bundle args = new Bundle();
+                    args.putString(Const.USERNAME, mTweet.getUser().getName());
+                    args.putString(Const.SCREEN_USERNAME, mTweet.getUser().getScreenName());
+                    args.putLong(Const.USER_ID, mTweet.getUser().getId());
+                    fragment.setArguments(args);
+                    getMainActivity().setMainFragment(fragment);
+                }
+            });
+
             if (name.equals(AppUser.getUserName(getActivity()))) {
                 deleteButton.setOnClickListener(new View.OnClickListener() {
 

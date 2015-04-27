@@ -25,7 +25,7 @@ public class FavoriteTimeline extends Timeline {
     @Override
     protected List<Status> getNewTweets(Twitter twitter, Paging page) {
         try {
-            return twitter.getFavorites(page);
+            return twitter.getFavorites(getScreenUserName(), page);
         } catch (TwitterException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -41,7 +41,7 @@ public class FavoriteTimeline extends Timeline {
     public Cursor getOldestTweet(ContentResolver resolver, String[] projection) { //TODO impl
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0'", null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                projection, TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0' AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
     }
 
     @Override
@@ -49,14 +49,14 @@ public class FavoriteTimeline extends Timeline {
         //TODO impl
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0'", null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                projection, TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0' AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
     }
 
     @Override
     protected Cursor getPreparedTweets(ContentResolver resolver, String[] projection) { //TODO impl
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0'", null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
+                projection, TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0' AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
     }
 
     @Override
@@ -64,7 +64,7 @@ public class FavoriteTimeline extends Timeline {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, TweetDatabase.Tweets._ID + "<"
-                        + getLastItemIdOrMax() + " AND " + TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0'", null,
+                        + getLastItemIdOrMax() + " AND " + TweetDatabase.Tweets.COLUMN_IS_FAVORITE + " != '0' AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null,
                 TweetDatabase.SELECTION_DESC + "LIMIT 100");
     }
 }

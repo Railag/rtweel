@@ -26,8 +26,7 @@ public class UserTimeline extends Timeline {
     @Override
     protected List<Status> getNewTweets(Twitter twitter, Paging page) {
         try {
-            return twitter.getUserTimeline(page);
-            //mTwitter.users(). //TODO
+            return  twitter.getUserTimeline(getScreenUserName(), page);
         } catch (TwitterException | NullPointerException e) {
             e.printStackTrace();
         }
