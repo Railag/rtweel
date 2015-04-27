@@ -107,6 +107,19 @@
             android:layout_marginStart="18dp" />
 
         <ImageView
+            android:id="@+id/detail_reply_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/detail_text"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/detail_share_button"
+            android:layout_toRightOf="@+id/detail_share_button"
+            android:src="@drawable/reply"
+            android:contentDescription="@string/cd_detail_reply"/>
+
+        <ImageView
             android:id="@+id/detail_delete"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -114,10 +127,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:layout_toEndOf="@+id/detail_share_button"
-            android:layout_toRightOf="@+id/detail_share_button"
+            android:layout_toEndOf="@+id/detail_reply_button"
+            android:layout_toRightOf="@+id/detail_reply_button"
             android:src="@drawable/delete"
-            android:contentDescription="@string/delete_button"/>
+            android:contentDescription="@string/cd_detail_delete"/>
 
 
         <com.makeramen.roundedimageview.RoundedImageView

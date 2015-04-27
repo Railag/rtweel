@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">Rtweel</string>
-    <string name="delete_button">Удалить</string>
     <string name="tweet_button">Твиты</string>
     <string name="hint_name">Автор</string>
     <string name="hint_text">Текст</string>
@@ -36,6 +35,10 @@
     <string name="cd_photo">Фото</string>
     <string name="cd_authors_picture">Картинка автора</string>
     <string name="cd_tweet_media">Медиа</string>
+    <string name="cd_detail_share">Поделиться</string>
+    <string name="cd_detail_reply">Ответить</string>
+    <string name="cd_detail_delete">Удалить</string>
+
 
 
     <!--nav drawer-->
@@ -55,7 +58,7 @@
     <string name="title_send_tweet">Новый твит</string>
 
     <!--Pager titles-->
-    <string name="timeline_home">Домашняя</string>
+    <string name="timeline_user">Домашняя</string>
     <string name="timeline_answers">Ответы</string>
     <string name="timeline_favorite">Избранное</string>
     <string name="timeline_images">Изображения</string>

@@ -22,9 +22,10 @@ import twitter4j.auth.AccessToken;
 public class SendTweetTask extends AsyncTask<String, String, Boolean> {
 
     private final Context mContext;
+    private final long mReplyId;
 
-    public SendTweetTask(Context context) {
-        mContext = context;
+    public SendTweetTask(Context context, long replyId) {
+        mContext = context; mReplyId = replyId;
     }
 
     @Override
@@ -46,6 +47,9 @@ public class SendTweetTask extends AsyncTask<String, String, Boolean> {
                 if (file.exists()) {
                     update.setMedia(file);
                 }
+
+                if (mReplyId != -1L)
+                    update.setInReplyToStatusId(mReplyId);
 
                 TwitterUtil.getInstance().getTwitterFactory()
                         .getInstance(accessToken).updateStatus(update);

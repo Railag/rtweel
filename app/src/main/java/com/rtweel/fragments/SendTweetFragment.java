@@ -64,23 +64,28 @@ public class SendTweetFragment extends BaseFragment {
 
     private int mCurrentMax = 140;
 
+    private long mReplyId = -1L;
+
 
     @Override
     public void onStart() {
         super.onStart();
 
         Bundle args = getArguments();
-
         if(args != null) {
-            String path = args.getString(Const.FILE_URI);
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            setImage(bitmap);
+            if (args.containsKey(Const.REPLY_ID))
+                mReplyId = args.getLong(Const.REPLY_ID);
+            else if(args.containsKey(Const.FILE_URI)) {
+                String path = args.getString(Const.FILE_URI);
+                Bitmap bitmap = BitmapFactory.decodeFile(path);
+                setImage(bitmap);
 
-            mCurrentMax = 117;
+                mCurrentMax = 117;
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String tweetText = prefs.getString(Const.TWEET_TEXT, "");
-            mTweetEntry.setText(tweetText);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String tweetText = prefs.getString(Const.TWEET_TEXT, "");
+                mTweetEntry.setText(tweetText);
+            }
         }
 
         mTweetProgress.setProgressColor(getResources().getColor(R.color.green_progress));
@@ -151,6 +156,7 @@ public class SendTweetFragment extends BaseFragment {
                 FileFragment fragment = new FileFragment();
                 Bundle args = new Bundle();
                 args.putString(Const.TWEET_TEXT, mTweetEntry.getText().toString());
+                args.putLong(Const.REPLY_ID, mReplyId);
                 fragment.setArguments(args);
                 getMainActivity().setMainFragment(fragment);
             }
@@ -243,7 +249,7 @@ public class SendTweetFragment extends BaseFragment {
                     }
 
 
-                    new SendTweetTask(getActivity())
+                    new SendTweetTask(getActivity(), mReplyId)
                             .execute(tweet);
                     mTweetEntry.setText("");
                 } else {

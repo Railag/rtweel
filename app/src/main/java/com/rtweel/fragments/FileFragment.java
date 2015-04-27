@@ -38,6 +38,7 @@ public class FileFragment extends BaseFragment {
     private ListView list;
 
     private String mTweetText;
+    private long mReplyId;
 
     private Pattern pattern = Pattern.compile("^.*\\.(png|gif|jpg|jpeg|bmp)$");
     private Matcher matcher;
@@ -49,6 +50,7 @@ public class FileFragment extends BaseFragment {
         Bundle args = getArguments();
         if (args != null) {
             mTweetText = args.getString(Const.TWEET_TEXT);
+            mReplyId = args.getLong(Const.REPLY_ID);
         }
 
         mCurrentPath = Environment.getExternalStorageDirectory();
@@ -165,6 +167,7 @@ public class FileFragment extends BaseFragment {
         Bundle args = new Bundle();
         args.putString(Const.FILE_URI, line.getPath());
         args.putString(Const.TWEET_TEXT, mTweetText);
+        args.putLong(Const.REPLY_ID, mReplyId);
         fragment.setArguments(args);
         getMainActivity().setMainFragment(fragment);
     }

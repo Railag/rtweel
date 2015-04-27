@@ -10,6 +10,9 @@ public class Const {
 	public static final String POSITION = "position";
 
 
+    //tweet send
+    public static final String REPLY_ID = "reply_id";
+
     //files
 	public static final String FILE_URI = "file_uri";
     public static final String TWEET_TEXT = "tweet_text";

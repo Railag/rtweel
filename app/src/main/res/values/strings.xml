@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">Rtweel</string>
-    <string name="delete_button">Delete</string>
     <string name="tweet_button">Tweets</string>
     <string name="hint_name">Name</string>
     <string name="hint_text">Text</string>
@@ -37,6 +36,8 @@
     <string name="cd_authors_picture">Author\'s picture</string>
     <string name="cd_tweet_media">Media</string>
     <string name="cd_detail_share">Share</string>
+    <string name="cd_detail_reply">Reply</string>
+    <string name="cd_detail_delete">Delete</string>
 
         <!--nav drawer-->
     <string-array name="drawer_items">

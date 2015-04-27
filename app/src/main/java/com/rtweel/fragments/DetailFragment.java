@@ -1,6 +1,7 @@
 package com.rtweel.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,9 +9,12 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -60,6 +64,7 @@ public class DetailFragment extends BaseFragment {
     private ImageView retweetsButton;
     private ImageView favsButton;
     private ImageView shareButton;
+    private ImageView replyButton;
     private ImageView deleteButton;
     private TextView retweetsCountView;
     private TextView favsCountView;
@@ -86,6 +91,7 @@ public class DetailFragment extends BaseFragment {
         retweetsButton = (ImageView) v.findViewById(R.id.detail_retweet_button);
         favsButton = (ImageView) v.findViewById(R.id.detail_favorited_button);
         shareButton = (ImageView) v.findViewById(R.id.detail_share_button);
+        replyButton = (ImageView) v.findViewById(R.id.detail_reply_button);
         deleteButton = (ImageView) v.findViewById(R.id.detail_delete);
         retweetsCountView = (TextView) v.findViewById(R.id.detail_retweet_count);
         favsCountView = (TextView) v.findViewById(R.id.detail_favorited_count);
@@ -192,6 +198,19 @@ public class DetailFragment extends BaseFragment {
                     Intent chooser = Intent.createChooser(shareIntent, title);
 
                     startActivity(chooser);
+                }
+            });
+
+            replyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    prefs.edit().putString(Const.TWEET_TEXT, "@" + mTweet.getUser().getScreenName()).commit();
+                    Bundle args = new Bundle();
+                    args.putLong(Const.REPLY_ID, mTweet.getId());
+                    SendTweetFragment fragment = new SendTweetFragment();
+                    fragment.setArguments(args);
+                    getMainActivity().setMainFragment(fragment);
                 }
             });
 
@@ -314,7 +333,6 @@ public class DetailFragment extends BaseFragment {
 
         b.recycle();
     }
-
 
     public void changeIsRetweeted() {
         mIsRetweeted = !mIsRetweeted;
