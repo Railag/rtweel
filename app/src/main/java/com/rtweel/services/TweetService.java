@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.rtweel.storage.Tweets;
 import com.rtweel.storage.App;
+import com.rtweel.timelines.HomeTimeline;
 import com.rtweel.timelines.Timeline;
 import com.rtweel.timelines.UserTimeline;
 
@@ -32,7 +33,7 @@ public class TweetService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        mTimeline = new UserTimeline(getApplicationContext());
+        mTimeline = new HomeTimeline(getApplicationContext());
     }
 
     @Override
