@@ -42,7 +42,7 @@ public class TweetService extends IntentService {
             return;
         }
 
-        String message = null;
+        String message;
         Log.i("DEBUG", "onHandleIntent");
         loadFromDB();
         try {

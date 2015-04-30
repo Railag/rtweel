@@ -38,7 +38,7 @@ import com.rtweel.utils.TwitterUtil;
 /**
  * Created by root on 21.3.15.
  */
-public abstract class TimelineFragment extends BaseFragment {
+public abstract class TimelineFragment extends PagerFragment {
 
     protected static final long ANIM_TIME = 200; //TODO fix with eternal loading when 400ms
 
@@ -53,8 +53,6 @@ public abstract class TimelineFragment extends BaseFragment {
     protected int mLastFirstVisibleItem = 0;
 
     protected LinearLayoutManager mLayoutManager;
-
-    private HideHeaderOnScrollListener mListener;
 
     private boolean isAnimLocked;
 
@@ -266,10 +264,6 @@ public abstract class TimelineFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tweet_send_open: {
-                getMainActivity().setMainFragment(new SendTweetFragment());
-                break;
-            }
             case R.id.logout_button: {
                 App app = (App) getActivity().getApplication();
 
@@ -310,10 +304,6 @@ public abstract class TimelineFragment extends BaseFragment {
         return mTimeline;
     }
 
-    public void setHideHeaderListener(HideHeaderOnScrollListener listener) {
-        mListener = listener;
-    }
-
     public void startLoadingAnim() {
         if (isAnimLocked)
             mHandler.postDelayed(mRetryAnim, ANIM_TIME / 2);
@@ -335,5 +325,10 @@ public abstract class TimelineFragment extends BaseFragment {
         super.onPause();
         mHandler.removeCallbacks(mAnimLockRunnable);
         mHandler.removeCallbacks(mRetryAnim);
+    }
+
+    @Override
+    public long getUserId() {
+        return getTimeline().getUserId();
     }
 }

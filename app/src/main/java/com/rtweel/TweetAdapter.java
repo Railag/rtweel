@@ -58,7 +58,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                                       int viewType) {
 
         LinearLayout v = (LinearLayout) LayoutInflater.from(mContext)
-                .inflate(R.layout.list_item, parent, false);
+                .inflate(R.layout.tweet_item, parent, false);
 
         TextView text = (TextView) v
                 .findViewById(R.id.tweet_text);
@@ -106,7 +106,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.getAuthorView().setText(tweet.getUser().getName());
 
         holder.getTextView().setText(tweet.getText().replace("\\n", "\n"));
-        holder.getTextView().setText(tweet.getText());
 
         String date = DateParser.parse(tweet.getCreatedAt().toString());
 
@@ -142,7 +141,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     args.putInt(Const.POSITION, position);
                     fragment.setArguments(args);
                     ((MainActivity) adapter.mContext).setMainFragment(fragment);
-
 
                 }
             });

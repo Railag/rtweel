@@ -16,6 +16,9 @@
 
 package com.rtweel.storage;
 
+import android.content.res.ObbScanner;
+import android.system.OsConstants;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.Closeable;

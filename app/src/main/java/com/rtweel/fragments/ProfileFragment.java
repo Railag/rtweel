@@ -29,7 +29,7 @@ import com.rtweel.tasks.tweet.GetUserDetailsTask;
  */
 public class ProfileFragment extends BaseFragment {
 
-    private final static int PAGER_SIZE = 4;
+    private final static int PAGER_SIZE = 5;
     private final static int ANIMATION_TIME = 2000;
 
     private View mView;
@@ -125,6 +125,8 @@ public class ProfileFragment extends BaseFragment {
                         return mCollection.getFav();
                     case 3:
                         return mCollection.getImages();
+                    case 4:
+                        return mCollection.getFollowers();
                     default:
                         return null;
                 }
@@ -152,6 +154,9 @@ public class ProfileFragment extends BaseFragment {
                     case 3:
                         title = getString(R.string.timeline_images);
                         break;
+                    case 4:
+                        title = getString(R.string.followers);
+                        break;
                     default:
                         title = "";
                         break;
@@ -174,13 +179,13 @@ public class ProfileFragment extends BaseFragment {
 
     }
 
-    private Fragment instantiateFragment(TimelineFragment timelineFragment) {
+    private Fragment instantiateFragment(PagerFragment pagerFragment) {
 
         Bundle args = new Bundle();
         args.putString(Const.USERNAME, mProfileNameNormal.getText().toString());
         args.putString(Const.SCREEN_USERNAME, mProfileNameLink.getText().toString());
         args.putLong(Const.USER_ID, mProfileId);
-        timelineFragment.setArguments(args);
+        pagerFragment.setArguments(args);
 
         mListener = new HideHeaderOnScrollListener() {
             @Override
@@ -201,9 +206,9 @@ public class ProfileFragment extends BaseFragment {
             }
         };
 
-        timelineFragment.setHideHeaderListener(mListener);
+        pagerFragment.setHideHeaderListener(mListener);
 
-        return timelineFragment;
+        return pagerFragment;
     }
 
 
@@ -414,9 +419,10 @@ public class ProfileFragment extends BaseFragment {
         AnswersTimelineFragment answers;
         FavoriteTimelineFragment fav;
         ImagesTimelineFragment images;
+        FollowersFragment followers;
 
 
-        public void saveFragment(TimelineFragment fragment) {
+        public void saveFragment(PagerFragment fragment) {
             if (fragment instanceof UserTimelineFragment) {
                 if (user == null)
                     user = (UserTimelineFragment) fragment;
@@ -449,6 +455,14 @@ public class ProfileFragment extends BaseFragment {
                     if (args.getLong(Const.USER_ID) != images.getTimeline().getUserId())
                         images = (ImagesTimelineFragment) fragment;
                 }
+            } else if (fragment instanceof FollowersFragment) {
+                if (followers == null)
+                    followers = (FollowersFragment) fragment;
+                else {
+                    Bundle args = fragment.getArguments();
+                    if (args.getLong(Const.USER_ID) != followers.getUserId())
+                        followers = (FollowersFragment) fragment;
+                }
             }
         }
 
@@ -457,7 +471,7 @@ public class ProfileFragment extends BaseFragment {
                 return user;
             else {
                 Fragment fragment = instantiateFragment(new UserTimelineFragment());
-                saveFragment((TimelineFragment) fragment);
+                saveFragment((PagerFragment) fragment);
                 return fragment;
             }
         }
@@ -467,7 +481,7 @@ public class ProfileFragment extends BaseFragment {
                 return answers;
             else {
                 Fragment fragment = instantiateFragment(new AnswersTimelineFragment());
-                saveFragment((TimelineFragment) fragment);
+                saveFragment((PagerFragment) fragment);
                 return fragment;
             }
         }
@@ -477,7 +491,7 @@ public class ProfileFragment extends BaseFragment {
                 return fav;
             else {
                 Fragment fragment = instantiateFragment(new FavoriteTimelineFragment());
-                saveFragment((TimelineFragment) fragment);
+                saveFragment((PagerFragment) fragment);
                 return fragment;
             }
         }
@@ -487,7 +501,17 @@ public class ProfileFragment extends BaseFragment {
                 return images;
             else {
                 Fragment fragment = instantiateFragment(new ImagesTimelineFragment());
-                saveFragment((TimelineFragment) fragment);
+                saveFragment((PagerFragment) fragment);
+                return fragment;
+            }
+        }
+
+        public Fragment getFollowers() {
+            if (followers != null)
+                return followers;
+            else {
+                Fragment fragment = instantiateFragment(new FollowersFragment());
+                saveFragment((PagerFragment) fragment);
                 return fragment;
             }
         }

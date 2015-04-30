@@ -54,12 +54,14 @@
     <string name="title_profile">Profile</string>
     <string name="title_settings">Settings</string>
     <string name="title_send_tweet">Send Tweet</string>
+    <string name="title_followers">Followers</string>
 
     <!--Pager titles-->
     <string name="timeline_user">User</string>
     <string name="timeline_answers">Answers</string>
     <string name="timeline_favorite">Favorites</string>
     <string name="timeline_images">Images</string>
+    <string name="followers">Followers</string>
 
 
 </resources>
