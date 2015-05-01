@@ -33,7 +33,7 @@ public class AnswersTimeline extends Timeline {
     }
 
     @Override
-    protected boolean isHomeTimeline() {
+    public boolean isHomeTimeline() {
         return false;
     }
 

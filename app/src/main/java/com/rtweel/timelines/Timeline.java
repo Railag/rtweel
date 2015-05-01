@@ -42,7 +42,7 @@ public abstract class Timeline implements Iterable<Status> {
 
     protected abstract List<Status> getNewTweets(Twitter twitter, Paging page);
 
-    protected abstract boolean isHomeTimeline();
+    public abstract boolean isHomeTimeline();
 
     protected abstract Cursor getPreparedTweets(ContentResolver resolver, String[] projection);
 

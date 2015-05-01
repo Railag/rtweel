@@ -87,11 +87,14 @@ public abstract class TimelineFragment extends PagerFragment {
 
         addTweetService();
 
-        loadTweets();
 
         initHandler();
 
         initList(v);
+
+        loadTweets();
+        if (!getTimeline().isHomeTimeline())
+            updateUp();
 
         initFloatingButton(v);
 
