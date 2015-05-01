@@ -1,6 +1,7 @@
 package com.rtweel.fragments;
 
 import android.animation.ValueAnimator;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -29,10 +30,15 @@ import twitter4j.User;
  */
 public class FollowersFragment extends PagerFragment {
 
+    public final static long FIRST_CURSOR = 1L;
+    public final static long NEXT_CURSOR = 2L;
+
     private FavoriteAdapter adapter;
 
     private ArrayList<User> users = new ArrayList<>();
     private Long userId = -1L;
+
+    private FollowersGetTask task;
 
     private RecyclerView list;
 
@@ -43,7 +49,6 @@ public class FollowersFragment extends PagerFragment {
     private HideHeaderOnScrollListener mListener;
 
     private Long mNextCursor = -1L;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,7 +68,7 @@ public class FollowersFragment extends PagerFragment {
 
         setTitle(getString(R.string.title_timeline));
 
-        loadFollowers();
+        updateUp();
 
         initList(v);
 
@@ -73,16 +78,17 @@ public class FollowersFragment extends PagerFragment {
     }
 
     private void updateUp() {
-
+        if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            task = new FollowersGetTask(FollowersFragment.this);
+            task.execute(userId, -1L, FIRST_CURSOR);
+        }
     }
 
     private void updateDown() {
-
-    }
-
-    private void loadFollowers() {
-        FollowersGetTask task = new FollowersGetTask(FollowersFragment.this);
-        task.execute(userId, mNextCursor);
+        if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            task = new FollowersGetTask(FollowersFragment.this);
+            task.execute(userId, mNextCursor, NEXT_CURSOR);
+        }
     }
 
     private void loadingAnim() {

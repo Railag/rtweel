@@ -2,12 +2,9 @@ package com.rtweel.tasks.timeline;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.rtweel.fragments.FollowersFragment;
-import com.rtweel.fragments.TimelineFragment;
 import com.rtweel.storage.Tweets;
-import com.rtweel.timelines.Timeline;
 
 import twitter4j.PagableResponseList;
 import twitter4j.Twitter;
@@ -29,14 +26,20 @@ public class FollowersGetTask extends AsyncTask<Long, Void, Long> {
         PagableResponseList<User> followers = null;
         Long id = params[0];
         Long cursor = params[1];
+        int cursorType = params[2].intValue();
 
         try {
             followers = twitter.getFollowersList(id, cursor);
-            mFragment.getFollowers().addAll(followers);
+            followers.removeAll(mFragment.getFollowers());
+
+            if (cursorType == FollowersFragment.FIRST_CURSOR)
+                mFragment.getFollowers().addAll(0, followers);
+            else if (cursorType == FollowersFragment.NEXT_CURSOR)
+                mFragment.getFollowers().addAll(followers);
         } catch (TwitterException e) {
             e.printStackTrace();
+            cancel(true);
         }
-
 
         if (followers != null && followers.size() > 0)
             return followers.getNextCursor();
@@ -53,9 +56,9 @@ public class FollowersGetTask extends AsyncTask<Long, Void, Long> {
 
         // mActivity.loadingAnim();
 
-        if (mFragment.getActivity() != null) {
+        if (mFragment.getActivity() != null)
             mFragment.setNextCursor(nextCursor);
-        } else
+        else
             Log.e("Exception", "TimelineUpTask lost context");
     }
 }

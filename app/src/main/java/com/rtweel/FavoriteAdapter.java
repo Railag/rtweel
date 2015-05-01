@@ -5,11 +5,10 @@ package com.rtweel;
  */
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +18,12 @@ import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.ProfileFragment;
-import com.rtweel.fragments.SettingsFragment;
-import com.rtweel.tasks.tweet.RefreshTweetTask;
-import com.rtweel.utils.DateParser;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
-import twitter4j.MediaEntity;
-import twitter4j.Status;
 import twitter4j.User;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
@@ -60,7 +53,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         LinearLayout v = (LinearLayout) LayoutInflater.from(mContext)
                 .inflate(R.layout.follower_item, parent, false);
 
-        TextView description= (TextView) v
+        TextView description = (TextView) v
                 .findViewById(R.id.follower_description);
         TextView name = (TextView) v
                 .findViewById(R.id.follower_name);
@@ -90,7 +83,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
         holder.getNameView().setText(user.getScreenName());
 
-        holder.getDescView().setText(user.getDescription());
+
+        String description = user.getDescription();
+        if (!TextUtils.isEmpty(description)) {
+            holder.getDescView().setText(user.getDescription());
+            holder.getDescView().setVisibility(View.VISIBLE);
+        } else
+            holder.getDescView().setVisibility(View.GONE);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

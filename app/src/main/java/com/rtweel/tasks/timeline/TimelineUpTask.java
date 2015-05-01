@@ -53,7 +53,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
                             mFragment.getActivity(),
                             "New tweets: "
                                     + result
-                                    + "\n There are unloaded new tweets, you can make right swipe one more time",
+                                    + "\n There are unloaded new tweets, you can make up swipe one more time",
                             Toast.LENGTH_LONG).show();
                 }
             }
