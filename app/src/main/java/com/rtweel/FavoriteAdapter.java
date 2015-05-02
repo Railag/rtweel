@@ -6,6 +6,7 @@ package com.rtweel;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -85,11 +86,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
 
         String description = user.getDescription();
+        View hidingView = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? holder.getDescView() : (View) holder.getDescView().getParent();
         if (!TextUtils.isEmpty(description)) {
             holder.getDescView().setText(user.getDescription());
-            holder.getDescView().setVisibility(View.VISIBLE);
+            hidingView.setVisibility(View.VISIBLE);
         } else
-            holder.getDescView().setVisibility(View.GONE);
+            hidingView.setVisibility(View.GONE);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
