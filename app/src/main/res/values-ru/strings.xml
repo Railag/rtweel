@@ -20,6 +20,11 @@
     <string name="tweet_refreshing">Открытие твита..</string>
     <string name="authorization">Авторизация..</string>
 
+    <!--detail-->
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete_message">"Вы уверены, что хотите удалить этот твит?"</string>
+
         <!--settings-->
     <string name="pref_images_shown">Превью картинок</string>
     <string name="pref_save_tweet">Сохранять текущий текст твита, \n даже после закрытия приложения</string>

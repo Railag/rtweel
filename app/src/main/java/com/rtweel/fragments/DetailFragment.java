@@ -21,6 +21,7 @@ import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,11 +66,11 @@ public class DetailFragment extends BaseFragment {
     private TextView nameView;
     private TextView textView;
     private TextView dateView;
-    private ImageView retweetsButton;
-    private ImageView favsButton;
-    private ImageView shareButton;
-    private ImageView replyButton;
-    private ImageView deleteButton;
+    private ImageButton retweetsButton;
+    private ImageButton favsButton;
+    private ImageButton shareButton;
+    private ImageButton replyButton;
+    private ImageButton deleteButton;
     private TextView retweetsCountView;
     private TextView favsCountView;
     private RoundedImageView profilePictureView;
@@ -92,11 +93,11 @@ public class DetailFragment extends BaseFragment {
         nameView = (TextView) v.findViewById(R.id.detail_name);
         textView = (TextView) v.findViewById(R.id.detail_text);
         dateView = (TextView) v.findViewById(R.id.detail_date);
-        retweetsButton = (ImageView) v.findViewById(R.id.detail_retweet_button);
-        favsButton = (ImageView) v.findViewById(R.id.detail_favorited_button);
-        shareButton = (ImageView) v.findViewById(R.id.detail_share_button);
-        replyButton = (ImageView) v.findViewById(R.id.detail_reply_button);
-        deleteButton = (ImageView) v.findViewById(R.id.detail_delete);
+        retweetsButton = (ImageButton) v.findViewById(R.id.detail_retweet_button);
+        favsButton = (ImageButton) v.findViewById(R.id.detail_favorited_button);
+        shareButton = (ImageButton) v.findViewById(R.id.detail_share_button);
+        replyButton = (ImageButton) v.findViewById(R.id.detail_reply_button);
+        deleteButton = (ImageButton) v.findViewById(R.id.detail_delete);
         retweetsCountView = (TextView) v.findViewById(R.id.detail_retweet_count);
         favsCountView = (TextView) v.findViewById(R.id.detail_favorited_count);
         profilePictureView = (RoundedImageView) v.findViewById(R.id.detail_profile_picture);
@@ -168,7 +169,6 @@ public class DetailFragment extends BaseFragment {
                     + getActivity().getPackageName() + "/" + "tmp" + ".jpg";
             mTweet = (Status) start.getSerializable(Const.TWEET);
             final String name = mTweet.getUser().getName();
-            makeSpannableText(mTweet.getText());
             String date = DateParser.parse(mTweet.getCreatedAt().toString());
 
 
@@ -237,15 +237,15 @@ public class DetailFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Are you sure you want to delete this tweet?");
-                        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        builder.setTitle(getString(R.string.delete_message));
+                        builder.setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 new DeleteTweetTask(DetailFragment.this,
                                         position).execute(id);
                             }
                         });
-                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
@@ -277,16 +277,17 @@ public class DetailFragment extends BaseFragment {
                     views[i].setId(mediaIds[i]);
 
                     Picasso.with(getActivity()).load(urls[i]).into(views[i]);
-                    //views[i].setImageBitmap(bitmap);
+
                     RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    p.topMargin = 10;
 
                     if (i == 0)
                         p.addRule(RelativeLayout.BELOW, R.id.detail_retweet_count);
                     else {
                         p.addRule(RelativeLayout.BELOW, mediaIds[i - 1]);
-                        p.topMargin = 10;
                     }
 
                     views[i].setLayoutParams(p);
@@ -305,7 +306,7 @@ public class DetailFragment extends BaseFragment {
             Picasso.with(getActivity()).load(imageUri).transform(transformation).into(profilePictureView);
 
             nameView.setText(name);
-      //      textView.setText(text);
+            makeSpannableText(mTweet.getText());
             dateView.setText(date);
 
         }

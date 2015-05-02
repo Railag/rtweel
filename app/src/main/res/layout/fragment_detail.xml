@@ -54,85 +54,78 @@
             android:textSize="18sp"
             android:text="Some 140 symbols text here right now appearing immediately on my screen for some strange tests after READY! STEADY! GO! still need some more"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/detail_retweet_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/detail_text"
             android:layout_marginTop="26dp"
             android:contentDescription="@string/cd_retweet_btn"
-            android:src="@drawable/retweet" />
+            android:src="@drawable/retweet"
+            android:scaleType="fitXY"/>
 
         <TextView
             android:id="@+id/detail_retweet_count"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/detail_retweet_button" />
+            android:layout_below="@+id/detail_retweet_button"
+            android:gravity="center"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/detail_favorited_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignBaseline="@+id/detail_retweet_button"
-            android:layout_alignBottom="@+id/detail_retweet_button"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp"
-            android:layout_toEndOf="@+id/detail_retweet_button"
-            android:layout_toRightOf="@+id/detail_retweet_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:contentDescription="@string/cd_fav_btn"
-            android:src="@drawable/favor" />
+            android:src="@drawable/favor"
+            android:scaleType="fitXY"
+            android:layout_alignTop="@+id/detail_retweet_button"
+            android:layout_toRightOf="@+id/detail_retweet_button"
+            android:layout_toEndOf="@+id/detail_retweet_button" />
 
         <TextView
             android:id="@+id/detail_favorited_count"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/detail_favorited_button"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp"
+            android:layout_below="@+id/detail_retweet_button"
+            android:layout_alignTop="@+id/detail_retweet_count"
+            android:layout_toRightOf="@+id/detail_retweet_button"
             android:layout_toEndOf="@+id/detail_retweet_button"
-            android:layout_toRightOf="@+id/detail_retweet_button" />
+            android:gravity="center"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/detail_share_button"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@android:drawable/ic_menu_share"
             android:contentDescription="@string/cd_detail_share"
+            android:scaleType="fitXY"
             android:layout_alignTop="@+id/detail_favorited_button"
             android:layout_toRightOf="@+id/detail_favorited_button"
-            android:layout_toEndOf="@+id/detail_favorited_button"
-            android:layout_marginLeft="18dp"
-            android:layout_marginStart="18dp" />
+            android:layout_toEndOf="@+id/detail_favorited_button" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/detail_reply_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/detail_text"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@+id/detail_share_button"
-            android:layout_toRightOf="@+id/detail_share_button"
             android:src="@drawable/reply"
-            android:contentDescription="@string/cd_detail_reply"/>
+            android:contentDescription="@string/cd_detail_reply"
+            android:scaleType="fitXY"
+            android:layout_alignTop="@+id/detail_share_button"
+            android:layout_toRightOf="@+id/detail_share_button"
+            android:layout_toEndOf="@+id/detail_share_button"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/detail_delete"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_below="@+id/detail_text"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@+id/detail_reply_button"
-            android:layout_toRightOf="@+id/detail_reply_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/delete"
-            android:contentDescription="@string/cd_detail_delete"/>
+            android:contentDescription="@string/cd_detail_delete"
+            android:scaleType="fitXY"
+            android:layout_alignTop="@+id/detail_reply_button"
+            android:layout_toRightOf="@+id/detail_reply_button"
+            android:layout_toEndOf="@+id/detail_reply_button" />
 
 
         <com.makeramen.roundedimageview.RoundedImageView
