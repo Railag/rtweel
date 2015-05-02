@@ -195,7 +195,8 @@ public class DetailFragment extends BaseFragment {
                             .getName() + "'s tweet");
 
                     ImageView mediaView = (ImageView) mView.findViewById(mediaIds[0]);
-                    saveToFile(mediaView);
+                    if (mediaView != null)
+                        saveToFile(mediaView);
                     File file = new File(sPath);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
                     String title = "Choose an app to share the tweet";
