@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.rtweel.storage.Tweets;
 import com.rtweel.utils.TwitterUtil;
 
 /**

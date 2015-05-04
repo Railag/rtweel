@@ -1,15 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ActionBar="http://schemas.android.com/apk/res-auto" >
+    xmlns:ActionBar="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/tweet_send_open"
-        ActionBar:showAsAction="ifRoom"
-        android:orderInCategory="100"
-        android:title="@string/tweet_send_open"/>
-    <item
         android:id="@+id/logout_button"
-        ActionBar:showAsAction="never"
         android:orderInCategory="1000"
-        android:title="@string/logout_button"/>
+        android:title="@string/logout"
+        ActionBar:showAsAction="never" />
 
 </menu>

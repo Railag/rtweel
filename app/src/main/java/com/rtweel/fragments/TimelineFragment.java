@@ -5,19 +5,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,15 +20,11 @@ import android.view.ViewGroup;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rtweel.R;
-import com.rtweel.storage.App;
 import com.rtweel.storage.AppUser;
 import com.rtweel.Const;
-import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.services.TweetService;
-import com.rtweel.storage.TweetDatabase;
 import com.rtweel.timelines.Timeline;
 import com.rtweel.TweetAdapter;
-import com.rtweel.utils.TwitterUtil;
 
 /**
  * Created by root on 21.3.15.
@@ -241,12 +232,6 @@ public abstract class TimelineFragment extends PagerFragment {
                         AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.main, menu);
-    }
-
     public void blink() {
 
         ValueAnimator fade = new ValueAnimator();
@@ -267,29 +252,7 @@ public abstract class TimelineFragment extends PagerFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.logout_button: {
-                App app = (App) getActivity().getApplication();
 
-                boolean dbDeleted = getActivity().deleteDatabase(TweetDatabase
-                        .getDbName());
-                Log.i("DEBUG", "DB DELETED = " + dbDeleted);
-
-                app.createDb();
-
-                SharedPreferences sharedPreferences = PreferenceManager
-                        .getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(Const.PREFERENCE_TWITTER_OAUTH_TOKEN, "");
-                editor.putString(
-                        Const.PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET, "");
-                editor.putBoolean(Const.PREFERENCE_TWITTER_IS_LOGGED_IN,
-                        false);
-                editor.commit();
-
-                TwitterUtil.getInstance().reset();
-                getMainActivity().finish();
-                break;
-            }
         }
         return true;
     }

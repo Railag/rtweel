@@ -1,16 +1,24 @@
 package com.rtweel.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.rtweel.R;
+import com.rtweel.storage.App;
+import com.rtweel.storage.TweetDatabase;
+import com.rtweel.storage.Tweets;
+import com.rtweel.utils.TwitterUtil;
 
 /**
  * Created by root on 25.3.15.
@@ -22,6 +30,7 @@ public class SettingsFragment extends BaseFragment {
 
     private CheckBox mImagesShown;
     private CheckBox mTweetSave;
+    private Button mLogoutButton;
 
     private SharedPreferences mPrefs;
 
@@ -39,11 +48,39 @@ public class SettingsFragment extends BaseFragment {
 
         mImagesShown = (CheckBox) v.findViewById(R.id.images_shown);
         mTweetSave = (CheckBox) v.findViewById(R.id.save_tweet);
+        mLogoutButton = (Button) v.findViewById(R.id.logout_button);
 
 
         setCheckbox(mImagesShown, IMAGES_SHOWN_PREFS, getString(R.string.pref_images_shown));
 
         setCheckbox(mTweetSave, SAVE_TWEET_PREFS, getString(R.string.pref_save_tweet));
+
+        mLogoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.logout_message));
+                builder.setPositiveButton(getString(R.string.logout), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.cancel();
+                    }
+                });
+                builder.create().show();
+            }
+        });
 
         return v;
     }
@@ -60,5 +97,25 @@ public class SettingsFragment extends BaseFragment {
             }
         });
     }
+
+    private void logout() {
+        App app = (App) getActivity().getApplication();
+
+        boolean dbDeleted = getActivity().deleteDatabase(TweetDatabase
+                .getDbName());
+        Log.i("DEBUG", "DB DELETED = " + dbDeleted);
+
+        app.createDb();
+
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+
+        TwitterUtil.getInstance().reset();
+        getMainActivity().finish();
+    }
+
 }
 

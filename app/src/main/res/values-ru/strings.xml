@@ -8,12 +8,10 @@
     <string name="hint_location">Расположение</string>
     <string name="make_photo">Сделать снимок</string>
     <string name="tweet_hint">Расскажите, что происходит</string>
-    <string name="logout">Выйти из аккаунта</string>
     <string name="tweet_send_open">Написать</string>
     <string name="tweet_send_ok">Отправить</string>
     <string name="tweet_send_back">Назад</string>
     <string name="tweet_send_hint">Расскажите, что происходит</string>
-    <string name="logout_button">Выйти из аккаунта</string>
     <string name="tweet_send_add_photo_button">Сделать снимок</string>
     <string name="select_file">Выбрать фото с диска</string>
     <string name="loading">Загрузка..</string>
@@ -28,6 +26,8 @@
         <!--settings-->
     <string name="pref_images_shown">Превью картинок</string>
     <string name="pref_save_tweet">Сохранять текущий текст твита, \n даже после закрытия приложения</string>
+    <string name="logout_message">Вы уверены, что хотите выйти из аккаунта?</string>
+    <string name="logout">Выйти из аккаунта</string>
 
 
     <!--content descriptions-->

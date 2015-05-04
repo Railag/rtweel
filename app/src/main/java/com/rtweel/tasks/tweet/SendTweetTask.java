@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.rtweel.storage.App;
 import com.rtweel.Const;
+import com.rtweel.storage.Tweets;
 import com.rtweel.utils.TwitterUtil;
 
 import java.io.File;

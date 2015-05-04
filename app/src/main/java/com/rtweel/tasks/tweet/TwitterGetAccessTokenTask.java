@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import com.rtweel.Const;
+import com.rtweel.storage.Tweets;
 import com.rtweel.utils.TwitterUtil;
 
 import twitter4j.Twitter;
@@ -25,7 +26,7 @@ public class TwitterGetAccessTokenTask extends
     @Override
     protected String doInBackground(String... params) {
 
-        Twitter twitter = TwitterUtil.getInstance().getTwitter();
+        Twitter twitter = Tweets.getTwitter(mContext);
         RequestToken requestToken = TwitterUtil.getInstance().getRequestToken();
         String verifier = params[0];
         SharedPreferences prefs = PreferenceManager
@@ -60,7 +61,7 @@ public class TwitterGetAccessTokenTask extends
                     accessTokenSecret);
             try {
                 TwitterUtil.getInstance().setTwitterFactory(accessToken);
-                return TwitterUtil.getInstance().getTwitter()
+                return Tweets.getTwitter(mContext)
                         .showUser(accessToken.getUserId()).getName();
             } catch (TwitterException e) {
                 e.printStackTrace();

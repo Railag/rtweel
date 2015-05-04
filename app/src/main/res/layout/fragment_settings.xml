@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <CheckBox
@@ -9,11 +10,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <View style="@style/rtweel_divider"/>
+    <View
+        android:id="@+id/settings_divider1"
+        style="@style/rtweel_divider"
+        android:layout_below="@id/images_shown" />
 
     <CheckBox
         android:id="@+id/save_tweet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settings_divider1" />
 
-</LinearLayout>
+    <View
+        android:id="@+id/settings_divider2"
+        style="@style/rtweel_divider"
+        android:layout_below="@id/save_tweet" />
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/logout" />
+
+</RelativeLayout>
