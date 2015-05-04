@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.rtweel.storage.AppUser;
 import com.rtweel.tasks.timeline.LoadTimelineTask;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
@@ -33,6 +34,9 @@ public class AnswersTimelineFragment extends TimelineFragment {
 
     protected void updateUp() {
 
+        if (getUserId() != AppUser.getUserId(getActivity()))
+            return;
+
         blink();
         if (!App.isOnline(getActivity())) {
             Log.i("DEBUG", "Up swipe NO NETWORK");
@@ -52,6 +56,10 @@ public class AnswersTimelineFragment extends TimelineFragment {
     }
 
     protected void updateDown() {
+
+        if (getUserId() != AppUser.getUserId(getActivity()))
+            return;
+
         blink();
         if (!App.isOnline(getActivity())) {
             Log.i("DEBUG", "Down swipe NO NETWORK");

@@ -31,8 +31,8 @@ public class TwitterAuthenticateTask extends AsyncTask<Void, Void, Void> {
                     Uri.parse(token
                             .getAuthenticationURL()));
             mContext.startActivity(intent);
-        }
-        Log.i("DEBUG", "Auth network problems");
+        } else
+            Log.i("DEBUG", "Auth network problems");
         return null;
     }
 }
