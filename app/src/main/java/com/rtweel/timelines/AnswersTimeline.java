@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.rtweel.storage.AppUser;
 import com.rtweel.storage.TweetDatabase;
 
 import java.util.List;
@@ -24,6 +25,9 @@ public class AnswersTimeline extends Timeline {
 
     @Override
     protected List<Status> getNewTweets(Twitter twitter, Paging page) {
+        if (getUserId() != AppUser.getUserId(mContext))
+            return null;
+
         try {
             return twitter.getMentionsTimeline(page);
         } catch (TwitterException | NullPointerException e) {

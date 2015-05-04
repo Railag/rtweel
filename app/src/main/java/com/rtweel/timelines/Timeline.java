@@ -33,7 +33,7 @@ public abstract class Timeline implements Iterable<Status> {
 
     protected List<twitter4j.Status> list;
 
-    private final Context mContext;
+    protected final Context mContext;
 
     private String mUserName;
     private String mScreenUserName;
@@ -62,6 +62,7 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
     public void loadTimeline() {
+
         preparingUpdate();
 
         if (list.isEmpty()) {
@@ -345,7 +346,7 @@ public abstract class Timeline implements Iterable<Status> {
     }
 
     public long getLastItemIdOrMax() {
-        if (list != null && list.size()  > 0)
+        if (list != null && list.size() > 0)
             return list.get(list.size() - 1).getId();
         else
             return Long.MAX_VALUE;

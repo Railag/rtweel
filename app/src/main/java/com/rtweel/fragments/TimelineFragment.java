@@ -78,7 +78,6 @@ public abstract class TimelineFragment extends PagerFragment {
 
         addTweetService();
 
-
         initHandler();
 
         initList(v);
