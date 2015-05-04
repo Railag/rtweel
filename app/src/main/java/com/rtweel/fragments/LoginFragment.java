@@ -62,10 +62,10 @@ public class LoginFragment extends BaseFragment {
                     String verifier = uri
                             .getQueryParameter(Const.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
                     Log.i("DEBUG", "Verification..");
-                    new TwitterGetAccessTokenTask(getActivity())
-                            .execute(verifier).get();
+                        new TwitterGetAccessTokenTask(getActivity())
+                                .execute(verifier).get();
 
-                    initialize();
+                        initialize();
                 } else {
                     Log.i("DEBUG", "Browser authentification...");
                     new TwitterAuthenticateTask(getActivity()).execute();

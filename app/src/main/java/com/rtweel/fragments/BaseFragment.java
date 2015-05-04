@@ -16,12 +16,7 @@ public class BaseFragment extends Fragment {
     private ProgressDialog mLoadingDialog;
 
     protected void startLoading(String loadingText) {
-        mLoadingDialog = ProgressDialog.show(getActivity(), loadingText, getResources().getString(R.string.loading), true, true, new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                dialog.cancel();
-            }
-        });
+        mLoadingDialog = ProgressDialog.show(getActivity(), loadingText, getResources().getString(R.string.loading), true, false, null);
     }
 
     public void stopLoading() {

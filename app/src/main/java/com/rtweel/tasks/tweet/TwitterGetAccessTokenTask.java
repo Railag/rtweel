@@ -26,7 +26,7 @@ public class TwitterGetAccessTokenTask extends
     @Override
     protected String doInBackground(String... params) {
 
-        Twitter twitter = Tweets.getTwitter(mContext);
+        Twitter twitter = TwitterUtil.getInstance().getTwitter();
         RequestToken requestToken = TwitterUtil.getInstance().getRequestToken();
         String verifier = params[0];
         SharedPreferences prefs = PreferenceManager
