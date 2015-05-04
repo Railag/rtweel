@@ -27,7 +27,7 @@ public class ImagesTimeline extends Timeline {
     protected List<Status> getNewTweets(Twitter twitter, Paging page) {
         try {
             List<Status> downloadedList = new ArrayList<Status>();
-            List<Status> download = twitter.getUserTimeline(page);
+            List<Status> download = twitter.getUserTimeline(getScreenUserName(), page);
 
             for (Status s : download)
                 if (s.getMediaEntities().length > 0)
@@ -49,7 +49,7 @@ public class ImagesTimeline extends Timeline {
     public Cursor getOldestTweet(ContentResolver resolver, String[] projection) { //TODO impl
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_MEDIA + " IS NOT NULL AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " != '' " + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
+                projection, TweetDatabase.Tweets.COLUMN_MEDIA + " IS NOT NULL AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " != '' " + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = '" + getUserId() + "'", null, TweetDatabase.SELECTION_ASC + "LIMIT 1");
     }
 
     @Override
@@ -57,14 +57,14 @@ public class ImagesTimeline extends Timeline {
         //TODO impl
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_MEDIA + " IS NOT NULL AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " != '' " + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
+                projection, TweetDatabase.Tweets.COLUMN_MEDIA + " IS NOT NULL AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " != '' " + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = '" + getUserId() + "'", null, TweetDatabase.SELECTION_DESC + "LIMIT 1");
     }
 
     @Override
     protected Cursor getPreparedTweets(ContentResolver resolver, String[] projection) { //TODO impl
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
-                projection, TweetDatabase.Tweets.COLUMN_MEDIA + " IS NOT NULL AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " != '' " + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
+                projection, TweetDatabase.Tweets.COLUMN_MEDIA + " IS NOT NULL AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " != '' " + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = '" + getUserId() + "'", null, TweetDatabase.SELECTION_DESC + "LIMIT 30");
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ImagesTimeline extends Timeline {
         return resolver.query(
                 TweetDatabase.Tweets.CONTENT_URI_TWEET_DB,
                 projection, TweetDatabase.Tweets._ID + "<"
-                        + getLastItemIdOrMax() + " AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " IS NOT NULL AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " != '' " + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = " + getUserId(), null,
+                        + getLastItemIdOrMax() + " AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " IS NOT NULL AND " + TweetDatabase.Tweets.COLUMN_MEDIA + " != '' " + " AND " + TweetDatabase.Tweets.COLUMN_USER_ID + " = '" + getUserId() + "'", null,
                 TweetDatabase.SELECTION_DESC + "LIMIT 100");
     }
 }
