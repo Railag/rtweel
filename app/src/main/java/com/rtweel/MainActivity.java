@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,7 @@ import com.rtweel.fragments.LoginFragment;
 import com.rtweel.fragments.ProfileFragment;
 import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.fragments.SettingsFragment;
+import com.rtweel.fragments.WebViewFragment;
 import com.rtweel.storage.AppUser;
 
 import java.lang.reflect.Field;
@@ -162,8 +164,17 @@ public class MainActivity extends ActionBarActivity {
         if (mFragmentManager.getBackStackEntryCount() == 0)
             super.onBackPressed();
         else {
+            if (mCurrentFragment instanceof WebViewFragment) {
+                WebViewFragment wv = (WebViewFragment) mCurrentFragment;
+                if (wv.isCanGoBack()) {
+                    wv.goBack();
+                    return;
+                }
+            }
+
             if (mCurrentFragment instanceof DetailFragment)
                 show();
+
             mFragmentManager.popBackStackImmediate();
         }
     }
@@ -200,6 +211,26 @@ public class MainActivity extends ActionBarActivity {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Log.e("Exception", e.getMessage());
         }
+    }
+
+    public void loadUrl(String url) {
+        WebViewFragment fragment = new WebViewFragment();
+        Bundle args = new Bundle();
+        args.putString(Const.URL, url);
+        fragment.setArguments(args);
+        setMainFragment(fragment);
+    }
+
+    public String makeProcessableUrl(String url) {
+        String replace;
+        if (url.contains("https"))
+            replace = "https://";
+        else if (url.contains("http"))
+            replace = "http://";
+        else
+            replace = "http://";
+
+        return url.replace(replace, "com.rtweel://");
     }
 
     public ProgressBar getLoadingBar() {
