@@ -11,6 +11,7 @@ import com.rtweel.utils.TwitterUtil;
 
 import java.util.ArrayList;
 
+import twitter4j.DirectMessage;
 import twitter4j.RateLimitStatusEvent;
 import twitter4j.RateLimitStatusListener;
 import twitter4j.Twitter;

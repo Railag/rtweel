@@ -53,7 +53,7 @@
     </string-array>
 
     <!--Toolbar titles-->
-    <string name="title_timeline">Home</string>
+    <string name="title_home">Home</string>
     <string name="title_file">Select File</string>
     <string name="title_login">Login</string>
     <string name="title_profile">Profile</string>

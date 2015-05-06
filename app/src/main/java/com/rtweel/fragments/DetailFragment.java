@@ -321,6 +321,8 @@ public class DetailFragment extends BaseFragment {
             fi = text.indexOf('@', fiEnd + 1);
             if (fi != -1) {
                 fiEnd = text.indexOf(' ', fi + 1);
+                if (fiEnd == -1)
+                    fiEnd = text.length() - 1;
                 final ConsistentClickableSpan clickableSpan = new ConsistentClickableSpan();
                 clickableSpan.mFi = fi + 1; // for @
                 clickableSpan.mFiEnd = fiEnd;
@@ -333,7 +335,6 @@ public class DetailFragment extends BaseFragment {
             } else
                 break;
         }
-
 
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -404,7 +405,6 @@ public class DetailFragment extends BaseFragment {
     }
 
 
-
     private class ConsistentClickableSpan extends ClickableSpan {
         private int mFi, mFiEnd;
 
@@ -417,4 +417,5 @@ public class DetailFragment extends BaseFragment {
             getMainActivity().setMainFragment(fragment);
         }
     }
+
 }

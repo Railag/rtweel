@@ -2,11 +2,13 @@ package com.rtweel.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.rtweel.Const;
 import com.rtweel.R;
@@ -34,11 +36,15 @@ public class WebViewFragment extends BaseFragment {
 
         initWebView(v);
 
+        setTitle(webView.getTitle());
+
         return v;
     }
 
     private void initWebView(View v) {
         webView = (WebView) v.findViewById(R.id.webview);
+
+        webView.setWebViewClient(new WVClient());
 
         webView.setWebChromeClient(new WebChromeClient());
 
@@ -54,6 +60,22 @@ public class WebViewFragment extends BaseFragment {
 
     public void goBack() {
         webView.goBack();
+    }
+
+
+    private class WVClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            setTitle(url);
+            return super.shouldOverrideUrlLoading(view, url);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            Log.i("Web", "url " + url + " is finished");
+            super.onPageFinished(view, url);
+        }
+
     }
 
 }

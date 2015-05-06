@@ -13,10 +13,7 @@ import com.rtweel.timelines.ImagesTimeline;
 /**
  * Created by root on 6.4.15.
  */
-public class ImagesTimelineFragment extends TimelineFragment {
-
-    private TimelineUpTask mUpTask;
-    private TimelineDownTask mDownTask;
+public class ImagesTweetFragment extends TweetFragment {
 
     @Override
     protected void loadTweets() {
@@ -24,14 +21,19 @@ public class ImagesTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    protected void instantiateTimeline(String username, String screenUserName, long userId) {
+    protected void instantiateListData(String username, String screenUserName, long userId) {
         mTimeline = new ImagesTimeline(getActivity().getApplicationContext());
         mTimeline.setUserName(username);
         mTimeline.setScreenUserName(screenUserName);
         mTimeline.setUserId(userId);
     }
 
-    protected void updateUp() {
+    @Override
+    protected void updateUp(Scroll scroll) {
+        super.updateUp(scroll);
+
+        if (!scroll.equals(Scroll.UPDATE_UP))
+            return;
 
         blink();
         if (!App.isOnline(getActivity())) {
@@ -46,12 +48,18 @@ public class ImagesTimelineFragment extends TimelineFragment {
         if (mUpTask != null)
             if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
-        mUpTask = new TimelineUpTask(ImagesTimelineFragment.this);
+        mUpTask = new TimelineUpTask(ImagesTweetFragment.this);
         mUpTask.execute(mTimeline);
 
     }
 
-    protected void updateDown() {
+    @Override
+    protected void updateDown(Scroll scroll) {
+        super.updateDown(scroll);
+
+        if (!scroll.equals(Scroll.UPDATE_DOWN))
+            return;
+
         blink();
         if (!App.isOnline(getActivity())) {
             Log.i("DEBUG", "Down swipe NO NETWORK");
@@ -66,7 +74,7 @@ public class ImagesTimelineFragment extends TimelineFragment {
         if (mDownTask != null)
             if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
-        mDownTask = new TimelineDownTask(ImagesTimelineFragment.this);
+        mDownTask = new TimelineDownTask(ImagesTweetFragment.this);
         mDownTask.execute(mTimeline);
     }
 

@@ -4,19 +4,16 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rtweel.timelines.FavoriteTimeline;
 import com.rtweel.tasks.timeline.LoadTimelineTask;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.storage.App;
+import com.rtweel.timelines.UserTimeline;
 
 /**
- * Created by root on 6.4.15.
+ * Created by root on 5.4.15.
  */
-public class FavoriteTimelineFragment extends TimelineFragment {
-
-    private TimelineUpTask mUpTask;
-    private TimelineDownTask mDownTask;
+public class UserTweetFragment extends TweetFragment {
 
     @Override
     protected void loadTweets() {
@@ -24,15 +21,19 @@ public class FavoriteTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    protected void instantiateTimeline(String username, String screenUserName, long userId) {
-        mTimeline = new FavoriteTimeline(getActivity().getApplicationContext());
+    protected void instantiateListData(String username, String screenUserName, long userId) {
+        mTimeline = new UserTimeline(getActivity().getApplicationContext());
         mTimeline.setUserName(username);
         mTimeline.setScreenUserName(screenUserName);
         mTimeline.setUserId(userId);
     }
 
+    @Override
+    protected void updateUp(Scroll scroll) {
+        super.updateUp(scroll);
 
-    protected void updateUp() {
+        if (!scroll.equals(Scroll.UPDATE_UP))
+            return;
 
         blink();
         if (!App.isOnline(getActivity())) {
@@ -47,12 +48,18 @@ public class FavoriteTimelineFragment extends TimelineFragment {
         if (mUpTask != null)
             if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
-        mUpTask = new TimelineUpTask(FavoriteTimelineFragment.this);
+        mUpTask = new TimelineUpTask(UserTweetFragment.this);
         mUpTask.execute(mTimeline);
 
     }
 
-    protected void updateDown() {
+    @Override
+    protected void updateDown(Scroll scroll) {
+        super.updateDown(scroll);
+
+        if (!scroll.equals(Scroll.UPDATE_DOWN))
+            return;
+
         blink();
         if (!App.isOnline(getActivity())) {
             Log.i("DEBUG", "Down swipe NO NETWORK");
@@ -67,14 +74,12 @@ public class FavoriteTimelineFragment extends TimelineFragment {
         if (mDownTask != null)
             if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
-        mDownTask = new TimelineDownTask(FavoriteTimelineFragment.this);
+        mDownTask = new TimelineDownTask(UserTweetFragment.this);
         mDownTask.execute(mTimeline);
     }
-
 
     @Override
     protected void loadingAnim() {
         //TODO
     }
-
 }

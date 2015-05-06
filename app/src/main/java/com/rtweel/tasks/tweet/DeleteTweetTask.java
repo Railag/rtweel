@@ -5,8 +5,8 @@ import android.util.Log;
 
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
-import com.rtweel.fragments.HomeTimelineFragment;
-import com.rtweel.fragments.TimelineFragment;
+import com.rtweel.fragments.HomeTweetFragment;
+import com.rtweel.fragments.TweetFragment;
 import com.rtweel.storage.TweetDatabase;
 import com.rtweel.storage.Tweets;
 
@@ -47,9 +47,9 @@ public class DeleteTweetTask extends AsyncTask<Long, Void, Long> {
                             + String.valueOf(result), null);
 
             if (mFragment instanceof DetailFragment) {
-                mFragment.getMainActivity().setMainFragment(new HomeTimelineFragment());
-            } else if (mFragment instanceof TimelineFragment) {
-                TimelineFragment timelineFragment = (TimelineFragment) mFragment;
+                mFragment.getMainActivity().setMainFragment(new HomeTweetFragment());
+            } else if (mFragment instanceof TweetFragment) {
+                TweetFragment timelineFragment = (TweetFragment) mFragment;
                 timelineFragment.getTimeline().remove(mPosition);
                 timelineFragment.getAdapter().notifyDataSetChanged();
             }

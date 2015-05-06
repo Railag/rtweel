@@ -4,16 +4,16 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rtweel.fragments.TimelineFragment;
+import com.rtweel.fragments.TweetFragment;
 import com.rtweel.timelines.Timeline;
 
 public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 
-	private TimelineFragment mFragment;
+	private TweetFragment mFragment;
 
 	private Timeline mTimeline;
 
-	public LoadTimelineTask(TimelineFragment fragment) {
+	public LoadTimelineTask(TweetFragment fragment) {
 		mFragment = fragment;
 	}
 

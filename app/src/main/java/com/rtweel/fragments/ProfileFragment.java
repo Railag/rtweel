@@ -415,45 +415,45 @@ public class ProfileFragment extends BaseFragment {
 //    }
 
     private class FragmentCollection {
-        UserTimelineFragment user;
-        AnswersTimelineFragment answers;
-        FavoriteTimelineFragment fav;
-        ImagesTimelineFragment images;
+        UserTweetFragment user;
+        AnswersTweetFragment answers;
+        FavoriteTweetFragment fav;
+        ImagesTweetFragment images;
         FollowersFragment followers;
 
 
         public void saveFragment(PagerFragment fragment) {
-            if (fragment instanceof UserTimelineFragment) {
+            if (fragment instanceof UserTweetFragment) {
                 if (user == null)
-                    user = (UserTimelineFragment) fragment;
+                    user = (UserTweetFragment) fragment;
                 else {
                     Bundle args = fragment.getArguments();
                     if (args.getLong(Const.USER_ID) != user.getTimeline().getUserId())
-                        user = (UserTimelineFragment) fragment;
+                        user = (UserTweetFragment) fragment;
                 }
-            } else if (fragment instanceof AnswersTimelineFragment) {
+            } else if (fragment instanceof AnswersTweetFragment) {
                 if (answers == null)
-                    answers = (AnswersTimelineFragment) fragment;
+                    answers = (AnswersTweetFragment) fragment;
                 else {
                     Bundle args = fragment.getArguments();
                     if (args.getLong(Const.USER_ID) != answers.getTimeline().getUserId())
-                        answers = (AnswersTimelineFragment) fragment;
+                        answers = (AnswersTweetFragment) fragment;
                 }
-            } else if (fragment instanceof FavoriteTimelineFragment) {
+            } else if (fragment instanceof FavoriteTweetFragment) {
                 if (fav == null)
-                    fav = (FavoriteTimelineFragment) fragment;
+                    fav = (FavoriteTweetFragment) fragment;
                 else {
                     Bundle args = fragment.getArguments();
                     if (args.getLong(Const.USER_ID) != fav.getTimeline().getUserId())
-                        fav = (FavoriteTimelineFragment) fragment;
+                        fav = (FavoriteTweetFragment) fragment;
                 }
-            } else if (fragment instanceof ImagesTimelineFragment) {
+            } else if (fragment instanceof ImagesTweetFragment) {
                 if (images == null)
-                    images = (ImagesTimelineFragment) fragment;
+                    images = (ImagesTweetFragment) fragment;
                 else {
                     Bundle args = fragment.getArguments();
                     if (args.getLong(Const.USER_ID) != images.getTimeline().getUserId())
-                        images = (ImagesTimelineFragment) fragment;
+                        images = (ImagesTweetFragment) fragment;
                 }
             } else if (fragment instanceof FollowersFragment) {
                 if (followers == null)
@@ -470,7 +470,7 @@ public class ProfileFragment extends BaseFragment {
             if (user != null)
                 return user;
             else {
-                Fragment fragment = instantiateFragment(new UserTimelineFragment());
+                Fragment fragment = instantiateFragment(new UserTweetFragment());
                 saveFragment((PagerFragment) fragment);
                 return fragment;
             }
@@ -480,7 +480,7 @@ public class ProfileFragment extends BaseFragment {
             if (answers != null)
                 return answers;
             else {
-                Fragment fragment = instantiateFragment(new AnswersTimelineFragment());
+                Fragment fragment = instantiateFragment(new AnswersTweetFragment());
                 saveFragment((PagerFragment) fragment);
                 return fragment;
             }
@@ -490,7 +490,7 @@ public class ProfileFragment extends BaseFragment {
             if (fav != null)
                 return fav;
             else {
-                Fragment fragment = instantiateFragment(new FavoriteTimelineFragment());
+                Fragment fragment = instantiateFragment(new FavoriteTweetFragment());
                 saveFragment((PagerFragment) fragment);
                 return fragment;
             }
@@ -500,7 +500,7 @@ public class ProfileFragment extends BaseFragment {
             if (images != null)
                 return images;
             else {
-                Fragment fragment = instantiateFragment(new ImagesTimelineFragment());
+                Fragment fragment = instantiateFragment(new ImagesTweetFragment());
                 saveFragment((PagerFragment) fragment);
                 return fragment;
             }

@@ -85,6 +85,6 @@ public class LoginFragment extends BaseFragment {
         if (isLoading())
             stopLoading();
 
-        getMainActivity().setMainFragment(new HomeTimelineFragment());
+        getMainActivity().setMainFragment(new HomeTweetFragment());
     }
 }

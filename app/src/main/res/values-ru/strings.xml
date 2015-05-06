@@ -55,7 +55,7 @@
     </string-array>
 
     <!--Toolbar titles-->
-    <string name="title_timeline">Главная</string>
+    <string name="title_home">Главная</string>
     <string name="title_file">Выбрать файл</string>
     <string name="title_login">Авторизация</string>
     <string name="title_profile">Профиль</string>

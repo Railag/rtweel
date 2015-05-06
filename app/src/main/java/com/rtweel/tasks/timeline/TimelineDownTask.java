@@ -3,16 +3,16 @@ package com.rtweel.tasks.timeline;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.rtweel.fragments.TimelineFragment;
+import com.rtweel.fragments.TweetFragment;
 import com.rtweel.timelines.Timeline;
 
 import java.util.List;
 
 public class TimelineDownTask extends AsyncTask<Timeline, Void, Void> {
 
-    private TimelineFragment mFragment;
+    private TweetFragment mFragment;
 
-    public TimelineDownTask(TimelineFragment fragment) {
+    public TimelineDownTask(TweetFragment fragment) {
         mFragment = fragment;
     }
 

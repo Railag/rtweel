@@ -1,8 +1,14 @@
 package com.rtweel;
 
 import android.animation.ObjectAnimator;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -22,12 +27,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.rtweel.fragments.DetailFragment;
-import com.rtweel.fragments.HomeTimelineFragment;
+import com.rtweel.fragments.HomeTweetFragment;
 import com.rtweel.fragments.LoginFragment;
 import com.rtweel.fragments.ProfileFragment;
 import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.fragments.WebViewFragment;
+import com.rtweel.services.TweetService;
 import com.rtweel.storage.AppUser;
 
 import java.lang.reflect.Field;
@@ -59,17 +65,29 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-
         initDrawer();
 
         initToolbar();
 
         initToggle();
 
+        initTweetService();
+
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
         setMainFragment(new LoginFragment());
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = getIntent();
+        Uri uri = intent.getData();
+        if (uri != null) {
+            if (uri.getScheme().equals("http") || uri.getScheme().equals("https"))
+                loadUrl(uri.toString());
+        }
     }
 
     private void initToolbar() {
@@ -103,7 +121,7 @@ public class MainActivity extends ActionBarActivity {
                         setMainFragment(fragment);
                         break;
                     case 1:
-                        setMainFragment(new HomeTimelineFragment());
+                        setMainFragment(new HomeTweetFragment());
                         break;
                     case 2:
                         setMainFragment(new SendTweetFragment());
@@ -141,6 +159,20 @@ public class MainActivity extends ActionBarActivity {
 
         mToggle.syncState();
     }
+
+
+    private void initTweetService() {
+        Intent serviceIntent = new Intent(this, TweetService.class);
+        PendingIntent alarmIntent = PendingIntent.getService(this, 0,
+                serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager
+                .setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        SystemClock.elapsedRealtime()
+                                + AlarmManager.INTERVAL_HALF_HOUR,
+                        AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
+    }
+
 
 
     public void setMainFragment(final Fragment fragment) {
@@ -219,18 +251,6 @@ public class MainActivity extends ActionBarActivity {
         args.putString(Const.URL, url);
         fragment.setArguments(args);
         setMainFragment(fragment);
-    }
-
-    public String makeProcessableUrl(String url) {
-        String replace;
-        if (url.contains("https"))
-            replace = "https://";
-        else if (url.contains("http"))
-            replace = "http://";
-        else
-            replace = "http://";
-
-        return url.replace(replace, "com.rtweel://");
     }
 
     public ProgressBar getLoadingBar() {

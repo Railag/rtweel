@@ -2,7 +2,7 @@ package com.rtweel.tasks.timeline;
 
 import java.util.List;
 
-import com.rtweel.fragments.TimelineFragment;
+import com.rtweel.fragments.TweetFragment;
 import com.rtweel.timelines.Timeline;
 
 import android.os.AsyncTask;
@@ -11,9 +11,9 @@ import android.widget.Toast;
 
 public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 
-    private TimelineFragment mFragment;
+    private TweetFragment mFragment;
 
-    public TimelineUpTask(TimelineFragment fragment) {
+    public TimelineUpTask(TweetFragment fragment) {
         mFragment = fragment;
     }
 

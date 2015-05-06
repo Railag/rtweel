@@ -50,7 +50,8 @@
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="com.rtweel" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
             </intent-filter>
 
         </activity>
@@ -72,6 +73,7 @@
             android:name=".storage.TweetContentProvider"
             android:authorities="com.rtweel.storage.TweetContentProvider"
             android:exported="false" />
+
     </application>
 
 </manifest>
