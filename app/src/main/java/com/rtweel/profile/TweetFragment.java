@@ -1,6 +1,9 @@
-package com.rtweel.fragments;
+package com.rtweel.profile;
+
+import android.support.v7.widget.RecyclerView;
 
 import com.rtweel.TweetAdapter;
+import com.rtweel.profile.PagerFragment;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.timelines.Timeline;
@@ -24,8 +27,8 @@ public abstract class TweetFragment extends PagerFragment {
     }
 
     @Override
-    protected void setAdapter() {
-        adapter = new TweetAdapter(mTimeline, getActivity());
+    protected RecyclerView.Adapter createAdapter() {
+        return new TweetAdapter(mTimeline, getActivity());
     }
 
     protected abstract void loadTweets();

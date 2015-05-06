@@ -3,7 +3,7 @@ package com.rtweel.tasks.timeline;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.rtweel.fragments.FollowersFragment;
+import com.rtweel.profile.FollowersFragment;
 import com.rtweel.storage.Tweets;
 
 import twitter4j.PagableResponseList;

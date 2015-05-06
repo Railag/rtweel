@@ -1,20 +1,19 @@
-package com.rtweel.fragments;
+package com.rtweel.profile;
 
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rtweel.storage.AppUser;
+import com.rtweel.timelines.FavoriteTimeline;
 import com.rtweel.tasks.timeline.LoadTimelineTask;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.storage.App;
-import com.rtweel.timelines.AnswersTimeline;
 
 /**
  * Created by root on 6.4.15.
  */
-public class AnswersTweetFragment extends TweetFragment {
+public class FavoriteTweetFragment extends TweetFragment {
 
     @Override
     protected void loadTweets() {
@@ -23,7 +22,7 @@ public class AnswersTweetFragment extends TweetFragment {
 
     @Override
     protected void instantiateListData(String username, String screenUserName, long userId) {
-        mTimeline = new AnswersTimeline(getActivity().getApplicationContext());
+        mTimeline = new FavoriteTimeline(getActivity().getApplicationContext());
         mTimeline.setUserName(username);
         mTimeline.setScreenUserName(screenUserName);
         mTimeline.setUserId(userId);
@@ -34,9 +33,6 @@ public class AnswersTweetFragment extends TweetFragment {
         super.updateUp(scroll);
 
         if (!scroll.equals(Scroll.UPDATE_UP))
-            return;
-
-        if (getUserId() != AppUser.getUserId(getActivity()))
             return;
 
         blink();
@@ -52,7 +48,7 @@ public class AnswersTweetFragment extends TweetFragment {
         if (mUpTask != null)
             if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
-        mUpTask = new TimelineUpTask(AnswersTweetFragment.this);
+        mUpTask = new TimelineUpTask(FavoriteTweetFragment.this);
         mUpTask.execute(mTimeline);
 
     }
@@ -62,9 +58,6 @@ public class AnswersTweetFragment extends TweetFragment {
         super.updateDown(scroll);
 
         if (!scroll.equals(Scroll.UPDATE_DOWN))
-            return;
-
-        if (getUserId() != AppUser.getUserId(getActivity()))
             return;
 
         blink();
@@ -81,12 +74,14 @@ public class AnswersTweetFragment extends TweetFragment {
         if (mDownTask != null)
             if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
-        mDownTask = new TimelineDownTask(AnswersTweetFragment.this);
+        mDownTask = new TimelineDownTask(FavoriteTweetFragment.this);
         mDownTask.execute(mTimeline);
     }
+
 
     @Override
     protected void loadingAnim() {
         //TODO
     }
+
 }

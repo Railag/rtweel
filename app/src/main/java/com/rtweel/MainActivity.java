@@ -29,7 +29,7 @@ import android.widget.TextView;
 import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.HomeTweetFragment;
 import com.rtweel.fragments.LoginFragment;
-import com.rtweel.fragments.ProfileFragment;
+import com.rtweel.profile.ProfileFragment;
 import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.fragments.WebViewFragment;

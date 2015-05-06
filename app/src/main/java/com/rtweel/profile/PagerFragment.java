@@ -1,5 +1,6 @@
-package com.rtweel.fragments;
+package com.rtweel.profile;
 
+import com.rtweel.fragments.BaseListFragment;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 
 /**

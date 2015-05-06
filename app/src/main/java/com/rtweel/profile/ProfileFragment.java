@@ -1,4 +1,4 @@
-package com.rtweel.fragments;
+package com.rtweel.profile;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.fragments.BaseFragment;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.storage.Tweets;
 import com.rtweel.tasks.tweet.GetUserDetailsTask;

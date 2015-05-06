@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rtweel.fragments.TweetFragment;
+import com.rtweel.profile.TweetFragment;
 import com.rtweel.timelines.Timeline;
 
 public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {

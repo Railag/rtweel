@@ -6,7 +6,7 @@ import android.util.Log;
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.DetailFragment;
 import com.rtweel.fragments.HomeTweetFragment;
-import com.rtweel.fragments.TweetFragment;
+import com.rtweel.profile.TweetFragment;
 import com.rtweel.storage.TweetDatabase;
 import com.rtweel.storage.Tweets;
 

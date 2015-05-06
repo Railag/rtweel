@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.rtweel.fragments.ProfileFragment;
+import com.rtweel.profile.ProfileFragment;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 

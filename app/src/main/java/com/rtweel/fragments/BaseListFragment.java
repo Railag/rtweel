@@ -42,7 +42,7 @@ public abstract class BaseListFragment extends BaseFragment {
     private Runnable mAnimLockRunnable;
     private Runnable mRetryAnim;
 
-    protected abstract void setAdapter();
+    protected abstract RecyclerView.Adapter createAdapter();
 
     protected abstract void updateUp(Scroll scroll);
 
@@ -154,7 +154,7 @@ public abstract class BaseListFragment extends BaseFragment {
 
         startLoadingAnim();
 
-        setAdapter();
+        adapter = createAdapter();
 
         list.setAdapter(adapter);
     }

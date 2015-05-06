@@ -31,6 +31,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.profile.ProfileFragment;
 import com.rtweel.storage.AppUser;
 import com.rtweel.tasks.tweet.DeleteTweetTask;
 import com.rtweel.tasks.tweet.FavoriteTask;

@@ -3,7 +3,7 @@ package com.rtweel.tasks.timeline;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.rtweel.fragments.TweetFragment;
+import com.rtweel.profile.TweetFragment;
 import com.rtweel.timelines.Timeline;
 
 import java.util.List;

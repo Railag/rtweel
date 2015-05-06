@@ -1,4 +1,4 @@
-package com.rtweel.fragments;
+package com.rtweel.profile;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,12 +8,12 @@ import com.rtweel.tasks.timeline.LoadTimelineTask;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.storage.App;
-import com.rtweel.timelines.ImagesTimeline;
+import com.rtweel.timelines.UserTimeline;
 
 /**
- * Created by root on 6.4.15.
+ * Created by root on 5.4.15.
  */
-public class ImagesTweetFragment extends TweetFragment {
+public class UserTweetFragment extends TweetFragment {
 
     @Override
     protected void loadTweets() {
@@ -22,7 +22,7 @@ public class ImagesTweetFragment extends TweetFragment {
 
     @Override
     protected void instantiateListData(String username, String screenUserName, long userId) {
-        mTimeline = new ImagesTimeline(getActivity().getApplicationContext());
+        mTimeline = new UserTimeline(getActivity().getApplicationContext());
         mTimeline.setUserName(username);
         mTimeline.setScreenUserName(screenUserName);
         mTimeline.setUserId(userId);
@@ -48,7 +48,7 @@ public class ImagesTweetFragment extends TweetFragment {
         if (mUpTask != null)
             if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
-        mUpTask = new TimelineUpTask(ImagesTweetFragment.this);
+        mUpTask = new TimelineUpTask(UserTweetFragment.this);
         mUpTask.execute(mTimeline);
 
     }
@@ -74,7 +74,7 @@ public class ImagesTweetFragment extends TweetFragment {
         if (mDownTask != null)
             if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
-        mDownTask = new TimelineDownTask(ImagesTweetFragment.this);
+        mDownTask = new TimelineDownTask(UserTweetFragment.this);
         mDownTask.execute(mTimeline);
     }
 
@@ -82,5 +82,4 @@ public class ImagesTweetFragment extends TweetFragment {
     protected void loadingAnim() {
         //TODO
     }
-
 }

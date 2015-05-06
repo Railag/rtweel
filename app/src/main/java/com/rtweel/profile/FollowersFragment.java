@@ -1,6 +1,7 @@
-package com.rtweel.fragments;
+package com.rtweel.profile;
 
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 
 import com.rtweel.FavoriteAdapter;
 import com.rtweel.tasks.timeline.FollowersGetTask;
@@ -70,8 +71,8 @@ public class FollowersFragment extends PagerFragment {
     }
 
     @Override
-    protected void setAdapter() {
-        adapter = new FavoriteAdapter(users, getActivity());
+    protected RecyclerView.Adapter createAdapter() {
+        return new FavoriteAdapter(users, getActivity());
     }
 
     public void setNextCursor(Long nextCursor) {

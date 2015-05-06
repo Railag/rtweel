@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.rtweel.R;
+import com.rtweel.profile.TweetFragment;
 import com.rtweel.tasks.timeline.LoadTimelineTask;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
