@@ -1,6 +1,5 @@
 package com.rtweel.fragments;
 
-import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -301,17 +300,15 @@ public class DetailFragment extends BaseFragment {
                     views[i].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            ObjectAnimator.ofFloat(v, "scaleX", 3).setDuration(1000).start();
-//                            ObjectAnimator.ofFloat(v, "scaleY", 3).setDuration(1000).start();
                             Rect rect = new Rect();
                             v.getGlobalVisibleRect(rect);
-                            ArrayList<Integer> points = new ArrayList<Integer>();
+                            ArrayList<Integer> points = new ArrayList<>();
                             points.add(rect.left);
                             points.add(rect.top);
                             points.add(rect.right);
                             points.add(rect.bottom);
 
-                            DetailImageFragment fragment = new DetailImageFragment();
+                            DetailImagePagerFragment fragment = new DetailImagePagerFragment();
                             Bundle args = new Bundle();
                             args.putStringArrayList(Const.MEDIA_LIST, new ArrayList<>(Arrays.asList(urls)));
                             args.putInt(Const.SELECTED_MEDIA, v.getId() - 1);

@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,18 +26,14 @@ import java.util.ArrayList;
  * Created by root on 7.5.15.
  */
 public class DetailImageFragment extends BaseFragment {
-    private View v;
-
     private Animator mCurrentAnimator;
 
     private ImageView image;
-    private ArrayList<String> mediaList;
-    private int selectedMedia;
     private Rect startRect;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_detail_image, null, false);
+        View v = inflater.inflate(R.layout.fragment_detail_image, null, false);
         image = (ImageView) v.findViewById(R.id.detail_image);
         return v;
     }
@@ -45,23 +43,14 @@ public class DetailImageFragment extends BaseFragment {
         super.onStart();
         Bundle args = getArguments();
         if (args != null) {
-            mediaList = args.getStringArrayList(Const.MEDIA_LIST);
-            selectedMedia = args.getInt(Const.SELECTED_MEDIA);
             ArrayList<Integer> points = args.getIntegerArrayList(Const.IMAGE_RECT);
             startRect = new Rect(points.get(0), points.get(1), points.get(2), points.get(3));
-            init();
+            String url = args.getString(Const.MEDIA_URL);
+            zoomImage(url);
         }
     }
 
-    private void init() {
-        View view = (View) v.getParent();
-        int width = view.getMeasuredWidth();
-        int height = view.getMeasuredHeight();
-        zoomImageFromThumb();
-    }
-
-
-    private void zoomImageFromThumb() {
+    private void zoomImage(String url) {
         if (mCurrentAnimator != null) {
             mCurrentAnimator.cancel();
         }
@@ -92,8 +81,6 @@ public class DetailImageFragment extends BaseFragment {
             startRect.bottom += deltaHeight;
         }
 
-       image.setVisibility(View.VISIBLE);
-
         image.setPivotX(0f);
         image.setPivotY(0f);
 
@@ -122,7 +109,7 @@ public class DetailImageFragment extends BaseFragment {
         set.start();
         mCurrentAnimator = set;
 
-        Picasso.with(getActivity()).load(mediaList.get(selectedMedia)).into(image);
+        Picasso.with(getActivity()).load(url).into(image);
 
     }
 }

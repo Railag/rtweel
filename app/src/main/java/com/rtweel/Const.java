@@ -16,6 +16,8 @@ public class Const {
     public static final String MEDIA_LIST = "media_list";
     public static final String SELECTED_MEDIA = "selected_media";
     public static final String IMAGE_RECT = "image_rect";
+    public static final String MEDIA_URL = "media_url";
+
 
 
     //tweet send
