@@ -316,8 +316,8 @@ public class DetailFragment extends BaseFragment {
 
     private void makeSpannableText(final String text) {
         SpannableString ss = new SpannableString(text);
-        int fi = 0;
-        int fiEnd = 0;
+        int fi;
+        int fiEnd = -1;
         while (true) {
             fi = text.indexOf('@', fiEnd + 1);
             if (fi != -1) {
