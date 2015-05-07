@@ -1,5 +1,6 @@
 package com.rtweel.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,6 +49,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import twitter4j.MediaEntity;
 import twitter4j.Status;
@@ -267,7 +271,7 @@ public class DetailFragment extends BaseFragment {
             }
 
             MediaEntity[] entities = mTweet.getExtendedMediaEntities();
-            String[] urls = new String[entities.length];
+            final String[] urls = new String[entities.length];
             ImageView[] views = new ImageView[entities.length];
 
             RelativeLayout relativeLayout = (RelativeLayout) mView.findViewById(R.id.detail_layout);
@@ -293,6 +297,30 @@ public class DetailFragment extends BaseFragment {
                     }
 
                     views[i].setLayoutParams(p);
+
+                    views[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+//                            ObjectAnimator.ofFloat(v, "scaleX", 3).setDuration(1000).start();
+//                            ObjectAnimator.ofFloat(v, "scaleY", 3).setDuration(1000).start();
+                            Rect rect = new Rect();
+                            v.getGlobalVisibleRect(rect);
+                            ArrayList<Integer> points = new ArrayList<Integer>();
+                            points.add(rect.left);
+                            points.add(rect.top);
+                            points.add(rect.right);
+                            points.add(rect.bottom);
+
+                            DetailImageFragment fragment = new DetailImageFragment();
+                            Bundle args = new Bundle();
+                            args.putStringArrayList(Const.MEDIA_LIST, new ArrayList<>(Arrays.asList(urls)));
+                            args.putInt(Const.SELECTED_MEDIA, v.getId() - 1);
+                            args.putIntegerArrayList(Const.IMAGE_RECT, points);
+                            fragment.setArguments(args);
+                            getMainActivity().setMainFragment(fragment);
+                        }
+                    });
+
                     relativeLayout.addView(views[i]);
                 }
 

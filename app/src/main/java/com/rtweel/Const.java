@@ -12,6 +12,11 @@ public class Const {
     //detail tweet
 	public static final String POSITION = "position";
 
+    //detail image fragment
+    public static final String MEDIA_LIST = "media_list";
+    public static final String SELECTED_MEDIA = "selected_media";
+    public static final String IMAGE_RECT = "image_rect";
+
 
     //tweet send
     public static final String REPLY_ID = "reply_id";
@@ -36,5 +41,4 @@ public class Const {
     public static final String PREFERENCE_TWITTER_OAUTH_TOKEN = "TWITTER_OAUTH_TOKEN";
     public static final String PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET = "TWITTER_OAUTH_TOKEN_SECRET";
     public static final String PREFERENCE_TWITTER_IS_LOGGED_IN = "TWITTER_IS_LOGGED_IN";
-
 }
