@@ -66,6 +66,7 @@ public class DetailFragment extends BaseFragment {
     private Long mRetweetId;
 
     private Status mTweet;
+    private Bundle mSaved;
 
     private TextView nameView;
     private TextView textView;
@@ -430,6 +431,19 @@ public class DetailFragment extends BaseFragment {
         refresh(args);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mSaved != null)
+            refresh(mSaved);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSaved = new Bundle();
+        mSaved.putSerializable(Const.TWEET, mTweet);
+    }
 
     private class ConsistentClickableSpan extends ClickableSpan {
         private int mFi, mFiEnd;
