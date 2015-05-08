@@ -51,6 +51,7 @@
         <item name="profile">Профиль</item>
         <item name="timeline">Лента</item>
         <item name="send_tweet">Новый твит</item>
+        <item name="messages">Сообщения</item>
         <item name="settings">Настройки</item>
     </string-array>
 

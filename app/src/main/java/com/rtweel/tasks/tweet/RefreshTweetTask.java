@@ -10,7 +10,7 @@ import com.rtweel.MainActivity;
 import com.rtweel.storage.Tweets;
 import com.rtweel.Const;
 import com.rtweel.fragments.BaseFragment;
-import com.rtweel.fragments.DetailFragment;
+import com.rtweel.detail.DetailFragment;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;

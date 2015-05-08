@@ -49,6 +49,7 @@
         <item name="profile">Profile</item>
         <item name="timeline">Timeline</item>
         <item name="send_tweet">Send Tweet</item>
+        <item name="messages">Messages</item>
         <item name="settings">Settings</item>
     </string-array>
 

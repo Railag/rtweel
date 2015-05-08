@@ -1,4 +1,4 @@
-package com.rtweel.fragments;
+package com.rtweel.detail;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.fragments.BaseFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

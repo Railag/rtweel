@@ -1,4 +1,4 @@
-package com.rtweel.fragments;
+package com.rtweel.detail;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.fragments.BaseFragment;
 
 import java.util.ArrayList;
 

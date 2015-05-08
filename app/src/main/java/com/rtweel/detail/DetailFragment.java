@@ -1,4 +1,4 @@
-package com.rtweel.fragments;
+package com.rtweel.detail;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -32,6 +32,8 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.fragments.BaseFragment;
+import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.profile.ProfileFragment;
 import com.rtweel.storage.AppUser;
 import com.rtweel.tasks.tweet.DeleteTweetTask;

@@ -26,7 +26,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.rtweel.fragments.DetailFragment;
+import com.rtweel.detail.DetailFragment;
+import com.rtweel.direct.DirectMessagesMainFragment;
 import com.rtweel.fragments.HomeTweetFragment;
 import com.rtweel.fragments.LoginFragment;
 import com.rtweel.profile.ProfileFragment;
@@ -86,14 +87,14 @@ public class MainActivity extends ActionBarActivity {
         Uri uri = intent.getData();
         if (uri != null) {
             if (uri.getScheme().equals("http") || uri.getScheme().equals("https"))
-                loadUrl(uri.toString());
+                loadUrl(uri.toString()); //todo fix some uris not loaded
         }
     }
 
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        mToolbar.setTitle("Home");
+        mToolbar.setTitle(getString(R.string.title_home));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -127,6 +128,9 @@ public class MainActivity extends ActionBarActivity {
                         setMainFragment(new SendTweetFragment());
                         break;
                     case 3:
+                        setMainFragment(new DirectMessagesMainFragment());
+                        break;
+                    case 4:
                         setMainFragment(new SettingsFragment());
                         break;
                 }

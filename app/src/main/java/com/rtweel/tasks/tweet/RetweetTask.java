@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rtweel.storage.Tweets;
-import com.rtweel.fragments.DetailFragment;
+import com.rtweel.detail.DetailFragment;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.rtweel.fragments.BaseFragment;
-import com.rtweel.fragments.DetailFragment;
+import com.rtweel.detail.DetailFragment;
 import com.rtweel.fragments.HomeTweetFragment;
 import com.rtweel.profile.TweetFragment;
 import com.rtweel.storage.TweetDatabase;

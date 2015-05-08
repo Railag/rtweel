@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.tasks.tweet.RefreshTweetTask;
-import com.rtweel.fragments.DetailFragment;
+import com.rtweel.detail.DetailFragment;
 import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.timelines.Timeline;
 import com.rtweel.utils.DateParser;

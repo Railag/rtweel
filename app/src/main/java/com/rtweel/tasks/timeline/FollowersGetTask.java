@@ -1,7 +1,6 @@
 package com.rtweel.tasks.timeline;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.rtweel.profile.FollowersFragment;
 import com.rtweel.storage.Tweets;
@@ -55,10 +54,7 @@ public class FollowersGetTask extends AsyncTask<Long, Void, Long> {
         mFragment.getAdapter().notifyDataSetChanged();
 
         // mActivity.loadingAnim();
-
-        if (mFragment.getActivity() != null)
-            mFragment.setNextCursor(nextCursor);
-        else
-            Log.e("Exception", "TimelineUpTask lost context");
+        
+        mFragment.setNextCursor(nextCursor);
     }
 }
