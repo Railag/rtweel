@@ -61,6 +61,9 @@ TODO:
 - ~~Profile section implementation~~
 - Mention in tweet custom push notification with opening this tweet
 - PN system changes + settings
+- Smooth Progress Bar for all loadings
+- Show profile by name in nav drawer
+- Search
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/main/com.rtweel/Const.java class.
