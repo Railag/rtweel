@@ -36,5 +36,10 @@ public class TimelineDownTask extends AsyncTask<Timeline, Void, Void> {
 
         mFragment.getAdapter().notifyDataSetChanged();
 
+        if (mFragment.getActivity() != null)
+            mFragment.hideProgressBar();
+        else
+            Log.e("Exception", "TimelineDownTask lost context");
+
     }
 }

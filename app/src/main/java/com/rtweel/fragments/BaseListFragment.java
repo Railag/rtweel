@@ -17,6 +17,8 @@ import com.rtweel.Const;
 import com.rtweel.R;
 import com.rtweel.storage.AppUser;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
 /**
  * Created by root on 5.5.15.
  */
@@ -41,6 +43,8 @@ public abstract class BaseListFragment extends BaseFragment {
     private Handler mHandler;
     private Runnable mAnimLockRunnable;
     private Runnable mRetryAnim;
+
+    private SmoothProgressBar mProgressBar;
 
     protected abstract RecyclerView.Adapter createAdapter();
 
@@ -76,6 +80,8 @@ public abstract class BaseListFragment extends BaseFragment {
             long userId = AppUser.getUserId(getActivity());
             instantiateListData(userName, screenUserName, userId);
         }
+
+        mProgressBar = (SmoothProgressBar) v.findViewById(R.id.smooth_progress_bar);
 
         initHandler();
 
@@ -253,4 +259,13 @@ public abstract class BaseListFragment extends BaseFragment {
     public RecyclerView.Adapter getAdapter() {
         return adapter;
     }
+
+    public void showProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
 }

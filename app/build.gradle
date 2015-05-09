@@ -19,6 +19,7 @@ android {
         compile 'com.akexorcist:RoundCornerProgressBar:1.1.0'
         compile 'com.melnykov:floatingactionbutton:1.2.0'
         compile 'com.android.support:cardview-v7:21.0.0'
+        compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     }
 
     buildTypes {
@@ -31,7 +32,7 @@ android {
     productFlavors {
         dev {
             applicationId "com.firrael.rtweel.dev"
-            versionName "0.37"
+            versionName "0.38"
         }
     }
 }

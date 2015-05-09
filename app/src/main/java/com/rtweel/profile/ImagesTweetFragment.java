@@ -80,7 +80,7 @@ public class ImagesTweetFragment extends TweetFragment {
 
     @Override
     protected void loadingAnim() {
-        //TODO
+        showProgressBar();
     }
 
 }

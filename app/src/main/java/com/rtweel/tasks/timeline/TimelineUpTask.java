@@ -40,6 +40,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
         // Toast.makeText(mActivity, "Finished", Toast.LENGTH_LONG).show();
 
         if (mFragment.getActivity() != null) {
+            mFragment.hideProgressBar();
             if (result == 0) {
                 Toast.makeText(mFragment.getActivity(), "No new tweets", Toast.LENGTH_LONG)
                         .show();

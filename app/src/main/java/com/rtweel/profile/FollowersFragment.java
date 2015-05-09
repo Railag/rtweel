@@ -63,6 +63,7 @@ public class FollowersFragment extends PagerFragment {
     }
 
     protected void loadingAnim() {
+        showProgressBar();
     }
 
     @Override
