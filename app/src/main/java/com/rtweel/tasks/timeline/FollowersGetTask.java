@@ -1,6 +1,7 @@
 package com.rtweel.tasks.timeline;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.rtweel.profile.FollowersFragment;
 import com.rtweel.storage.Tweets;
@@ -52,6 +53,11 @@ public class FollowersGetTask extends AsyncTask<Long, Void, Long> {
     @Override
     protected void onPostExecute(Long nextCursor) {
         mFragment.getAdapter().notifyDataSetChanged();
+
+        if (mFragment.getActivity() != null)
+            mFragment.hideProgressBar();
+        else
+            Log.e("Exception", "FollowersGetTask lost context");
 
         // mActivity.loadingAnim();
         
