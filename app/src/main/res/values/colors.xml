@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="green_progress" type="color">#56d2c2</item>
-    <item name="light_gray_progress" type="color">#757575</item>
-    <item name="red" type="color">#cc0000</item>
-    <item name="blue" type="color">#0000ff</item>
-    <item name="green" type="color">#00ff00</item>
+    <color name="green_progress">#56d2c2</color>
+    <color name="light_gray_progress">#757575</color>
+    <color name="red">#cc0000</color>
+    <color name="blue">#0000ff</color>
+    <color name="green">#00ff00</color>
+
+    <integer-array name="colors">
+        <item name="green">@color/green</item>
+        <item name="green_progress">@color/green_progress</item>
+    </integer-array>
 </resources>
