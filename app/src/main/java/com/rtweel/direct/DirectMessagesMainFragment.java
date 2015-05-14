@@ -3,6 +3,7 @@ package com.rtweel.direct;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 
+import com.rtweel.R;
 import com.rtweel.fragments.BaseListFragment;
 
 import java.util.ArrayList;
@@ -22,6 +23,12 @@ public class DirectMessagesMainFragment extends BaseListFragment {
     @Override
     protected RecyclerView.Adapter createAdapter() {
         return new DirectAdapter(users, getActivity());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setTitle(getString(R.string.title_messages));
     }
 
     @Override
