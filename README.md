@@ -36,8 +36,8 @@ TODO:
 - ~~Adding network exceptions avoiding~~, ~~screen rotating info saving~~
 - ~~Logout~~
 - ~~Followers~~
-- Direct messages
-- Mentions
+- Direct messages //halfly implemented
+- Mentions //implemented, just no way to get the proper mentions for different users. search+-
 - Trends
 - ~~Paging system improvement~~
 - ~~Tweet deletion~~
@@ -59,11 +59,15 @@ TODO:
 - ~~Replace main listview with recyclerview~~
 - ~~Adding floating button to scroll up and down on timeline~~
 - ~~Profile section implementation~~
-- Mention in tweet custom push notification with opening this tweet
-- PN system changes + settings
-- Smooth Progress Bar for all loadings
+- PN system changes + settings:
+-  - settings for PN to disable all-time notifications about new tweets
+-  - PN for new tweet with user's mention and opening this tweet detail
+-  - PN for new tweet with direct message and opening this direct message
+- ~~Smooth Progress Bar for all loadings~~
 - Show profile by name in nav drawer
 - Search
+- Empty content processing (no messages / no tweets in timelines etc)
+- Progress Bar cancelling fix
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/main/com.rtweel/Const.java class.
