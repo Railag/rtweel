@@ -32,4 +32,11 @@ public abstract class PagerFragment extends BaseListFragment {
             mListener.onTop();
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (isProgressBarShown())
+            hideProgressBar();
+    }
 }

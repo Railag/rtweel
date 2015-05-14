@@ -34,8 +34,8 @@ public class LoginFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (!getMainActivity().isLoggedIn()) {
-            if (isLoading())
-                stopLoading();
+            if (isLoadingDialogShown())
+                stopLoadingDialog();
             if (loginCheck())
                 initialize();
         }
@@ -82,8 +82,8 @@ public class LoginFragment extends BaseFragment {
     }
 
     private void initialize() {
-        if (isLoading())
-            stopLoading();
+        if (isLoadingDialogShown())
+            stopLoadingDialog();
 
         getMainActivity().setMainFragment(new HomeTweetFragment());
     }

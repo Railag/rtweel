@@ -65,8 +65,8 @@ public abstract class BaseListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_timeline, null);
 
-        if (isLoading())
-            stopLoading();
+        if (isLoadingDialogShown())
+            stopLoadingDialog();
 
         Bundle args = getArguments();
         if (args != null) {
@@ -266,6 +266,10 @@ public abstract class BaseListFragment extends BaseFragment {
 
     public void hideProgressBar() {
         mProgressBar.setVisibility(View.GONE);
+    }
+
+    protected boolean isProgressBarShown() {
+        return mProgressBar.isShown();
     }
 
 }

@@ -19,11 +19,11 @@ public class BaseFragment extends Fragment {
         mLoadingDialog = ProgressDialog.show(getActivity(), loadingText, getResources().getString(R.string.loading), true, false, null);
     }
 
-    public void stopLoading() {
+    public void stopLoadingDialog() {
         mLoadingDialog.dismiss();
     }
 
-    public boolean isLoading() {
+    public boolean isLoadingDialogShown() {
         return mLoadingDialog != null && mLoadingDialog.isShowing();
     }
 

@@ -22,8 +22,10 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
         Timeline timeline = params[0];
         List<twitter4j.Status> downloadedList = timeline.downloadTimeline(Timeline.UP_TWEETS);
 
-        if (downloadedList == null)
+        if (downloadedList == null) {
             cancel(true);
+            mFragment.hideProgressBar();
+        }
 
         timeline.updateTimelineUpDb(downloadedList);
 

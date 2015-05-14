@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="green_progress">#56d2c2</color>
     <color name="light_gray_progress">#757575</color>
     <color name="red">#cc0000</color>
     <color name="blue">#0000ff</color>
+
+    //greenz
     <color name="green">#00ff00</color>
+    <color name="green_progress">#56d2c2</color>
+    <color name="amazon">#3B7A57</color>
+    <color name="android_green">#A4C639</color>
+    <color name="asparagus">#87A96B</color>
+    <color name="bud_green">#7BB661</color>
+    <color name="caribbean_green">#00CC99</color>
+    <color name="celadon">#ACE1AF</color>
 
     <integer-array name="colors">
         <item name="green">@color/green</item>
         <item name="green_progress">@color/green_progress</item>
+        <item name="amazon">@color/amazon</item>
+        <item name="android_green">@color/android_green</item>
+        <item name="asparagus">@color/asparagus</item>
+        <item name="bud_green">@color/bud_green</item>
+        <item name="caribbean_green">@color/caribbean_green</item>
+        <item name="celadon">@color/celadon</item>
+
     </integer-array>
 </resources>
