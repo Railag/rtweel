@@ -39,7 +39,7 @@ public class DirectMessagesMainFragment extends BaseListFragment {
 
         if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
             task = new DirectMessagesTask(DirectMessagesMainFragment.this);
-            task.execute(1, 1);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1, 1);
         }
     }
 
@@ -50,7 +50,7 @@ public class DirectMessagesMainFragment extends BaseListFragment {
 
         if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
             task = new DirectMessagesTask(DirectMessagesMainFragment.this);
-            task.execute(pageReceived, pageSent);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, pageReceived, pageSent);
         }
     }
 

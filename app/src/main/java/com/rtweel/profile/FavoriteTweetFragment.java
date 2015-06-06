@@ -17,7 +17,7 @@ public class FavoriteTweetFragment extends TweetFragment {
 
     @Override
     protected void loadTweets() {
-        new LoadTimelineTask(this).execute(mTimeline);
+        new LoadTimelineTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
     }
 
     @Override
@@ -42,6 +42,7 @@ public class FavoriteTweetFragment extends TweetFragment {
                     getActivity(),
                     "No network connection, couldn't load tweets!",
                     Toast.LENGTH_LONG).show();
+            hideProgressBar();
             return;
         }
         Log.i("DEBUG", "SWIPE UP");
@@ -49,7 +50,7 @@ public class FavoriteTweetFragment extends TweetFragment {
             if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
         mUpTask = new TimelineUpTask(FavoriteTweetFragment.this);
-        mUpTask.execute(mTimeline);
+        mUpTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
 
     }
 
@@ -67,6 +68,7 @@ public class FavoriteTweetFragment extends TweetFragment {
                     getActivity(),
                     "No network connection, couldn't load tweets!",
                     Toast.LENGTH_LONG).show();
+            hideProgressBar();
             return;
         }
         Log.i("DEBUG", "SWIPE DOWN");
@@ -75,7 +77,7 @@ public class FavoriteTweetFragment extends TweetFragment {
             if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
         mDownTask = new TimelineDownTask(FavoriteTweetFragment.this);
-        mDownTask.execute(mTimeline);
+        mDownTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
     }
 
 

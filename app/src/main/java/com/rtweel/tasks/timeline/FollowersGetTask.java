@@ -54,13 +54,22 @@ public class FollowersGetTask extends AsyncTask<Long, Void, Long> {
     protected void onPostExecute(Long nextCursor) {
         mFragment.getAdapter().notifyDataSetChanged();
 
-        if (mFragment.getActivity() != null)
+        if (mFragment.getActivity() != null) {
+            Log.i("PB", mFragment.getClass().getSimpleName() + " end hide dialog");
+
             mFragment.hideProgressBar();
-        else
+        } else
             Log.e("Exception", "FollowersGetTask lost context");
 
         // mActivity.loadingAnim();
-        
+
         mFragment.setNextCursor(nextCursor);
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        Log.i("PB", mFragment.getClass().getSimpleName() + " cancelled hide dialog");
+        mFragment.hideProgressBar();
     }
 }

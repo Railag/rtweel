@@ -35,7 +35,7 @@ public class FollowersFragment extends PagerFragment {
 
         if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
             task = new FollowersGetTask(FollowersFragment.this);
-            task.execute(mUserId, -1L, FIRST_CURSOR);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mUserId, -1L, FIRST_CURSOR);
         }
     }
 
@@ -48,7 +48,7 @@ public class FollowersFragment extends PagerFragment {
 
         if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
             task = new FollowersGetTask(FollowersFragment.this);
-            task.execute(mUserId, mNextCursor, NEXT_CURSOR);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mUserId, mNextCursor, NEXT_CURSOR);
         }
     }
 

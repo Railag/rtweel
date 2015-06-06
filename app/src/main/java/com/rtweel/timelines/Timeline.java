@@ -3,6 +3,7 @@ package com.rtweel.timelines;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -78,7 +79,7 @@ public abstract class Timeline implements Iterable<Status> {
 
                 list.addAll(tweets);
 
-                new DbWriteTask(mContext, list, isHomeTimeline()).execute();
+                new DbWriteTask(mContext, list, isHomeTimeline()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
         }
@@ -94,7 +95,7 @@ public abstract class Timeline implements Iterable<Status> {
         list.addAll(0, downloadedList);
         Log.i("DEBUG", "New tweets: " + (list.size() - prevSize));
         new DbWriteTask(mContext, downloadedList, isHomeTimeline())
-                .execute();
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void updateTimelineDown(List<Status> downloadedList) {
@@ -104,7 +105,7 @@ public abstract class Timeline implements Iterable<Status> {
 
         list.addAll(downloadedList);
         new DbWriteTask(mContext, downloadedList, isHomeTimeline())
-                .execute();
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public List<twitter4j.Status> downloadTimeline(int flag)

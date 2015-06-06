@@ -2,6 +2,7 @@ package com.rtweel.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -72,7 +73,7 @@ public class Tweets {
             });
         }
 
-        new GetScreenNameTask(context, null, null).execute(sTwitter);
+        new GetScreenNameTask(context, null, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, sTwitter);
 
         return sTwitter;
     }

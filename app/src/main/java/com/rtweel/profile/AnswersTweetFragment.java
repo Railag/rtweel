@@ -18,7 +18,7 @@ public class AnswersTweetFragment extends TweetFragment {
 
     @Override
     protected void loadTweets() {
-        new LoadTimelineTask(this).execute(mTimeline);
+        new LoadTimelineTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
     }
 
     @Override
@@ -33,11 +33,14 @@ public class AnswersTweetFragment extends TweetFragment {
     protected void updateUp(Scroll scroll) {
         super.updateUp(scroll);
 
-        if (!scroll.equals(Scroll.UPDATE_UP))
+        if (!scroll.equals(Scroll.UPDATE_UP)) {
             return;
+        }
 
-        if (getUserId() != AppUser.getUserId(getActivity()))
+        if (getUserId() != AppUser.getUserId(getActivity())) {
+            hideProgressBar();
             return;
+        }
 
         blink();
         if (!App.isOnline(getActivity())) {
@@ -53,7 +56,7 @@ public class AnswersTweetFragment extends TweetFragment {
             if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
         mUpTask = new TimelineUpTask(AnswersTweetFragment.this);
-        mUpTask.execute(mTimeline);
+        mUpTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
 
     }
 
@@ -64,8 +67,10 @@ public class AnswersTweetFragment extends TweetFragment {
         if (!scroll.equals(Scroll.UPDATE_DOWN))
             return;
 
-        if (getUserId() != AppUser.getUserId(getActivity()))
+        if (getUserId() != AppUser.getUserId(getActivity())) {
+            hideProgressBar();
             return;
+        }
 
         blink();
         if (!App.isOnline(getActivity())) {
@@ -82,7 +87,7 @@ public class AnswersTweetFragment extends TweetFragment {
             if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
         mDownTask = new TimelineDownTask(AnswersTweetFragment.this);
-        mDownTask.execute(mTimeline);
+        mDownTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.rtweel.profile;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -80,7 +81,7 @@ public class ProfileFragment extends BaseFragment {
         }
 
         GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription, mProfileId);
-        task.execute(Tweets.getTwitter(getActivity()));
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Tweets.getTwitter(getActivity()));
 
 
         initPagerAdapter();

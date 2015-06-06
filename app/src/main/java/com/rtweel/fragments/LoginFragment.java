@@ -2,6 +2,7 @@ package com.rtweel.fragments;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -63,12 +64,12 @@ public class LoginFragment extends BaseFragment {
                             .getQueryParameter(Const.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
                     Log.i("DEBUG", "Verification..");
                         new TwitterGetAccessTokenTask(getActivity())
-                                .execute(verifier).get();
+                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, verifier).get();
 
                         initialize();
                 } else {
                     Log.i("DEBUG", "Browser authentification...");
-                    new TwitterAuthenticateTask(getActivity()).execute();
+                    new TwitterAuthenticateTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             } catch (Exception e) {
                 Log.i("DEBUG", e.toString());

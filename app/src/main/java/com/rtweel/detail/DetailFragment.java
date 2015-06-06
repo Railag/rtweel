@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -147,7 +148,7 @@ public class DetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     if (!name.equals(AppUser.getUserName(getActivity()))) {
                         new RetweetTask(DetailFragment.this, retweetsButton, retweetsCountView,
-                                mIsRetweeted).execute(id, mRetweetId);
+                                mIsRetweeted).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id, mRetweetId);
                     } else {
                         Toast.makeText(getActivity(),
                                 "You can't retweet your own tweet",
@@ -162,7 +163,7 @@ public class DetailFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     new FavoriteTask(DetailFragment.this, favsButton, favsCountView,
-                            mIsFavorited).execute(id);
+                            mIsFavorited).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
                 }
             });
         }
@@ -250,7 +251,7 @@ public class DetailFragment extends BaseFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 new DeleteTweetTask(DetailFragment.this,
-                                        position).execute(id);
+                                        position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
                             }
                         });
                         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

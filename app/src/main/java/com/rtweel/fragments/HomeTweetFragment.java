@@ -21,7 +21,7 @@ public class HomeTweetFragment extends TweetFragment {
 
     @Override
     protected void loadTweets() {
-        new LoadTimelineTask(this).execute(mTimeline);
+        new LoadTimelineTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class HomeTweetFragment extends TweetFragment {
             if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
         mUpTask = new TimelineUpTask(HomeTweetFragment.this);
-        mUpTask.execute(mTimeline);
+        mUpTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
 
     }
 
@@ -83,7 +83,7 @@ public class HomeTweetFragment extends TweetFragment {
             if (!mDownTask.getStatus().equals(AsyncTask.Status.FINISHED))
                 return;
         mDownTask = new TimelineDownTask(HomeTweetFragment.this);
-        mDownTask.execute(mTimeline);
+        mDownTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTimeline);
     }
 
     @Override

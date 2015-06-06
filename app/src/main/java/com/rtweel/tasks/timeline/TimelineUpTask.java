@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import twitter4j.TwitterException;
+
 public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 
     private TweetFragment mFragment;
@@ -20,11 +22,15 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
     @Override
     protected Integer doInBackground(Timeline... params) {
         Timeline timeline = params[0];
-        List<twitter4j.Status> downloadedList = timeline.downloadTimeline(Timeline.UP_TWEETS);
+        List<twitter4j.Status> downloadedList = null;
+        try {
+            downloadedList = timeline.downloadTimeline(Timeline.UP_TWEETS);
+        } catch(Exception e) {
+            cancel(true);
+        }
 
         if (downloadedList == null) {
             cancel(true);
-            mFragment.hideProgressBar();
         }
 
         timeline.updateTimelineUpDb(downloadedList);
@@ -42,6 +48,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
         // Toast.makeText(mActivity, "Finished", Toast.LENGTH_LONG).show();
 
         if (mFragment.getActivity() != null) {
+            Log.i("PB", mFragment.getClass().getSimpleName() + " end hide dialog");
             mFragment.hideProgressBar();
             if (result == 0) {
                 Toast.makeText(mFragment.getActivity(), "No new tweets", Toast.LENGTH_LONG)
@@ -63,4 +70,12 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
         } else
             Log.e("Exception", "TimelineUpTask lost context");
     }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        Log.i("PB", mFragment.getClass().getSimpleName() + " cancelled hide dialog");
+        mFragment.hideProgressBar();
+    }
+
 }

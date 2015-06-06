@@ -3,6 +3,7 @@ package com.rtweel;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
@@ -133,7 +134,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
                     Status tweet = adapter.mData.get(position);
 
-                    new RefreshTweetTask(adapter.mContext, position).execute(tweet.getId());
+                    new RefreshTweetTask(adapter.mContext, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet.getId());
 
                     DetailFragment fragment = new DetailFragment();
                     Bundle args = new Bundle();

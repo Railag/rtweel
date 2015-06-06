@@ -56,7 +56,7 @@ public class RefreshTweetTask extends AsyncTask<Long, Void, twitter4j.Status> {
                     detailFragment.setResult(args);
                 }
             } else {
-                new DeleteTweetTask((BaseFragment) mActivity.getCurrentFragment(), mPosition).execute(mId);
+                new DeleteTweetTask((BaseFragment) mActivity.getCurrentFragment(), mPosition).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mId);
             }
         } else
             Log.e("Exception", "RefreshTweetTask lost context");

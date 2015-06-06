@@ -13,6 +13,7 @@
     <color name="bud_green">#7BB661</color>
     <color name="caribbean_green">#00CC99</color>
     <color name="celadon">#ACE1AF</color>
+    <color name="eucalyptus">#44D7A8</color>
 
     <integer-array name="colors">
         <item name="green">@color/green</item>
@@ -23,6 +24,7 @@
         <item name="bud_green">@color/bud_green</item>
         <item name="caribbean_green">@color/caribbean_green</item>
         <item name="celadon">@color/celadon</item>
+        <item name="eucalyptus">@color/eucalyptus</item>
 
     </integer-array>
 </resources>
