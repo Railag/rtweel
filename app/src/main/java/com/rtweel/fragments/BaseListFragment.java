@@ -3,6 +3,7 @@ package com.rtweel.fragments;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,10 +43,11 @@ public abstract class BaseListFragment extends BaseFragment {
 
     private boolean isAnimLocked;
 
-    private Handler mHandler;
-    private Runnable mAnimLockRunnable;
-    private Runnable mRetryAnim;
-    private Runnable mRestoreTimelineState;
+    private static Handler mHandler;
+
+    private final static int MESSAGE_ANIM_LOCK = 1;
+    private final static int MESSAGE_ANIM_RETRY = 2;
+    private final static int MESSAGE_TIMELINE_STATE = 3;
 
     private SmoothProgressBar mProgressBar;
 
@@ -192,35 +194,18 @@ public abstract class BaseListFragment extends BaseFragment {
 
     public void startLoadingAnim() {
         if (isAnimLocked)
-            mHandler.postDelayed(mRetryAnim, ANIM_TIME / 2);
+            mHandler.sendEmptyMessageDelayed(MESSAGE_ANIM_RETRY, ANIM_TIME / 2);
         else {
             isAnimLocked = true;
             loadingAnim();
-            mHandler.postDelayed(mAnimLockRunnable, ANIM_TIME);
+            mHandler.sendEmptyMessageDelayed(MESSAGE_ANIM_LOCK, ANIM_TIME);
         }
     }
 
 
     private void initHandler() {
-        mHandler = new Handler();
-        mAnimLockRunnable = new Runnable() {
-            @Override
-            public void run() {
-                isAnimLocked = false;
-            }
-        };
-        mRetryAnim = new Runnable() {
-            @Override
-            public void run() {
-                startLoadingAnim();
-            }
-        };
-        mRestoreTimelineState = new Runnable() {
-            @Override
-            public void run() {
-                mLayoutManager.scrollToPosition(state.getInt(TIMELINE_POSITION));
-            }
-        };
+        if (mHandler == null)
+            mHandler = new RtHandler();
     }
 
 
@@ -229,16 +214,18 @@ public abstract class BaseListFragment extends BaseFragment {
         super.onResume();
         initHandler();
         if (mLayoutManager != null)
-            mHandler.postDelayed(mRestoreTimelineState, ANIM_TIME);
+            mHandler.sendEmptyMessageDelayed(MESSAGE_TIMELINE_STATE, ANIM_TIME);
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-        mHandler.removeCallbacks(mAnimLockRunnable);
-        mHandler.removeCallbacks(mRetryAnim);
-        mHandler.removeCallbacks(mRestoreTimelineState);
+
+        mHandler.removeMessages(MESSAGE_ANIM_LOCK);
+        mHandler.removeMessages(MESSAGE_ANIM_RETRY);
+        mHandler.removeMessages(MESSAGE_TIMELINE_STATE);
+
         if (mLayoutManager != null)
             state.putInt(TIMELINE_POSITION, mLayoutManager.findFirstCompletelyVisibleItemPosition() + 1);
     }
@@ -287,4 +274,30 @@ public abstract class BaseListFragment extends BaseFragment {
     protected boolean isProgressBarShown() {
         return mProgressBar.isShown();
     }
+
+    private class RtHandler extends Handler {
+
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case MESSAGE_ANIM_LOCK:
+                        isAnimLocked = false;
+                        break;
+                    case MESSAGE_ANIM_RETRY:
+                        startLoadingAnim();
+                        break;
+                    case MESSAGE_TIMELINE_STATE:
+                        int position = state.getInt(TIMELINE_POSITION);
+                        if (position > mLayoutManager.getItemCount()) {
+                            updateDown(Scroll.UPDATE_DOWN);
+                            sendEmptyMessageDelayed(MESSAGE_TIMELINE_STATE, ANIM_TIME);
+                            return;
+                        }
+
+                        mLayoutManager.scrollToPosition(position);
+                        break;
+                }
+            }
+        };
 }
