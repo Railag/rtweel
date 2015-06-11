@@ -24,6 +24,8 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  */
 public abstract class BaseListFragment extends BaseFragment {
 
+    private static final String TIMELINE_POSITION = "timelinePosition";
+
     protected enum Scroll {SCROLL_DOWN, SCROLL_UP, UPDATE_DOWN, UPDATE_UP}
 
     protected static final long ANIM_TIME = 200; //TODO fix with eternal loading when 400ms
@@ -43,8 +45,11 @@ public abstract class BaseListFragment extends BaseFragment {
     private Handler mHandler;
     private Runnable mAnimLockRunnable;
     private Runnable mRetryAnim;
+    private Runnable mRestoreTimelineState;
 
     private SmoothProgressBar mProgressBar;
+
+    private Bundle state = new Bundle();
 
     protected abstract RecyclerView.Adapter createAdapter();
 
@@ -210,6 +215,12 @@ public abstract class BaseListFragment extends BaseFragment {
                 startLoadingAnim();
             }
         };
+        mRestoreTimelineState = new Runnable() {
+            @Override
+            public void run() {
+                mLayoutManager.scrollToPosition(state.getInt(TIMELINE_POSITION));
+            }
+        };
     }
 
 
@@ -217,6 +228,8 @@ public abstract class BaseListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         initHandler();
+        if (mLayoutManager != null)
+            mHandler.postDelayed(mRestoreTimelineState, ANIM_TIME);
     }
 
 
@@ -225,6 +238,9 @@ public abstract class BaseListFragment extends BaseFragment {
         super.onPause();
         mHandler.removeCallbacks(mAnimLockRunnable);
         mHandler.removeCallbacks(mRetryAnim);
+        mHandler.removeCallbacks(mRestoreTimelineState);
+        if (mLayoutManager != null)
+            state.putInt(TIMELINE_POSITION, mLayoutManager.findFirstCompletelyVisibleItemPosition() + 1);
     }
 
     public void blink() {
@@ -271,5 +287,4 @@ public abstract class BaseListFragment extends BaseFragment {
     protected boolean isProgressBarShown() {
         return mProgressBar.isShown();
     }
-
 }
