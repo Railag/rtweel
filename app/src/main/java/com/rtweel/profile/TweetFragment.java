@@ -17,8 +17,6 @@ public abstract class TweetFragment extends PagerFragment {
 
     protected Timeline mTimeline;
 
-    protected boolean mContentLoaded;
-
     protected void listDataLoading() {
         loadTweets();
         if (!getTimeline().isHomeTimeline())

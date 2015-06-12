@@ -42,15 +42,11 @@ public abstract class BaseListFragment extends BaseFragment {
 
     protected Long mUserId = -1L;
 
-    private boolean isAnimLocked;
-
     private static Handler mHandler;
 
-    private final static int MESSAGE_ANIM_LOCK = 1;
-    private final static int MESSAGE_ANIM_RETRY = 2;
-    private final static int MESSAGE_TIMELINE_STATE = 3;
-    private final static int MESSAGE_STOP_ANIM = 4;
-    private final static int MESSAGE_ANIM_LOADING = 5;
+    private final static int MESSAGE_TIMELINE_STATE = 1;
+    private final static int MESSAGE_STOP_ANIM = 2;
+    private final static int MESSAGE_ANIM_LOADING = 3;
 
     private SmoothProgressBar mProgressBar;
 
@@ -198,13 +194,6 @@ public abstract class BaseListFragment extends BaseFragment {
     }
 
     public void startLoadingAnim() {
-//        if (isAnimLocked)
-//            mHandler.sendEmptyMessageDelayed(MESSAGE_ANIM_RETRY, ANIM_TIME / 2);
-//        else {
-//            isAnimLocked = true;
-//            startAnim();
-//            mHandler.sendEmptyMessageDelayed(MESSAGE_ANIM_LOCK, ANIM_TIME);
-//        }
         mHandler.sendEmptyMessage(MESSAGE_ANIM_LOADING);
     }
 
@@ -214,8 +203,7 @@ public abstract class BaseListFragment extends BaseFragment {
 
 
     private void initHandler() {
-        if (mHandler == null)
-            mHandler = new RtHandler();
+        mHandler = new RtHandler();
     }
 
 
@@ -235,8 +223,6 @@ public abstract class BaseListFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
 
-        mHandler.removeMessages(MESSAGE_ANIM_LOCK);
-        mHandler.removeMessages(MESSAGE_ANIM_RETRY);
         mHandler.removeMessages(MESSAGE_TIMELINE_STATE);
         mHandler.removeMessages(MESSAGE_STOP_ANIM);
         mHandler.removeMessages(MESSAGE_ANIM_LOADING);
@@ -296,12 +282,6 @@ public abstract class BaseListFragment extends BaseFragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case MESSAGE_ANIM_LOCK:
-                    isAnimLocked = false;
-                    break;
-                case MESSAGE_ANIM_RETRY:
-                    startLoadingAnim();
-                    break;
                 case MESSAGE_TIMELINE_STATE:
                     int position = msg.arg1;
                     Log.i("Handler", "MESSAGE_TIMELINE_STATE" + " Position = " + position);
@@ -312,6 +292,7 @@ public abstract class BaseListFragment extends BaseFragment {
                         sendMessageDelayed(msg, ANIM_TIME);
                         return;
                     }
+
 
                     mLayoutManager.scrollToPosition(position);
                     break;
