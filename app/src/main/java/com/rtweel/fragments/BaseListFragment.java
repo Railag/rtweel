@@ -289,7 +289,9 @@ public abstract class BaseListFragment extends BaseFragment {
 
                     if (position > mLayoutManager.getItemCount()) {
                         updateDown(Scroll.UPDATE_DOWN);
-                        sendMessageDelayed(msg, ANIM_TIME);
+                        Message message = mHandler.obtainMessage(MESSAGE_TIMELINE_STATE);
+                        message.arg1 = position;
+                        sendMessageDelayed(message, ANIM_TIME);
                         return;
                     }
 
