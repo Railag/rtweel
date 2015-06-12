@@ -1,11 +1,13 @@
 package com.rtweel;
 
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -239,11 +241,10 @@ public class MainActivity extends ActionBarActivity {
 
                 @Override
                 public void onClick(View v) {
-                    ObjectAnimator animator = new ObjectAnimator();
-                    animator.setFloatValues(1.0f, 0.5f, 1.0f);
-                    animator.setDuration(600);
-                    animator.setPropertyName("alpha");
-                    animator.setTarget(barTitleView);
+                    int color = getResources().getColor(R.color.eucalyptus);
+                    final ObjectAnimator animator = ObjectAnimator.ofInt(barTitleView, "textColor", color, Color.BLACK);
+                    animator.setDuration(300);
+                    animator.setEvaluator(new ArgbEvaluator());
                     animator.start();
 
                     if (mDrawerLayout.isDrawerOpen(mDrawerList))
