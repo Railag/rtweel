@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_line"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="10dp"
@@ -9,12 +9,27 @@
     android:layout_marginRight="5dp"
     android:layout_marginStart="5dp"
     android:layout_marginTop="5dp"
-    android:gravity="start|top"
-    android:text="Test here"
-    android:textColor="#008080"
-    android:textSize="18sp"
-    android:padding="10dp"
-    android:textStyle="italic"
-    >
+    android:orientation="horizontal"
+    android:padding="10dp">
 
-</TextView>
+    <ImageView
+        android:id="@+id/drawer_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:gravity="start|top"
+        android:src="@drawable/rtweel"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/cd_nav_item"/>
+
+    <TextView
+        android:id="@+id/drawer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test here"
+        android:textColor="#008080"
+        android:textSize="18sp"
+        android:textStyle="italic" />
+
+</LinearLayout>

@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
 
     private ListView mDrawerList;
 
-    private ArrayList<String> mDrawerItems;
+    private ArrayList<NavItem> mDrawerItems;
 
     private Toolbar mToolbar;
 
@@ -102,12 +102,15 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initDrawer() {
-        mDrawerItems = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.drawer_items)));
+        ArrayList<String> drawerTitles = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.drawer_items)));
+        mDrawerItems = new ArrayList<>();
+        for (String s : drawerTitles)
+            mDrawerItems.add(new NavItem(s, getResources().getDrawable(R.drawable.rtweel)));
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_item, mDrawerItems));
+        mDrawerList.setAdapter(new NavAdapter(this, mDrawerItems));
 
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
             @Override

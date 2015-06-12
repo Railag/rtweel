@@ -43,8 +43,9 @@
     <string name="cd_detail_share">Share</string>
     <string name="cd_detail_reply">Reply</string>
     <string name="cd_detail_delete">Delete</string>
+    <string name="cd_nav_item">Navigation item</string>
 
-        <!--nav drawer-->
+    <!--nav drawer-->
     <string-array name="drawer_items">
         <item name="profile">Profile</item>
         <item name="timeline">Timeline</item>
@@ -69,6 +70,5 @@
     <string name="timeline_favorite">Favorites</string>
     <string name="timeline_images">Images</string>
     <string name="followers">Followers</string>
-
 
 </resources>

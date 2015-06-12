@@ -43,6 +43,7 @@
     <string name="cd_detail_share">Поделиться</string>
     <string name="cd_detail_reply">Ответить</string>
     <string name="cd_detail_delete">Удалить</string>
+    <string name="cd_nav_item">Иконка элемента навигации</string>
 
 
 
