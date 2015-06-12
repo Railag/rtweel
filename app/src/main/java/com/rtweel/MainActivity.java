@@ -40,6 +40,7 @@ import com.rtweel.storage.AppUser;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -216,6 +217,10 @@ public class MainActivity extends ActionBarActivity {
                 show();
 
             mFragmentManager.popBackStackImmediate();
+
+            List<Fragment> fragments = mFragmentManager.getFragments();
+            if (!fragments.isEmpty())
+                mCurrentFragment = fragments.get(fragments.size() - 2);
         }
     }
 
@@ -248,7 +253,9 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
 
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+            Log.e("Exception", e.getMessage());
+        } catch (IllegalAccessException e) {
             Log.e("Exception", e.getMessage());
         }
     }
