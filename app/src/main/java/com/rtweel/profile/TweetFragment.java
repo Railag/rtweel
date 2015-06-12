@@ -3,8 +3,6 @@ package com.rtweel.profile;
 import android.support.v7.widget.RecyclerView;
 
 import com.rtweel.TweetAdapter;
-import com.rtweel.fragments.BaseListFragment;
-import com.rtweel.profile.PagerFragment;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.timelines.Timeline;
@@ -32,7 +30,7 @@ public abstract class TweetFragment extends PagerFragment {
         super.updateUp(scroll);
 
         if (scroll.equals(Scroll.UPDATE_UP))
-            loadingAnim();
+            startAnim();
     }
 
     @Override
@@ -40,7 +38,7 @@ public abstract class TweetFragment extends PagerFragment {
         super.updateDown(scroll);
 
         if (scroll.equals(Scroll.UPDATE_DOWN))
-            loadingAnim();
+            startAnim();
     }
 
     @Override

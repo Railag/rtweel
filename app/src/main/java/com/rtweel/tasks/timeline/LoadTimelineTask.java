@@ -39,7 +39,7 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
                 mFragment.getAdapter().notifyDataSetChanged();
 
                 Log.i("Anim", "anim from loadtimelinetask");
-                mFragment.startLoadingAnim();
+                mFragment.stopLoadingAnim();
             }
         } else
             Log.e("Exception", "LoadTimelineTask lost context");

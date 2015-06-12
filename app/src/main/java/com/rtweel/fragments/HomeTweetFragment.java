@@ -8,10 +8,10 @@ import android.widget.Toast;
 
 import com.rtweel.R;
 import com.rtweel.profile.TweetFragment;
+import com.rtweel.storage.App;
 import com.rtweel.tasks.timeline.LoadTimelineTask;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
-import com.rtweel.storage.App;
 import com.rtweel.timelines.HomeTimeline;
 
 /**
@@ -87,24 +87,31 @@ public class HomeTweetFragment extends TweetFragment {
     }
 
     @Override
-    protected void loadingAnim() {
-
-        final View showView = mContentLoaded ? list : getLoadingBar();
-        final View hideView = mContentLoaded ? getLoadingBar() : list;
-        mContentLoaded = !mContentLoaded;
-
-        showView.setVisibility(View.VISIBLE);
-
-        ObjectAnimator.ofFloat(showView, "alpha", 0f, 1f).setDuration(ANIM_TIME).start();
-
-        ObjectAnimator hideAnim = ObjectAnimator.ofFloat(hideView, "alpha", 1f, 0f).setDuration(ANIM_TIME);
-        hideAnim.addListener(new android.animation.AnimatorListenerAdapter() {
+    protected void startAnim() {
+        ObjectAnimator anim = ObjectAnimator.ofFloat(list, "alpha", 1f, 0f).setDuration(ANIM_TIME);
+        anim.addListener(new android.animation.AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
-                hideView.setVisibility(View.GONE);
+                if (getActivity() != null)
+                    getLoadingBar().setVisibility(View.VISIBLE);
             }
         });
-        hideAnim.start();
+
+        anim.start();
+    }
+
+    @Override
+    protected void stopAnim() {
+        ObjectAnimator anim = ObjectAnimator.ofFloat(list, "alpha", 0f, 1f).setDuration(ANIM_TIME);
+        anim.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                if (getActivity() != null)
+                    getLoadingBar().setVisibility(View.GONE);
+            }
+        });
+
+        anim.start();
 
     }
 }

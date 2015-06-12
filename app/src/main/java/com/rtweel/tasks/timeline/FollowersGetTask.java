@@ -61,7 +61,7 @@ public class FollowersGetTask extends AsyncTask<Long, Void, Long> {
         } else
             Log.e("Exception", "FollowersGetTask lost context");
 
-        // mActivity.loadingAnim();
+        // mActivity.startAnim();
 
         mFragment.setNextCursor(nextCursor);
     }

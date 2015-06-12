@@ -44,7 +44,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
     protected void onPostExecute(Integer result) {
         mFragment.getAdapter().notifyDataSetChanged();
 
-        // mActivity.loadingAnim();
+        // mActivity.startAnim();
         // Toast.makeText(mActivity, "Finished", Toast.LENGTH_LONG).show();
 
         if (mFragment.getActivity() != null) {

@@ -82,8 +82,11 @@ public class FavoriteTweetFragment extends TweetFragment {
 
 
     @Override
-    protected void loadingAnim() {
+    protected void startAnim() {
         showProgressBar();
     }
 
+    @Override
+    protected void stopAnim() {
+    }
 }

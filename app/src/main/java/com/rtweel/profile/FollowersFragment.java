@@ -62,8 +62,12 @@ public class FollowersFragment extends PagerFragment {
         updateUp(Scroll.UPDATE_UP);
     }
 
-    protected void loadingAnim() {
+    protected void startAnim() {
         showProgressBar();
+    }
+
+    @Override
+    protected void stopAnim() {
     }
 
     @Override

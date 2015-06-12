@@ -64,7 +64,13 @@ public class DirectMessagesMainFragment extends BaseListFragment {
     }
 
     @Override
-    protected void loadingAnim() {
+    protected void startAnim() {
+        //TODO anim
+    }
+
+    @Override
+    protected void stopAnim() {
+
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +49,8 @@ public abstract class BaseListFragment extends BaseFragment {
     private final static int MESSAGE_ANIM_LOCK = 1;
     private final static int MESSAGE_ANIM_RETRY = 2;
     private final static int MESSAGE_TIMELINE_STATE = 3;
+    private final static int MESSAGE_STOP_ANIM = 4;
+    private final static int MESSAGE_ANIM_LOADING = 5;
 
     private SmoothProgressBar mProgressBar;
 
@@ -63,7 +66,9 @@ public abstract class BaseListFragment extends BaseFragment {
 
     protected abstract void listDataLoading();
 
-    protected abstract void loadingAnim();
+    protected abstract void startAnim();
+
+    protected abstract void stopAnim();
 
     protected abstract long getUserId();
 
@@ -193,13 +198,18 @@ public abstract class BaseListFragment extends BaseFragment {
     }
 
     public void startLoadingAnim() {
-        if (isAnimLocked)
-            mHandler.sendEmptyMessageDelayed(MESSAGE_ANIM_RETRY, ANIM_TIME / 2);
-        else {
-            isAnimLocked = true;
-            loadingAnim();
-            mHandler.sendEmptyMessageDelayed(MESSAGE_ANIM_LOCK, ANIM_TIME);
-        }
+//        if (isAnimLocked)
+//            mHandler.sendEmptyMessageDelayed(MESSAGE_ANIM_RETRY, ANIM_TIME / 2);
+//        else {
+//            isAnimLocked = true;
+//            startAnim();
+//            mHandler.sendEmptyMessageDelayed(MESSAGE_ANIM_LOCK, ANIM_TIME);
+//        }
+        mHandler.sendEmptyMessage(MESSAGE_ANIM_LOADING);
+    }
+
+    public void stopLoadingAnim() {
+        mHandler.sendEmptyMessage(MESSAGE_STOP_ANIM);
     }
 
 
@@ -213,8 +223,11 @@ public abstract class BaseListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         initHandler();
-        if (mLayoutManager != null)
-            mHandler.sendEmptyMessageDelayed(MESSAGE_TIMELINE_STATE, ANIM_TIME);
+        if (mLayoutManager != null) {
+            Message message = mHandler.obtainMessage(MESSAGE_TIMELINE_STATE);
+            message.arg1 = state.getInt(TIMELINE_POSITION);
+            mHandler.sendMessageDelayed(message, ANIM_TIME);
+        }
     }
 
 
@@ -225,6 +238,8 @@ public abstract class BaseListFragment extends BaseFragment {
         mHandler.removeMessages(MESSAGE_ANIM_LOCK);
         mHandler.removeMessages(MESSAGE_ANIM_RETRY);
         mHandler.removeMessages(MESSAGE_TIMELINE_STATE);
+        mHandler.removeMessages(MESSAGE_STOP_ANIM);
+        mHandler.removeMessages(MESSAGE_ANIM_LOADING);
 
         if (mLayoutManager != null)
             state.putInt(TIMELINE_POSITION, mLayoutManager.findFirstCompletelyVisibleItemPosition() + 1);
@@ -277,27 +292,38 @@ public abstract class BaseListFragment extends BaseFragment {
 
     private class RtHandler extends Handler {
 
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                switch (msg.what) {
-                    case MESSAGE_ANIM_LOCK:
-                        isAnimLocked = false;
-                        break;
-                    case MESSAGE_ANIM_RETRY:
-                        startLoadingAnim();
-                        break;
-                    case MESSAGE_TIMELINE_STATE:
-                        int position = state.getInt(TIMELINE_POSITION);
-                        if (position > mLayoutManager.getItemCount()) {
-                            updateDown(Scroll.UPDATE_DOWN);
-                            sendEmptyMessageDelayed(MESSAGE_TIMELINE_STATE, ANIM_TIME);
-                            return;
-                        }
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MESSAGE_ANIM_LOCK:
+                    isAnimLocked = false;
+                    break;
+                case MESSAGE_ANIM_RETRY:
+                    startLoadingAnim();
+                    break;
+                case MESSAGE_TIMELINE_STATE:
+                    int position = msg.arg1;
+                    Log.i("Handler", "MESSAGE_TIMELINE_STATE" + " Position = " + position);
 
-                        mLayoutManager.scrollToPosition(position);
-                        break;
-                }
+
+                    if (position > mLayoutManager.getItemCount()) {
+                        updateDown(Scroll.UPDATE_DOWN);
+                        sendMessageDelayed(msg, ANIM_TIME);
+                        return;
+                    }
+
+                    mLayoutManager.scrollToPosition(position);
+                    break;
+                case MESSAGE_STOP_ANIM:
+                    stopAnim();
+                    break;
+                case MESSAGE_ANIM_LOADING:
+                    startAnim();
+                    break;
             }
-        };
+        }
+    }
+
+    ;
 }
