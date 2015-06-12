@@ -53,7 +53,7 @@ TODO:
 - Improving app behavior with bad connections
 - ~~Improving timeline system~~
 - ~~Replacing rotate animation with something more smoother~~
-- Adding webview for auth
+- Adding webview for urls handling // some bugs there
 - ~~Replacing standard menu with nav drawer one~~
 - Add view pager for detail tweet scrolling
 - ~~Replace main listview with recyclerview~~
@@ -67,7 +67,7 @@ TODO:
 - Show profile by name in nav drawer
 - Search
 - Empty content processing (no messages / no tweets in timelines etc)
-- Progress Bar cancelling fix
+- ~~Progress Bar cancelling fix~~
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/main/com.rtweel/Const.java class.
