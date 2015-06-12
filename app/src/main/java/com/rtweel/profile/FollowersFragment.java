@@ -68,6 +68,7 @@ public class FollowersFragment extends PagerFragment {
 
     @Override
     protected void stopAnim() {
+        hideProgressBar();
     }
 
     @Override

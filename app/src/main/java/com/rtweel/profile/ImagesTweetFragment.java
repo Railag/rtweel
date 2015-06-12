@@ -86,5 +86,6 @@ public class ImagesTweetFragment extends TweetFragment {
 
     @Override
     protected void stopAnim() {
+        hideProgressBar();
     }
 }
