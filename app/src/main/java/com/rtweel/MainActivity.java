@@ -95,6 +95,7 @@ public class MainActivity extends ActionBarActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         mToolbar.setTitle(getString(R.string.title_home));
+        mToolbar.setBackgroundColor(getResources().getColor(R.color.celadon));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
