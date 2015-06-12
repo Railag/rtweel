@@ -10,7 +10,8 @@
     android:layout_marginStart="5dp"
     android:layout_marginTop="5dp"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@color/amazon">
 
     <ImageView
         android:id="@+id/drawer_icon"
@@ -28,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Test here"
-        android:textColor="#008080"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="italic" />
 
