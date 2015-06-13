@@ -85,6 +85,8 @@ public class DetailFragment extends BaseFragment {
 
     private int mediaIds[] = {1, 2, 3, 4, 5};
 
+    private final static String RESTRICTED_SYMBOLS = ":";
+
     private static String sPath;
 
     @Nullable
@@ -355,6 +357,9 @@ public class DetailFragment extends BaseFragment {
                     fiEnd = text.length() - 1;
                 final ConsistentClickableSpan clickableSpan = new ConsistentClickableSpan();
                 clickableSpan.mFi = fi + 1; // for @
+                if (text.substring(fiEnd - 1, fiEnd).contains(RESTRICTED_SYMBOLS)) // for @name:
+                    fiEnd--;
+
                 clickableSpan.mFiEnd = fiEnd;
 
                 TextPaint textPaint = new TextPaint();
