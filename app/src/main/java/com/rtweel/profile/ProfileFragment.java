@@ -10,7 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,7 @@ public class ProfileFragment extends BaseFragment {
     private FragmentCollection mCollection;
 
     private PagerAdapter mPagerAdapter;
+    private PagerTabStrip mPagerTabStrip;
 
     private TextView mProfileNameNormal;
     private TextView mProfileNameLink;
@@ -67,6 +70,8 @@ public class ProfileFragment extends BaseFragment {
     private float pagerY;
     private int pagerHeight;
     private int fullHeight;
+
+    private boolean isDescDisabled;
 
 
     @Override
@@ -95,6 +100,7 @@ public class ProfileFragment extends BaseFragment {
         mView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         mPager = (ViewPager) mView.findViewById(R.id.profile_pager);
+        mPagerTabStrip = (PagerTabStrip) mView.findViewById(R.id.pager_tab_strip);
 
         mBackground = (ImageView) mView.findViewById(R.id.profile_background);
         mLogo = (RoundedImageView) mView.findViewById(R.id.profile_picture);
@@ -219,6 +225,8 @@ public class ProfileFragment extends BaseFragment {
 
     private void hideHeader() {
 
+        isDescDisabled = TextUtils.isEmpty(mDescription.getText());
+
         headerY = mHeaderLayout.getY();
         descriptionY = mDescription.getY();
         pagerY = mPager.getY();
@@ -250,17 +258,19 @@ public class ProfileFragment extends BaseFragment {
             }
         });
 
-        ValueAnimator hideDesc = new ValueAnimator();
-        hideDesc.setFloatValues(descriptionY, -mDescription.getHeight());
-        hideDesc.setDuration(ANIMATION_TIME);
-        hideDesc.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) animation.getAnimatedValue();
-                mDescription.setY(value);
-            }
-        });
-        hideDesc.start();
+        if (!isDescDisabled) {
+            ValueAnimator hideDesc = new ValueAnimator();
+            hideDesc.setFloatValues(descriptionY, -mDescription.getHeight());
+            hideDesc.setDuration(ANIMATION_TIME);
+            hideDesc.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float value = (float) animation.getAnimatedValue();
+                    mDescription.setY(value);
+                }
+            });
+            hideDesc.start();
+        }
 
         ValueAnimator liftPager = new ValueAnimator();
         liftPager.setFloatValues(mPager.getY(), 0f);
@@ -298,7 +308,8 @@ public class ProfileFragment extends BaseFragment {
 
     private void showHeader() {
         mHeaderLayout.setVisibility(View.VISIBLE);
-        mDescription.setVisibility(View.VISIBLE);
+        if (!isDescDisabled)
+            mDescription.setVisibility(View.VISIBLE);
 
         mIsHidden = false;
 
@@ -316,17 +327,19 @@ public class ProfileFragment extends BaseFragment {
         });
         showHeader.start();
 
-        ValueAnimator showDesc = new ValueAnimator();
-        showDesc.setFloatValues(-mDescription.getHeight(), descriptionY);
-        showDesc.setDuration(ANIMATION_TIME);
-        showDesc.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) animation.getAnimatedValue();
-                mDescription.setY(value);
-            }
-        });
-        showDesc.start();
+        if (!isDescDisabled) {
+            ValueAnimator showDesc = new ValueAnimator();
+            showDesc.setFloatValues(-mDescription.getHeight(), descriptionY);
+            showDesc.setDuration(ANIMATION_TIME);
+            showDesc.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float value = (float) animation.getAnimatedValue();
+                    mDescription.setY(value);
+                }
+            });
+            showDesc.start();
+        }
 
         ValueAnimator downPager = new ValueAnimator();
         downPager.setFloatValues(0f, pagerY);
