@@ -232,6 +232,11 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+
         if (mFragmentManager.getBackStackEntryCount() == 0)
             super.onBackPressed();
         else {
