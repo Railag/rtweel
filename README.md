@@ -64,7 +64,7 @@ TODO:
 -  - PN for new tweet with user's mention and opening this tweet detail
 -  - PN for new tweet with direct message and opening this direct message
 - ~~Smooth Progress Bar for all loadings~~
-- Show profile by name in nav drawer
+- ~~Show profile by name in nav drawer~~
 - Search
 - Empty content processing (no messages / no tweets in timelines etc)
 - ~~Progress Bar cancelling fix~~
