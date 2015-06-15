@@ -56,6 +56,10 @@
         <item name="settings">Настройки</item>
     </string-array>
 
+    <string name="go_to_profile_text">Перейти к профилю</string>
+    <string name="goToProfile_hint">Имя профиля</string>
+
+
     <!--Toolbar titles-->
     <string name="title_home">Главная</string>
     <string name="title_file">Выбрать файл</string>

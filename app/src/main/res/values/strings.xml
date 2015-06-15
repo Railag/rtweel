@@ -54,6 +54,10 @@
         <item name="settings">Settings</item>
     </string-array>
 
+    <string name="go_to_profile_text">Go to Profile</string>
+    <string name="goToProfile_hint">Input profile name</string>
+
+
     <!--Toolbar titles-->
     <string name="title_home">Home</string>
     <string name="title_file">Select File</string>

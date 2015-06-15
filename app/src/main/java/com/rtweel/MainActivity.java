@@ -18,12 +18,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -112,6 +117,29 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        View footer = LayoutInflater.from(this).inflate(R.layout.drawer_footer, null, false);
+        mDrawerList.addFooterView(footer);
+        final EditText footerEdit = (EditText) footer.findViewById(R.id.goToProfile_input);
+        Button footerButton = (Button) footer.findViewById(R.id.goToProfile_button);
+        footerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(footerEdit.getText()))
+                    return;
+
+                mDrawerLayout.closeDrawers();
+                hideKeyboard();
+
+                ProfileFragment fragment = new ProfileFragment();
+                Bundle args = new Bundle();
+                args.putString(Const.SCREEN_USERNAME, footerEdit.getText().toString());
+//                args.putString(Const.SCREEN_USERNAME, AppUser.getScreenUserName(MainActivity.this));
+//                args.putLong(Const.USER_ID, AppUser.getUserId(MainActivity.this));
+                fragment.setArguments(args);
+                setMainFragment(fragment);
+            }
+        });
 
         mDrawerList.setAdapter(new NavAdapter(this, mDrawerItems));
 
@@ -291,5 +319,13 @@ public class MainActivity extends ActionBarActivity {
 
     public void show() {
         getSupportActionBar().show();
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }
