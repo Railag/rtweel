@@ -15,7 +15,7 @@ import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.timelines.HomeTimeline;
 
 /**
- * Created by root on 5.4.15.
+ * Created by firrael on 5.4.15.
  */
 public class HomeTweetFragment extends TweetFragment {
 

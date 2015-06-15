@@ -10,7 +10,7 @@ import com.rtweel.R;
 import com.rtweel.MainActivity;
 
 /**
- * Created by root on 21.3.15.
+ * Created by firrael on 21.3.15.
  */
 public class BaseFragment extends Fragment {
     private ProgressDialog mLoadingDialog;

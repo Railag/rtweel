@@ -1,7 +1,7 @@
 package com.rtweel.listeners;
 
 /**
- * Created by root on 5.4.15.
+ * Created by firrael on 5.4.15.
  */
 public interface HideHeaderOnScrollListener {
 

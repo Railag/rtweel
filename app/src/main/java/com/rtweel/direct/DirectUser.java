@@ -6,7 +6,7 @@ import twitter4j.DirectMessage;
 import twitter4j.User;
 
 /**
- * Created by root on 7.5.15.
+ * Created by firrael on 7.5.15.
  */
 public class DirectUser {
     public DirectUser() {

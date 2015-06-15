@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 /**
- * Created by root on 17.4.15.
+ * Created by firrael on 17.4.15.
  */
 public class AppUser {
 

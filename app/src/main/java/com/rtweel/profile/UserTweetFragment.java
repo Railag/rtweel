@@ -11,7 +11,7 @@ import com.rtweel.storage.App;
 import com.rtweel.timelines.UserTimeline;
 
 /**
- * Created by root on 5.4.15.
+ * Created by firrael on 5.4.15.
  */
 public class UserTweetFragment extends TweetFragment {
 

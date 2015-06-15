@@ -13,7 +13,7 @@ import com.rtweel.utils.TwitterUtil;
 import twitter4j.auth.RequestToken;
 
 /**
- * Created by root on 21.3.15.
+ * Created by firrael on 21.3.15.
  */
 public class TwitterAuthenticateTask extends AsyncTask<Void, Void, Void> {
 

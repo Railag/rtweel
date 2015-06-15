@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
- * Created by root on 7.5.15.
+ * Created by firrael on 7.5.15.
  */
 public class DetailImageFragment extends BaseFragment {
     private Animator mCurrentAnimator;

@@ -3,7 +3,7 @@ package com.rtweel.utils;
 import android.text.TextUtils;
 
 /**
- * Created by root on 24.4.15.
+ * Created by firrael on 24.4.15.
  */
 public class MediaParser {
 

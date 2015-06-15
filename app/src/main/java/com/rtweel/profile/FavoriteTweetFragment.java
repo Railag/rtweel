@@ -11,7 +11,7 @@ import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.storage.App;
 
 /**
- * Created by root on 6.4.15.
+ * Created by firrael on 6.4.15.
  */
 public class FavoriteTweetFragment extends TweetFragment {
 

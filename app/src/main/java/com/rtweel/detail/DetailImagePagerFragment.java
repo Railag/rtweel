@@ -18,7 +18,7 @@ import com.rtweel.fragments.BaseFragment;
 import java.util.ArrayList;
 
 /**
- * Created by root on 7.5.15.
+ * Created by firrael on 7.5.15.
  */
 public class DetailImagePagerFragment extends BaseFragment {
     private View v;

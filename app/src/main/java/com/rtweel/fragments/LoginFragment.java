@@ -14,7 +14,7 @@ import com.rtweel.Const;
 import com.rtweel.tasks.tweet.TwitterGetAccessTokenTask;
 
 /**
- * Created by root on 21.3.15.
+ * Created by firrael on 21.3.15.
  */
 public class LoginFragment extends BaseFragment {
 

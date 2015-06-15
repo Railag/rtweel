@@ -20,7 +20,7 @@ import twitter4j.TwitterException;
 import twitter4j.User;
 
 /**
- * Created by root on 5.4.15.
+ * Created by firrael on 5.4.15.
  */
 public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
 

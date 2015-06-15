@@ -9,7 +9,7 @@ import com.rtweel.fragments.BaseListFragment;
 import java.util.ArrayList;
 
 /**
- * Created by root on 7.5.15.
+ * Created by firrael on 7.5.15.
  */
 public class DirectMessagesMainFragment extends BaseListFragment {
 

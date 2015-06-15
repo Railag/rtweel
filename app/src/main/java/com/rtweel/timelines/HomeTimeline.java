@@ -14,7 +14,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
 /**
- * Created by root on 6.4.15.
+ * Created by firrael on 6.4.15.
  */
 public class HomeTimeline extends Timeline {
 

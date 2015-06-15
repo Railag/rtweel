@@ -4,7 +4,7 @@ import com.rtweel.fragments.BaseListFragment;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 
 /**
- * Created by root on 30.4.15.
+ * Created by firrael on 30.4.15.
  */
 public abstract class PagerFragment extends BaseListFragment {
     HideHeaderOnScrollListener mListener;

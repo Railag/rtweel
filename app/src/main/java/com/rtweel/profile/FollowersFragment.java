@@ -12,7 +12,7 @@ import java.util.List;
 import twitter4j.User;
 
 /**
- * Created by root on 28.4.15.
+ * Created by firrael on 28.4.15.
  */
 public class FollowersFragment extends PagerFragment {
 

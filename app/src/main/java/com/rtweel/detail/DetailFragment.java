@@ -58,7 +58,7 @@ import twitter4j.MediaEntity;
 import twitter4j.Status;
 
 /**
- * Created by root on 22.3.15.
+ * Created by firrael on 22.3.15.
  */
 public class DetailFragment extends BaseFragment {
 

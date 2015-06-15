@@ -29,7 +29,7 @@ import com.rtweel.storage.Tweets;
 import com.rtweel.tasks.tweet.GetUserDetailsTask;
 
 /**
- * Created by root on 25.3.15.
+ * Created by firrael on 25.3.15.
  */
 public class ProfileFragment extends BaseFragment {
 

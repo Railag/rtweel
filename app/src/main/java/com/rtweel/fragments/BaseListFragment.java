@@ -22,7 +22,7 @@ import com.rtweel.storage.AppUser;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
- * Created by root on 5.5.15.
+ * Created by firrael on 5.5.15.
  */
 public abstract class BaseListFragment extends BaseFragment {
 

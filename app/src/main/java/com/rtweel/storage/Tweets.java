@@ -19,7 +19,7 @@ import twitter4j.Twitter;
 import twitter4j.auth.AccessToken;
 
 /**
- * Created by root on 10.4.15.
+ * Created by firrael on 10.4.15.
  */
 
 

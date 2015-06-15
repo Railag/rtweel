@@ -42,7 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Created by root on 22.3.15.
+ * Created by firrael on 22.3.15.
  */
 public class SendTweetFragment extends BaseFragment {
 

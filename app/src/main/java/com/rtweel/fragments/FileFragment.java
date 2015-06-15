@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by root on 22.3.15.
+ * Created by firrael on 22.3.15.
  */
 public class FileFragment extends BaseFragment {
     private File mCurrentPath;

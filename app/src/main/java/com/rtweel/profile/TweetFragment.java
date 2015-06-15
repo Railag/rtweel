@@ -8,7 +8,7 @@ import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.timelines.Timeline;
 
 /**
- * Created by root on 21.3.15.
+ * Created by firrael on 21.3.15.
  */
 public abstract class TweetFragment extends PagerFragment {
 
