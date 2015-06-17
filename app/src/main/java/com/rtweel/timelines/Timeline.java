@@ -219,27 +219,6 @@ public abstract class Timeline implements Iterable<Status> {
 
     }
 
-    // TODO: Implementation
-
-    public ArrayList<Status> search(String queryString) {
-        Query query = new Query();
-        query.setResultType(Query.RECENT);
-        query.setQuery(queryString);
-        query.setCount(100);
-        //query.setSinceId(list.get(0).getId());
-
-        List<Status> resultList = null;
-        try {
-            QueryResult result = Tweets.getTwitter(mContext).search(query);
-            resultList = result.getTweets();
-        } catch
-                (TwitterException e) {
-            e.printStackTrace();
-        }
-
-        return new ArrayList<>(resultList);
-    }
-
     public static Status buildTweet(String author, String text, String pictureUrl, String date, long id, String[] media) {
         try {
             StringBuilder builder = new StringBuilder();

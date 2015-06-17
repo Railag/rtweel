@@ -9,16 +9,20 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -43,6 +48,7 @@ import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.fragments.WebViewFragment;
 import com.rtweel.services.TweetService;
 import com.rtweel.storage.AppUser;
+import com.rtweel.tasks.tweet.SearchTask;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -141,6 +147,42 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        final MultiAutoCompleteTextView mactv = (MultiAutoCompleteTextView) footer.findViewById(R.id.search_field);
+        mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        mactv.setThreshold(1);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
+        mactv.setAdapter(adapter);
+
+        mactv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                SearchTask task = new SearchTask(MainActivity.this, adapter, mactv);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s.toString());
+            }
+        });
+
+        mactv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //TODO
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //TODO
+            }
+        });
+
         mDrawerList.setAdapter(new NavAdapter(this, mDrawerItems));
 
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
@@ -227,7 +269,6 @@ public class MainActivity extends ActionBarActivity {
             show();
 
         mCurrentFragment = fragment;
-
     }
 
     @Override
@@ -283,7 +324,7 @@ public class MainActivity extends ActionBarActivity {
                     if (mDrawerLayout.isDrawerOpen(mDrawerList))
                         mDrawerLayout.closeDrawers();
                     else
-                        mDrawerLayout.openDrawer(Gravity.START);
+                        mDrawerLayout.openDrawer(GravityCompat.START);
                 }
             });
 
