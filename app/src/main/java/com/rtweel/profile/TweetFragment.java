@@ -3,6 +3,7 @@ package com.rtweel.profile;
 import android.support.v7.widget.RecyclerView;
 
 import com.rtweel.TweetAdapter;
+import com.rtweel.fragments.ProfileFragment;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
 import com.rtweel.timelines.Timeline;
@@ -10,7 +11,7 @@ import com.rtweel.timelines.Timeline;
 /**
  * Created by firrael on 21.3.15.
  */
-public abstract class TweetFragment extends PagerFragment {
+public abstract class TweetFragment extends ProfileFragment {
 
     protected TimelineUpTask mUpTask;
     protected TimelineDownTask mDownTask;

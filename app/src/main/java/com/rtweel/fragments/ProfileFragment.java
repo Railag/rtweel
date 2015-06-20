@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.melnykov.fab.FloatingActionButton;
 import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.storage.AppUser;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -25,6 +26,8 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  * Created by firrael on 5.5.15.
  */
 public abstract class ProfileFragment extends BaseFragment {
+
+    HideHeaderOnScrollListener mListener;
 
     private static final String TIMELINE_POSITION = "timelinePosition";
 
@@ -53,10 +56,6 @@ public abstract class ProfileFragment extends BaseFragment {
     private Bundle state = new Bundle();
 
     protected abstract RecyclerView.Adapter createAdapter();
-
-    protected abstract void updateUp(Scroll scroll);
-
-    protected abstract void updateDown(Scroll scroll);
 
     protected abstract void instantiateListData(String username, String userScreenName, long userId);
 
@@ -100,6 +99,28 @@ public abstract class ProfileFragment extends BaseFragment {
         initFloatingButton(v);
 
         return v;
+    }
+
+    public void setHideHeaderListener(HideHeaderOnScrollListener listener) {
+        mListener = listener;
+    }
+
+    protected void updateDown(Scroll scroll) {
+        if (!scroll.equals(Scroll.SCROLL_DOWN))
+            return;
+
+        if (mListener != null && !mListener.isHidden()) {
+            mListener.onScrollDown();
+        }
+    }
+
+    protected void updateUp(Scroll scroll) {
+        if (!scroll.equals(Scroll.SCROLL_UP))
+            return;
+
+        if (mListener != null && mListener.isHidden()) {
+            mListener.onTop();
+        }
     }
 
     private void initList(View v) {

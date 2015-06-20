@@ -24,6 +24,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.Const;
 import com.rtweel.R;
 import com.rtweel.fragments.BaseFragment;
+import com.rtweel.fragments.ProfileFragment;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.storage.Tweets;
 import com.rtweel.tasks.tweet.GetUserDetailsTask;
@@ -185,13 +186,13 @@ public class MainProfileFragment extends BaseFragment {
 
     }
 
-    private Fragment instantiateFragment(PagerFragment pagerFragment) {
+    private Fragment instantiateFragment(ProfileFragment profileFragment) {
 
         Bundle args = new Bundle();
         args.putString(Const.USERNAME, mProfileNameNormal.getText().toString());
         args.putString(Const.SCREEN_USERNAME, mProfileNameLink.getText().toString());
         args.putLong(Const.USER_ID, mProfileId);
-        pagerFragment.setArguments(args);
+        profileFragment.setArguments(args);
 
         mListener = new HideHeaderOnScrollListener() {
             @Override
@@ -212,9 +213,9 @@ public class MainProfileFragment extends BaseFragment {
             }
         };
 
-        pagerFragment.setHideHeaderListener(mListener);
+        profileFragment.setHideHeaderListener(mListener);
 
-        return pagerFragment;
+        return profileFragment;
     }
 
 
@@ -400,7 +401,7 @@ public class MainProfileFragment extends BaseFragment {
         FollowersFragment followers;
 
 
-        public void saveFragment(PagerFragment fragment) {
+        public void saveFragment(ProfileFragment fragment) {
             if (fragment instanceof UserTweetFragment) {
                 if (user == null)
                     user = (UserTweetFragment) fragment;
@@ -449,7 +450,7 @@ public class MainProfileFragment extends BaseFragment {
                 return user;
             else {
                 Fragment fragment = instantiateFragment(new UserTweetFragment());
-                saveFragment((PagerFragment) fragment);
+                saveFragment((ProfileFragment) fragment);
                 return fragment;
             }
         }
@@ -459,7 +460,7 @@ public class MainProfileFragment extends BaseFragment {
                 return answers;
             else {
                 Fragment fragment = instantiateFragment(new AnswersTweetFragment());
-                saveFragment((PagerFragment) fragment);
+                saveFragment((ProfileFragment) fragment);
                 return fragment;
             }
         }
@@ -469,7 +470,7 @@ public class MainProfileFragment extends BaseFragment {
                 return fav;
             else {
                 Fragment fragment = instantiateFragment(new FavoriteTweetFragment());
-                saveFragment((PagerFragment) fragment);
+                saveFragment((ProfileFragment) fragment);
                 return fragment;
             }
         }
@@ -479,7 +480,7 @@ public class MainProfileFragment extends BaseFragment {
                 return images;
             else {
                 Fragment fragment = instantiateFragment(new ImagesTweetFragment());
-                saveFragment((PagerFragment) fragment);
+                saveFragment((ProfileFragment) fragment);
                 return fragment;
             }
         }
@@ -489,7 +490,7 @@ public class MainProfileFragment extends BaseFragment {
                 return followers;
             else {
                 Fragment fragment = instantiateFragment(new FollowersFragment());
-                saveFragment((PagerFragment) fragment);
+                saveFragment((ProfileFragment) fragment);
                 return fragment;
             }
         }
