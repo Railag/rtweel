@@ -25,6 +25,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -139,15 +140,12 @@ public class MainActivity extends ActionBarActivity {
                 MainProfileFragment fragment = new MainProfileFragment();
                 Bundle args = new Bundle();
                 args.putString(Const.SCREEN_USERNAME, footerEdit.getText().toString());
-//                args.putString(Const.SCREEN_USERNAME, AppUser.getScreenUserName(MainActivity.this));
-//                args.putLong(Const.USER_ID, AppUser.getUserId(MainActivity.this));
                 fragment.setArguments(args);
                 setMainFragment(fragment);
             }
         });
 
         final AutoCompleteTextView mactv = (AutoCompleteTextView) footer.findViewById(R.id.search_field);
-    //    mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         mactv.setAdapter(adapter);
 

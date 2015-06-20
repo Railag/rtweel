@@ -10,6 +10,7 @@ import android.widget.MultiAutoCompleteTextView;
 
 import com.rtweel.storage.Tweets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import twitter4j.Query;
@@ -23,13 +24,13 @@ import twitter4j.TwitterException;
 public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> {
 
     private final Context mContext;
-    private final ArrayAdapter<String> mAdapter;
-    private final AutoCompleteTextView mMactv;
+    private ArrayAdapter<String> mAdapter;
+    private final AutoCompleteTextView mActv;
 
-    public SearchTask(Context context, ArrayAdapter<String> adapter, AutoCompleteTextView mactv) {
+    public SearchTask(Context context, ArrayAdapter<String> adapter, AutoCompleteTextView actv) {
         mContext = context;
         mAdapter = adapter;
-        mMactv = mactv;
+        mActv = actv;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> 
         Query query = new Query();
         query.setResultType(Query.RECENT);
         query.setQuery(queryString);
-        query.setCount(20);
+        query.setCount(100);
         //    query.setSinceId(mAdapter.getItem(0).getId());
         List<twitter4j.Status> resultList = null;
         try {
@@ -64,17 +65,18 @@ public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> 
     protected void onPostExecute(List<twitter4j.Status> resultList) {
         super.onPostExecute(resultList);
 
-        mAdapter.clear();
+        ArrayList<String> users = new ArrayList<>();
+
         if (resultList != null && resultList.size() > 0) {
             for (int i = 0; i < resultList.size(); i++) {
                 String s = resultList.get(i).getUser().getScreenName();
                 Log.i("Search", s);
-                mAdapter.add(s);
+                users.add(s);
             }
         }
-
-        //mMactv.setAdapter(mAdapter);
-        mMactv.showDropDown();
+        mAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_dropdown_item_1line, users);
+        mActv.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
 }
