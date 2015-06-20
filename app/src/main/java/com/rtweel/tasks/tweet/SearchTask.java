@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.MultiAutoCompleteTextView;
 
 import com.rtweel.storage.Tweets;
@@ -23,9 +24,9 @@ public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> 
 
     private final Context mContext;
     private final ArrayAdapter<String> mAdapter;
-    private final MultiAutoCompleteTextView mMactv;
+    private final AutoCompleteTextView mMactv;
 
-    public SearchTask(Context context, ArrayAdapter<String> adapter, MultiAutoCompleteTextView mactv) {
+    public SearchTask(Context context, ArrayAdapter<String> adapter, AutoCompleteTextView mactv) {
         mContext = context;
         mAdapter = adapter;
         mMactv = mactv;
@@ -43,11 +44,11 @@ public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> 
         Query query = new Query();
         query.setResultType(Query.RECENT);
         query.setQuery(queryString);
-        query.setCount(100);
+        query.setCount(20);
         //    query.setSinceId(mAdapter.getItem(0).getId());
         List<twitter4j.Status> resultList = null;
         try {
-            QueryResult result = Tweets.getTwitter(mContext).search(query);
+            QueryResult result = twitter.search(query);
             resultList = result.getTweets();
 
             //    TODO fetch next page   result.nextQuery();
@@ -72,6 +73,7 @@ public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> 
             }
         }
 
+        //mMactv.setAdapter(mAdapter);
         mMactv.showDropDown();
     }
 

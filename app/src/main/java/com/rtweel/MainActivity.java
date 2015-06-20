@@ -24,17 +24,16 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -42,7 +41,7 @@ import com.rtweel.detail.DetailFragment;
 import com.rtweel.direct.DirectMessagesMainFragment;
 import com.rtweel.fragments.HomeTweetFragment;
 import com.rtweel.fragments.LoginFragment;
-import com.rtweel.profile.ProfileFragment;
+import com.rtweel.profile.MainProfileFragment;
 import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.fragments.WebViewFragment;
@@ -137,7 +136,7 @@ public class MainActivity extends ActionBarActivity {
                 mDrawerLayout.closeDrawers();
                 hideKeyboard();
 
-                ProfileFragment fragment = new ProfileFragment();
+                MainProfileFragment fragment = new MainProfileFragment();
                 Bundle args = new Bundle();
                 args.putString(Const.SCREEN_USERNAME, footerEdit.getText().toString());
 //                args.putString(Const.SCREEN_USERNAME, AppUser.getScreenUserName(MainActivity.this));
@@ -147,21 +146,18 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        final MultiAutoCompleteTextView mactv = (MultiAutoCompleteTextView) footer.findViewById(R.id.search_field);
-        mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-        mactv.setThreshold(1);
+        final AutoCompleteTextView mactv = (AutoCompleteTextView) footer.findViewById(R.id.search_field);
+    //    mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         mactv.setAdapter(adapter);
 
         mactv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -190,7 +186,7 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        ProfileFragment fragment = new ProfileFragment();
+                        MainProfileFragment fragment = new MainProfileFragment();
                         Bundle args = new Bundle();
                         args.putString(Const.USERNAME, AppUser.getUserName(MainActivity.this));
                         args.putString(Const.SCREEN_USERNAME, AppUser.getScreenUserName(MainActivity.this));

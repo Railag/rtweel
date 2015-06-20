@@ -31,7 +31,7 @@ import com.rtweel.tasks.tweet.GetUserDetailsTask;
 /**
  * Created by firrael on 25.3.15.
  */
-public class ProfileFragment extends BaseFragment {
+public class MainProfileFragment extends BaseFragment {
 
     private final static int PAGER_SIZE = 5;
     private final static int ANIMATION_TIME = 2000;
@@ -85,7 +85,7 @@ public class ProfileFragment extends BaseFragment {
             mProfileId = args.getLong(Const.USER_ID);
         }
 
-        GetUserDetailsTask task = new GetUserDetailsTask(getActivity(), mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription, mProfileId);
+        GetUserDetailsTask task = new GetUserDetailsTask(this, mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Tweets.getTwitter(getActivity()));
 
 
@@ -386,6 +386,10 @@ public class ProfileFragment extends BaseFragment {
         if (mHandler != null) {
             mHandler.removeCallbacks(mRunnable);
         }
+    }
+
+    public void setProfileId(Long profileId) {
+        mProfileId = profileId;
     }
 
     private class FragmentCollection {

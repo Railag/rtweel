@@ -1,12 +1,12 @@
 package com.rtweel.profile;
 
-import com.rtweel.fragments.BaseListFragment;
+import com.rtweel.fragments.ProfileFragment;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 
 /**
  * Created by firrael on 30.4.15.
  */
-public abstract class PagerFragment extends BaseListFragment {
+public abstract class PagerFragment extends ProfileFragment {
     HideHeaderOnScrollListener mListener;
 
     public void setHideHeaderListener(HideHeaderOnScrollListener listener) {

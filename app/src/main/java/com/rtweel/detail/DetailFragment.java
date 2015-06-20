@@ -35,7 +35,7 @@ import com.rtweel.Const;
 import com.rtweel.R;
 import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.SendTweetFragment;
-import com.rtweel.profile.ProfileFragment;
+import com.rtweel.profile.MainProfileFragment;
 import com.rtweel.storage.AppUser;
 import com.rtweel.tasks.tweet.DeleteTweetTask;
 import com.rtweel.tasks.tweet.FavoriteTask;
@@ -232,7 +232,7 @@ public class DetailFragment extends BaseFragment {
             profilePictureView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ProfileFragment fragment = new ProfileFragment();
+                    MainProfileFragment fragment = new MainProfileFragment();
                     Bundle args = new Bundle();
                     args.putString(Const.USERNAME, mTweet.getUser().getName());
                     args.putString(Const.SCREEN_USERNAME, mTweet.getUser().getScreenName());
@@ -458,7 +458,7 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         public void onClick(View widget) {
-            ProfileFragment fragment = new ProfileFragment();
+            MainProfileFragment fragment = new MainProfileFragment();
             Bundle args = new Bundle();
             args.putString(Const.SCREEN_USERNAME, ((TextView) widget).getText().subSequence(mFi, mFiEnd).toString());
             fragment.setArguments(args);

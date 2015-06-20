@@ -18,7 +18,7 @@ import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.Const;
 import com.rtweel.MainActivity;
 import com.rtweel.R;
-import com.rtweel.profile.ProfileFragment;
+import com.rtweel.profile.MainProfileFragment;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -122,7 +122,7 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
 
                     DirectUser directUser = adapter.mUsers.get(position);
 
-                    ProfileFragment fragment = new ProfileFragment();
+                    MainProfileFragment fragment = new MainProfileFragment();
                     Bundle args = new Bundle();
                     args.putString(Const.SCREEN_USERNAME, directUser.user.getScreenName());
                     args.putString(Const.USERNAME, directUser.user.getName());

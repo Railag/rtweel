@@ -24,7 +24,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 /**
  * Created by firrael on 5.5.15.
  */
-public abstract class BaseListFragment extends BaseFragment {
+public abstract class ProfileFragment extends BaseFragment {
 
     private static final String TIMELINE_POSITION = "timelinePosition";
 
@@ -307,6 +307,4 @@ public abstract class BaseListFragment extends BaseFragment {
             }
         }
     }
-
-    ;
 }

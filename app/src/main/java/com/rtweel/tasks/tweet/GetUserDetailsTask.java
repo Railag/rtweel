@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.rtweel.profile.MainProfileFragment;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -24,22 +25,20 @@ import twitter4j.User;
  */
 public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
 
-    private final Context mContext;
+    private final MainProfileFragment mFragment;
     private final ImageView mBackground;
     private final RoundedImageView mImage;
     private final TextView mUsername;
     private final TextView mUsernameLinked;
     private final TextView mDescription;
-    private Long mId;
 
-    public GetUserDetailsTask(Context context, ImageView background, RoundedImageView image, TextView username, TextView usernameLinked, TextView description, Long id ) {
-        mContext = context;
+    public GetUserDetailsTask(MainProfileFragment fragment, ImageView background, RoundedImageView image, TextView username, TextView usernameLinked, TextView description) {
+        mFragment = fragment;
         mBackground = background;
         mImage = image;
         mUsername = username;
         mUsernameLinked = usernameLinked;
         mDescription = description;
-        mId = id;
     }
 
     @Override
@@ -65,7 +64,8 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
     protected void onPostExecute(User user) {
         super.onPostExecute(user);
 
-        if (mContext != null) {
+        Context context = mFragment.getActivity();
+        if (context != null) {
             if (user != null) {
                 Transformation transformation = new RoundedTransformationBuilder()
                         .borderColor(Color.BLACK)
@@ -74,10 +74,10 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
                         .oval(false)
                         .build();
 
-                Picasso.with(mContext).load(user.getProfileBannerURL()).resize(mBackground.getMeasuredWidth(), mBackground.getMeasuredHeight()).into(mBackground);
-                Picasso.with(mContext).load(user.getBiggerProfileImageURL()).transform(transformation).into(mImage);
+                Picasso.with(context).load(user.getProfileBannerURL()).resize(mBackground.getMeasuredWidth(), mBackground.getMeasuredHeight()).into(mBackground);
+                Picasso.with(context).load(user.getBiggerProfileImageURL()).transform(transformation).into(mImage);
 
-                mId = user.getId();
+                mFragment.setProfileId(user.getId());
 
                 mUsername.setText(user.getName());
                 mUsername.setTextColor(Color.WHITE);//Color.parseColor("#" + user.getProfileTextColor()));
@@ -85,14 +85,14 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
                 mUsernameLinked.setText("@" + user.getScreenName());
                 mUsernameLinked.setTextColor(Color.WHITE);//Color.parseColor("#" + user.getProfileTextColor()));
 
-                if(TextUtils.isEmpty(user.getDescription()))
+                if (TextUtils.isEmpty(user.getDescription()))
                     mDescription.setVisibility(View.GONE);
                 else {
                     mDescription.setText(user.getDescription());
                     mDescription.setBackgroundColor(Color.parseColor("#" + user.getProfileBackgroundColor()));
                 }
             } else
-                Toast.makeText(mContext, "Network problems", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Network problems", Toast.LENGTH_SHORT).show();
         } else
             Log.e("Exception", "GetUserDetailsTask lost context");
 

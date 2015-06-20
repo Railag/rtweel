@@ -4,14 +4,14 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 
 import com.rtweel.R;
-import com.rtweel.fragments.BaseListFragment;
+import com.rtweel.fragments.ProfileFragment;
 
 import java.util.ArrayList;
 
 /**
  * Created by firrael on 7.5.15.
  */
-public class DirectMessagesMainFragment extends BaseListFragment {
+public class DirectMessagesMainFragment extends ProfileFragment {
 
     private DirectMessagesTask task;
 

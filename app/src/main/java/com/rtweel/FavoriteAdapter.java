@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.rtweel.profile.ProfileFragment;
+import com.rtweel.profile.MainProfileFragment;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -113,7 +113,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
                     User user = adapter.mUsers.get(position);
 
-                    ProfileFragment fragment = new ProfileFragment();
+                    MainProfileFragment fragment = new MainProfileFragment();
                     Bundle args = new Bundle();
                     args.putString(Const.SCREEN_USERNAME, user.getScreenName());
                     args.putString(Const.USERNAME, user.getName());
