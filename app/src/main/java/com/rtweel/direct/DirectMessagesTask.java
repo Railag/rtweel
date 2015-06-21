@@ -86,9 +86,9 @@ public class DirectMessagesTask extends AsyncTask<Integer, Void, Void> {
         for (DirectUser dUser : users) {
             if (dUser.user.equals(user)) {
 
-                if (isReceived)
+                if (isReceived && !dUser.sentMessages.contains(message))
                     dUser.sentMessages.add(message);
-                else
+                else if (!dUser.receivedMessages.contains(message))
                     dUser.receivedMessages.add(message);
 
                 return;
