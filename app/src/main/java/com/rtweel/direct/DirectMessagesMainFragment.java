@@ -38,6 +38,7 @@ public class DirectMessagesMainFragment extends ProfileFragment {
             return;
 
         if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            startLoadingAnim();
             task = new DirectMessagesTask(DirectMessagesMainFragment.this);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1, 1);
         }
@@ -49,6 +50,7 @@ public class DirectMessagesMainFragment extends ProfileFragment {
             return;
 
         if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            startLoadingAnim();
             task = new DirectMessagesTask(DirectMessagesMainFragment.this);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, pageReceived, pageSent);
         }
@@ -65,12 +67,14 @@ public class DirectMessagesMainFragment extends ProfileFragment {
 
     @Override
     protected void startAnim() {
-        //TODO anim
+        if (getActivity() != null)
+            getMainActivity().showLoadingBar();
     }
 
     @Override
     protected void stopAnim() {
-
+        if (getActivity() != null)
+            getMainActivity().hideLoadingBar();
     }
 
     @Override

@@ -108,6 +108,6 @@ public class DirectMessagesTask extends AsyncTask<Integer, Void, Void> {
     protected void onPostExecute(Void result) {
         mFragment.getAdapter().notifyDataSetChanged();
 
-        // mActivity.startAnim();
+        mFragment.stopAnim();
     }
 }

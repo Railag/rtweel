@@ -94,7 +94,7 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
 
         int messagesCount = directUser.sentMessages.size();
         if (messagesCount > 0) {
-            holder.getMessagesCountView().setText(messagesCount);
+            holder.getMessagesCountView().setText(String.valueOf(messagesCount));
             holder.getMessagesCountView().setVisibility(View.VISIBLE);
         } else {
             holder.getMessagesCountView().setVisibility(View.GONE);

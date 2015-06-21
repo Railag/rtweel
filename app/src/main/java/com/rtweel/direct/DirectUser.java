@@ -17,6 +17,8 @@ public class DirectUser {
     public DirectUser(User user) {
         super();
         this.user = user;
+        receivedMessages = new ArrayList<>();
+        sentMessages = new ArrayList<>();
     }
 
     public User user;
