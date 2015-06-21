@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.rtweel.R;

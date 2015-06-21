@@ -6,8 +6,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.MultiAutoCompleteTextView;
 
+import com.rtweel.SearchAdapter;
+import com.rtweel.SearchItem;
 import com.rtweel.storage.Tweets;
 
 import java.util.ArrayList;
@@ -15,26 +16,29 @@ import java.util.List;
 
 import twitter4j.Query;
 import twitter4j.QueryResult;
+import twitter4j.ResponseList;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.User;
 
 /**
  * Created by firrael on 17.6.15.
  */
-public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> {
+public class SearchTask extends AsyncTask<String, Void, List<SearchItem>> {
 
     private final Context mContext;
-    private ArrayAdapter<String> mAdapter;
+    private SearchAdapter mAdapter;
     private final AutoCompleteTextView mActv;
 
-    public SearchTask(Context context, ArrayAdapter<String> adapter, AutoCompleteTextView actv) {
+    public SearchTask(Context context, SearchAdapter adapter, AutoCompleteTextView actv) {
         mContext = context;
         mAdapter = adapter;
         mActv = actv;
     }
 
     @Override
-    protected List<twitter4j.Status> doInBackground(String... params) {
+    protected List<SearchItem> doInBackground(String... params) {
         Twitter twitter = Tweets.getTwitter(mContext);
 
         String queryString = params[0];
@@ -45,11 +49,13 @@ public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> 
         Query query = new Query();
         query.setResultType(Query.RECENT);
         query.setQuery(queryString);
-        query.setCount(100);
+        query.setCount(10);
         //    query.setSinceId(mAdapter.getItem(0).getId());
         List<twitter4j.Status> resultList = null;
+        List<twitter4j.User> users = null;
         try {
             QueryResult result = twitter.search(query);
+            users = twitter.searchUsers(queryString, 0);
             resultList = result.getTweets();
 
             //    TODO fetch next page   result.nextQuery();
@@ -58,25 +64,32 @@ public class SearchTask extends AsyncTask<String, Void, List<twitter4j.Status>> 
             e.printStackTrace();
         }
 
-        return resultList;
+        List<SearchItem> items = new ArrayList<>();
+
+        if (users != null && users.size() > 0) {
+            if (users.size() > 10)
+                users = users.subList(0, 10);
+            for (User u : users)
+                items.add(new SearchItem(u));
+        }
+
+        if (resultList != null && resultList.size() > 0)
+            for(twitter4j.Status s : resultList)
+                items.add(new SearchItem(s));
+
+        return items;
     }
 
     @Override
-    protected void onPostExecute(List<twitter4j.Status> resultList) {
+    protected void onPostExecute(List<SearchItem> resultList) {
         super.onPostExecute(resultList);
 
-        ArrayList<String> users = new ArrayList<>();
-
-        if (resultList != null && resultList.size() > 0) {
-            for (int i = 0; i < resultList.size(); i++) {
-                String s = resultList.get(i).getUser().getScreenName();
-                Log.i("Search", s);
-                users.add(s);
-            }
+        if (mContext != null) {
+            mAdapter = new SearchAdapter(resultList, mContext);
+            mActv.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            mActv.showDropDown();
         }
-        mAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_dropdown_item_1line, users);
-        mActv.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
     }
 
 }

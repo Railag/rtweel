@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -48,6 +50,7 @@ import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.fragments.WebViewFragment;
 import com.rtweel.services.TweetService;
 import com.rtweel.storage.AppUser;
+import com.rtweel.tasks.timeline.FollowersGetTask;
 import com.rtweel.tasks.tweet.SearchTask;
 
 import java.lang.reflect.Field;
@@ -71,6 +74,8 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<NavItem> mDrawerItems;
 
     private Toolbar mToolbar;
+
+    private SearchTask mSearchTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,11 +150,21 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        final AutoCompleteTextView mactv = (AutoCompleteTextView) footer.findViewById(R.id.search_field);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
-        mactv.setAdapter(adapter);
+        final AutoCompleteTextView actv = (AutoCompleteTextView) footer.findViewById(R.id.search_field);
 
-        mactv.addTextChangedListener(new TextWatcher() {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int width = displaymetrics.widthPixels;
+        int height = displaymetrics.heightPixels;
+
+        actv.setDropDownWidth(width);
+        actv.setDropDownHeight(height / 2);
+
+        final SearchAdapter adapter = new SearchAdapter(this);
+
+        actv.setAdapter(adapter);
+
+        actv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -160,20 +175,32 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                SearchTask task = new SearchTask(MainActivity.this, adapter, mactv);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s.toString());
+
+                if (s.length() < 3)
+                    return;
+
+                if (mSearchTask != null && !mSearchTask.getStatus().equals(AsyncTask.Status.FINISHED))
+                    mSearchTask.cancel(true);
+
+                mSearchTask = new SearchTask(MainActivity.this, adapter, actv);
+                mSearchTask.execute(s.toString());
             }
         });
 
-        mactv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        actv.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //TODO
-            }
+            public boolean onTouch(View v, MotionEvent event) {
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //TODO
+                if (actv.getText().length() < 3)
+                    return false;
+
+                if (mSearchTask != null && !mSearchTask.getStatus().equals(AsyncTask.Status.FINISHED))
+                    mSearchTask.cancel(true);
+
+                mSearchTask = new SearchTask(MainActivity.this, adapter, actv);
+                mSearchTask.execute(actv.getText().toString());
+
+                return false;
             }
         });
 
@@ -323,9 +350,9 @@ public class MainActivity extends ActionBarActivity {
             });
 
         } catch (NoSuchFieldException e) {
-            Log.e("Exception", e.getMessage());
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            Log.e("Exception", e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -361,11 +388,23 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().show();
     }
 
-    private void hideKeyboard() {
+    public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    public void hideNav() {
+        mDrawerLayout.closeDrawers();
+    }
+
+    public void showLoadingBar() {
+        mLoadingBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoadingBar() {
+        mLoadingBar.setVisibility(View.GONE);
     }
 }
