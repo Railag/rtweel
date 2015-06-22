@@ -24,4 +24,40 @@ public class DirectUser {
     public User user;
     public ArrayList<DirectMessage> receivedMessages;
     public ArrayList<DirectMessage> sentMessages;
+
+    private boolean isReceivedMessages() {
+        return !receivedMessages.isEmpty();
+    }
+
+    private boolean isSentMessages() {
+        return !sentMessages.isEmpty();
+    }
+
+    public DirectMessage getLastMessage() {
+
+        DirectMessage lastMessage;
+
+        if (isReceivedMessages())
+            lastMessage = receivedMessages.get(0);
+        else if (isSentMessages())
+            lastMessage = sentMessages.get(0);
+        else
+            return null;
+
+
+        if (isReceivedMessages())
+            for (DirectMessage dm : receivedMessages) {
+                if (dm.getCreatedAt().after(lastMessage.getCreatedAt()))
+                    lastMessage = dm;
+            }
+
+        if (isSentMessages())
+            for (DirectMessage dm : sentMessages) {
+                if (dm.getCreatedAt().after(lastMessage.getCreatedAt()))
+                    lastMessage = dm;
+            }
+
+
+        return lastMessage;
+    }
 }

@@ -24,6 +24,8 @@ import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
+import twitter4j.DirectMessage;
+
 public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder> {
 
     private final List<DirectUser> mUsers;
@@ -52,7 +54,7 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
                 .inflate(R.layout.direct_user_item, parent, false);
 
         TextView description = (TextView) v
-                .findViewById(R.id.direct_description);
+                .findViewById(R.id.direct_last_message);
         TextView name = (TextView) v
                 .findViewById(R.id.direct_name);
         RoundedImageView picture = (RoundedImageView) v
@@ -84,20 +86,23 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
         holder.getNameView().setText(directUser.user.getScreenName());
 
 
-        String description = directUser.user.getDescription();
-        View hidingView = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? holder.getDescView() : (View) holder.getDescView().getParent();
-        if (!TextUtils.isEmpty(description)) {
-            holder.getDescView().setText(directUser.user.getDescription());
-            hidingView.setVisibility(View.VISIBLE);
-        } else
-            hidingView.setVisibility(View.GONE);
+        DirectMessage message = directUser.getLastMessage();
+        //View hidingView = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? holder.getLastMessageView() : (View) holder.getLastMessageView().getParent();
+        holder.getLastMessageView().setText(message.getText());
 
         int messagesCount = directUser.sentMessages.size();
         if (messagesCount > 0) {
             holder.getMessagesCountView().setText(String.valueOf(messagesCount));
+            holder.getMessagesCountView().setTextColor(Color.RED);
             holder.getMessagesCountView().setVisibility(View.VISIBLE);
         } else {
-            holder.getMessagesCountView().setVisibility(View.GONE);
+            messagesCount = directUser.receivedMessages.size();
+            if (messagesCount > 0) {
+                holder.getMessagesCountView().setText(String.valueOf(messagesCount));
+                holder.getMessagesCountView().setTextColor(Color.GREEN);
+                holder.getMessagesCountView().setVisibility(View.VISIBLE);
+            } else
+                holder.getMessagesCountView().setVisibility(View.GONE);
         }
 
     }
@@ -105,7 +110,7 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView mNameView;
-        private final TextView mDescriptionView;
+        private final TextView mLastMessageView;
         private final RoundedImageView mPictureView;
         private final TextView mMessagesCount;
 
@@ -134,7 +139,7 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
             });
 
             this.mNameView = name;
-            this.mDescriptionView = description;
+            this.mLastMessageView = description;
             this.mPictureView = picture;
             this.mMessagesCount = messagesCount;
         }
@@ -143,8 +148,8 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
             return mNameView;
         }
 
-        public TextView getDescView() {
-            return mDescriptionView;
+        public TextView getLastMessageView() {
+            return mLastMessageView;
         }
 
         public ImageView getPictureView() {
