@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 
 import com.rtweel.FavoriteAdapter;
-import com.rtweel.fragments.ProfileFragment;
+import com.rtweel.fragments.RecyclerViewFragment;
 import com.rtweel.tasks.timeline.FollowersGetTask;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import twitter4j.User;
 /**
  * Created by firrael on 28.4.15.
  */
-public class FollowersFragment extends ProfileFragment {
+public class FollowersFragment extends RecyclerViewFragment {
 
     public final static long FIRST_CURSOR = 1L;
     public final static long NEXT_CURSOR = 2L;

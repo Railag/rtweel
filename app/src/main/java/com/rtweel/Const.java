@@ -12,6 +12,9 @@ public class Const {
     //detail tweet
 	public static final String POSITION = "position";
 
+    //chat
+    public static final String CHAT_MESSAGES = "chat_messages";
+
     //detail image fragment
     public static final String MEDIA_LIST = "media_list";
     public static final String SELECTED_MEDIA = "selected_media";

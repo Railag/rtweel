@@ -2,8 +2,6 @@ package com.rtweel.direct;
 
 import android.os.AsyncTask;
 
-import com.rtweel.direct.DirectMessagesMainFragment;
-import com.rtweel.direct.DirectUser;
 import com.rtweel.storage.Tweets;
 
 import java.util.ArrayList;
@@ -88,7 +86,7 @@ public class DirectMessagesTask extends AsyncTask<Integer, Void, Void> {
 
                 if (isReceived && !dUser.sentMessages.contains(message))
                     dUser.sentMessages.add(message);
-                else if (!dUser.receivedMessages.contains(message))
+                else if (!isReceived && !dUser.receivedMessages.contains(message))
                     dUser.receivedMessages.add(message);
 
                 return;

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rtweel.fragments.ProfileFragment;
+import com.rtweel.fragments.RecyclerViewFragment;
 import com.rtweel.tasks.timeline.LoadTimelineTask;
 import com.rtweel.tasks.timeline.TimelineDownTask;
 import com.rtweel.tasks.timeline.TimelineUpTask;
@@ -30,7 +30,7 @@ public class UserTweetFragment extends TweetFragment {
     }
 
     @Override
-    protected void updateUp(ProfileFragment.Scroll scroll) {
+    protected void updateUp(RecyclerViewFragment.Scroll scroll) {
         super.updateUp(scroll);
 
         if (!scroll.equals(Scroll.UPDATE_UP))

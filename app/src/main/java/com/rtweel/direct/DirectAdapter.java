@@ -22,6 +22,8 @@ import com.rtweel.profile.MainProfileFragment;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import twitter4j.DirectMessage;
@@ -125,14 +127,25 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
                     RecyclerView rv = (RecyclerView) main.getParent();
                     DirectAdapter adapter = (DirectAdapter) rv.getAdapter();
 
-                    DirectUser directUser = adapter.mUsers.get(position);
+                    DirectUser user = adapter.mUsers.get(position);
 
-                    MainProfileFragment fragment = new MainProfileFragment();
+//                    MainProfileFragment fragment = new MainProfileFragment();
+//                    Bundle args = new Bundle();
+//                    args.putString(Const.SCREEN_USERNAME, directUser.user.getScreenName());
+//                    args.putString(Const.USERNAME, directUser.user.getName());
+//                    args.putLong(Const.USER_ID, directUser.user.getId());
+//                    fragment.setArguments(args);
+//                    ((MainActivity) adapter.mContext).setMainFragment(fragment);
+
                     Bundle args = new Bundle();
-                    args.putString(Const.SCREEN_USERNAME, directUser.user.getScreenName());
-                    args.putString(Const.USERNAME, directUser.user.getName());
-                    args.putLong(Const.USER_ID, directUser.user.getId());
-                    fragment.setArguments(args);
+                    ArrayList<ChatMessage> messages = new ArrayList<>();
+                    for (DirectMessage dm : user.receivedMessages)
+                        messages.add(new ChatMessage(dm));
+                    for (DirectMessage dm : user.sentMessages)
+                        messages.add (new ChatMessage(dm));
+                    Collections.sort(messages);
+                    args.putParcelableArrayList(Const.CHAT_MESSAGES, messages);
+                    ChatFragment fragment = ChatFragment.getInstance(args);
                     ((MainActivity) adapter.mContext).setMainFragment(fragment);
 
                 }

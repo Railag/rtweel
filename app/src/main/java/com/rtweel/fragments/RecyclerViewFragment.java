@@ -25,7 +25,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 /**
  * Created by firrael on 5.5.15.
  */
-public abstract class ProfileFragment extends BaseFragment {
+public abstract class RecyclerViewFragment extends BaseFragment {
 
     HideHeaderOnScrollListener mListener;
 

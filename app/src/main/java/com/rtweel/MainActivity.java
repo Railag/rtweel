@@ -41,6 +41,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.rtweel.detail.DetailFragment;
+import com.rtweel.direct.ChatFragment;
 import com.rtweel.direct.DirectMessagesMainFragment;
 import com.rtweel.fragments.HomeTweetFragment;
 import com.rtweel.fragments.LoginFragment;
@@ -306,6 +307,14 @@ public class MainActivity extends ActionBarActivity {
                 WebViewFragment wv = (WebViewFragment) mCurrentFragment;
                 if (wv.isCanGoBack()) {
                     wv.goBack();
+                    return;
+                }
+            }
+
+            if (mCurrentFragment instanceof ChatFragment) {
+                ChatFragment fragment = (ChatFragment) mCurrentFragment;
+                if (!fragment.isListShown()) {
+                    fragment.showList();
                     return;
                 }
             }
