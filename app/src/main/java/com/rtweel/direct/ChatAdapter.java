@@ -1,29 +1,17 @@
 package com.rtweel.direct;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.melnykov.fab.FloatingActionButton;
-import com.rtweel.MainActivity;
 import com.rtweel.R;
-import com.rtweel.storage.Tweets;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
 
 /**
  * Created by firrael on 23.6.15.

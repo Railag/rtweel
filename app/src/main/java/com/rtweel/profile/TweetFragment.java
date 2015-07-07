@@ -2,6 +2,7 @@ package com.rtweel.profile;
 
 import android.support.v7.widget.RecyclerView;
 
+import com.rtweel.R;
 import com.rtweel.TweetAdapter;
 import com.rtweel.fragments.RecyclerViewFragment;
 import com.rtweel.tasks.timeline.TimelineDownTask;
@@ -54,5 +55,10 @@ public abstract class TweetFragment extends RecyclerViewFragment {
     @Override
     public long getUserId() {
         return getTimeline().getUserId();
+    }
+
+    @Override
+    protected String getEmptyMessage() {
+        return getString(R.string.tweet_empty_message);
     }
 }

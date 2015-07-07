@@ -88,6 +88,11 @@ public class DirectMessagesMainFragment extends RecyclerViewFragment {
         return mUserId;
     }
 
+    @Override
+    protected String getEmptyMessage() {
+        return getString(R.string.direct_empty_message);
+    }
+
     public ArrayList<DirectUser> getUsers() {
         return users;
     }

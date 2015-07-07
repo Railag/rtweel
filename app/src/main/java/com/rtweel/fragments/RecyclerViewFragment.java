@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rtweel.Const;
@@ -38,6 +39,7 @@ public abstract class RecyclerViewFragment extends BaseFragment {
     protected RecyclerView.Adapter adapter;
 
     protected RecyclerView list;
+    private TextView emptyView;
 
     private int mLastFirstVisibleItem = 0;
 
@@ -67,6 +69,8 @@ public abstract class RecyclerViewFragment extends BaseFragment {
 
     protected abstract long getUserId();
 
+    protected abstract String getEmptyMessage();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +93,9 @@ public abstract class RecyclerViewFragment extends BaseFragment {
         }
 
         mProgressBar = (SmoothProgressBar) v.findViewById(R.id.smooth_progress_bar);
+
+        emptyView = (TextView) v.findViewById(R.id.empty_view);
+        emptyView.setText(getEmptyMessage());
 
         initHandler();
 
@@ -321,11 +328,45 @@ public abstract class RecyclerViewFragment extends BaseFragment {
                     break;
                 case MESSAGE_STOP_ANIM:
                     stopAnim();
+                    State state = getState();
+                    refreshState(state);
                     break;
                 case MESSAGE_ANIM_LOADING:
                     startAnim();
                     break;
             }
+        }
+    }
+
+    private enum State {
+        LOADED,
+        LOADING,
+        EMPTY
+    }
+
+    private State getState() {
+        if (adapter.getItemCount() > 0)
+            return State.LOADED;
+        else {
+            if (isProgressBarShown())
+                return State.LOADING;
+            else
+                return State.EMPTY;
+        }
+    }
+
+    private void refreshState(State state) {
+        switch (state) {
+            case LOADED:
+                list.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                break;
+            case LOADING:
+                break;
+            case EMPTY:
+                list.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+                break;
         }
     }
 }

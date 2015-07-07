@@ -17,6 +17,16 @@
     <string name="loading">Загрузка..</string>
     <string name="tweet_refreshing">Открытие твита..</string>
     <string name="authorization">Авторизация..</string>
+    <string name="bad_connection_message">Нестабильное интернет-соединение, что может сказаться на работе приложения</string>
+    <string name="new_tweets">Новые твиты:</string>
+    <string name="unloaded_tweets">\n остались незагруженные твиты, Вы можете дозагрузить их, сделав ещё один свайп вверх</string>
+
+
+    <!-- Empty messages-->
+    <string name="tweet_empty_message">По правде говоря, здесь нет твитов</string>
+    <string name="direct_empty_message">Новые сообщения не объявлялись</string>
+    <string name="followers_empty_message">Пока без подписчиков</string>
+
 
     <!--detail-->
     <string name="delete">Удалить</string>
@@ -76,5 +86,4 @@
     <string name="timeline_favorite">Избранное</string>
     <string name="timeline_images">Изображения</string>
     <string name="followers">Подписчики</string>
-
 </resources>

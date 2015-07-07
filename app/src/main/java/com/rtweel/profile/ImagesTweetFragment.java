@@ -36,15 +36,7 @@ public class ImagesTweetFragment extends TweetFragment {
             return;
 
         blink();
-        if (!App.isOnline(getActivity())) {
-            Log.i("DEBUG", "Up swipe NO NETWORK");
-            Toast.makeText(
-                    getActivity(),
-                    "No network connection, couldn't load tweets!",
-                    Toast.LENGTH_LONG).show();
-            hideProgressBar();
-            return;
-        }
+
         Log.i("DEBUG", "SWIPE UP");
         if (mUpTask != null)
             if (!mUpTask.getStatus().equals(AsyncTask.Status.FINISHED))
@@ -62,14 +54,7 @@ public class ImagesTweetFragment extends TweetFragment {
             return;
 
         blink();
-        if (!App.isOnline(getActivity())) {
-            Log.i("DEBUG", "Down swipe NO NETWORK");
-            Toast.makeText(
-                    getActivity(),
-                    "No network connection, couldn't load tweets!",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
+
         Log.i("DEBUG", "SWIPE DOWN");
 
         if (mDownTask != null)

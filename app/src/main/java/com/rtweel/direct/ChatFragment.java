@@ -46,7 +46,7 @@ public class ChatFragment extends BaseFragment {
 
     private ChatAdapter adapter;
 
-    public static ChatFragment getInstance(Bundle args) {
+    public static ChatFragment newInstance(Bundle args) {
         ChatFragment fragment = new ChatFragment();
         fragment.setArguments(args);
         return fragment;

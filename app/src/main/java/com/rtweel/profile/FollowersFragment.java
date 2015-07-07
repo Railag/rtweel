@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 
 import com.rtweel.FavoriteAdapter;
+import com.rtweel.R;
 import com.rtweel.fragments.RecyclerViewFragment;
 import com.rtweel.tasks.timeline.FollowersGetTask;
 
@@ -75,6 +76,11 @@ public class FollowersFragment extends RecyclerViewFragment {
     @Override
     protected long getUserId() {
         return mUserId;
+    }
+
+    @Override
+    protected String getEmptyMessage() {
+        return getString(R.string.followers_empty_message);
     }
 
     @Override

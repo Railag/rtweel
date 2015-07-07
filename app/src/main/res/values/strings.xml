@@ -17,6 +17,16 @@
     <string name="loading">Loading..</string>
     <string name="tweet_refreshing">Tweet refreshing..</string>
     <string name="authorization">Authorization..</string>
+    <string name="bad_connection_message">No network connection, application requires it for normal functionality</string>
+    <string name="new_tweets">New tweets:</string>
+    <string name="unloaded_tweets">\n There are unloaded new tweets, you can make up swipe one more time</string>
+
+
+    <!-- Empty Messages-->
+    <string name="tweet_empty_message">There are actually no tweets here</string>
+    <string name="direct_empty_message">Haven\'t seen any new messages</string>
+    <string name="followers_empty_message">Has no followers</string>
+
 
     <!--detail-->
     <string name="delete">Delete</string>

@@ -2,10 +2,8 @@ package com.rtweel.direct;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.Const;
 import com.rtweel.MainActivity;
 import com.rtweel.R;
-import com.rtweel.profile.MainProfileFragment;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -145,7 +142,7 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
                         messages.add (new ChatMessage(dm));
                     Collections.sort(messages);
                     args.putParcelableArrayList(Const.CHAT_MESSAGES, messages);
-                    ChatFragment fragment = ChatFragment.getInstance(args);
+                    ChatFragment fragment = ChatFragment.newInstance(args);
                     ((MainActivity) adapter.mContext).setMainFragment(fragment);
 
                 }

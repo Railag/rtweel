@@ -1,15 +1,14 @@
 package com.rtweel.tasks.timeline;
 
-import java.util.List;
-
-import com.rtweel.profile.TweetFragment;
-import com.rtweel.timelines.Timeline;
-
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import twitter4j.TwitterException;
+import com.rtweel.R;
+import com.rtweel.profile.TweetFragment;
+import com.rtweel.timelines.Timeline;
+
+import java.util.List;
 
 public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
 
@@ -25,7 +24,7 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
         List<twitter4j.Status> downloadedList = null;
         try {
             downloadedList = timeline.downloadTimeline(Timeline.UP_TWEETS);
-        } catch(Exception e) {
+        } catch (Exception e) {
             cancel(true);
         }
 
@@ -50,22 +49,19 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
         if (mFragment.getActivity() != null) {
             Log.i("PB", mFragment.getClass().getSimpleName() + " end hide dialog");
             mFragment.hideProgressBar();
-            if (result == 0) {
-                Toast.makeText(mFragment.getActivity(), "No new tweets", Toast.LENGTH_LONG)
-                        .show();
+            if (result == 0)
+                return;
 
+            if (result < (100 - 3)) {
+                Toast.makeText(mFragment.getActivity(), mFragment.getString(R.string.new_tweets) + result,
+                        Toast.LENGTH_LONG).show();
             } else {
-                if (result < (100 - 3)) {
-                    Toast.makeText(mFragment.getActivity(), "New tweets: " + result,
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(
-                            mFragment.getActivity(),
-                            "New tweets: "
-                                    + result
-                                    + "\n There are unloaded new tweets, you can make up swipe one more time",
-                            Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(
+                        mFragment.getActivity(),
+                        mFragment.getString(R.string.new_tweets)
+                                + result
+                                + mFragment.getString(R.string.unloaded_tweets),
+                        Toast.LENGTH_LONG).show();
             }
         } else
             Log.e("Exception", "TimelineUpTask lost context");

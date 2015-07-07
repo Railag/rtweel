@@ -235,7 +235,7 @@ public class SendTweetFragment extends BaseFragment {
                         Log.i("DEBUG",
                                 "sendtweetactivity send tweet button onClick NO NETWORK");
                         Toast.makeText(getActivity(),
-                                "No network connection, couldn't load tweets!",
+                                "Network problems",
                                 Toast.LENGTH_LONG).show();
                         return false;
                     }
@@ -255,7 +255,7 @@ public class SendTweetFragment extends BaseFragment {
                     mTweetEntry.setText("");
                 } else {
                     Toast toast = Toast.makeText(getActivity(),
-                            "Too long tweet, must be less than 140 symbols",
+                            "Too long tweet, must be less than" + mCurrentMax + " symbols",
                             Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();

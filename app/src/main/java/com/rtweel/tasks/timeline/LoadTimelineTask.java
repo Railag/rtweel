@@ -30,17 +30,10 @@ public class LoadTimelineTask extends AsyncTask<Timeline, Void, Void> {
 	protected void onPostExecute(Void result) {
         if(mFragment.getActivity() != null) {
 
-            if (mTimeline.getTweets().isEmpty()) {
-                Log.i("DEBUG", "OnPostExecute loadtimeline NO NETWORK");
-                Toast.makeText(mFragment.getActivity(),
-                        "No network connection, couldn't load tweets!",
-                        Toast.LENGTH_LONG).show();
-            } else {
                 mFragment.getAdapter().notifyDataSetChanged();
 
                 Log.i("Anim", "anim from loadtimelinetask");
                 mFragment.stopLoadingAnim();
-            }
         } else
             Log.e("Exception", "LoadTimelineTask lost context");
 	}

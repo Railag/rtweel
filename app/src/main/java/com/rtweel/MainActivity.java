@@ -17,8 +17,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -31,27 +31,26 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rtweel.detail.DetailFragment;
 import com.rtweel.direct.ChatFragment;
 import com.rtweel.direct.DirectMessagesMainFragment;
 import com.rtweel.fragments.HomeTweetFragment;
 import com.rtweel.fragments.LoginFragment;
-import com.rtweel.profile.MainProfileFragment;
 import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.fragments.SettingsFragment;
 import com.rtweel.fragments.WebViewFragment;
+import com.rtweel.profile.MainProfileFragment;
 import com.rtweel.services.TweetService;
+import com.rtweel.storage.App;
 import com.rtweel.storage.AppUser;
-import com.rtweel.tasks.timeline.FollowersGetTask;
 import com.rtweel.tasks.tweet.SearchTask;
 
 import java.lang.reflect.Field;
@@ -59,7 +58,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     private FragmentManager mFragmentManager;
 
@@ -109,6 +108,15 @@ public class MainActivity extends ActionBarActivity {
             if (uri.getScheme().equals("http") || uri.getScheme().equals("https"))
                 loadUrl(uri.toString()); //todo fix some uris not loaded
         }
+    }
+
+    @Override
+    protected void onResume() {
+        if (!App.isOnline(this)) {
+            Log.i("DEBUG", "App no network");
+            Toast.makeText(this, getString(R.string.bad_connection_message), Toast.LENGTH_LONG).show();
+        }
+        super.onResume();
     }
 
     private void initToolbar() {
@@ -275,7 +283,6 @@ public class MainActivity extends ActionBarActivity {
                                 + AlarmManager.INTERVAL_HALF_HOUR,
                         AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
     }
-
 
 
     public void setMainFragment(final Fragment fragment) {
