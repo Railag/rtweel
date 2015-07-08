@@ -65,8 +65,8 @@ TODO:
 -  - PN for new tweet with direct message and opening this direct message
 - ~~Smooth Progress Bar for all loadings~~
 - ~~Show profile by name in nav drawer~~
-- Search
-- Empty content processing (no messages / no tweets in timelines etc)
+- ~~Search~~
+- Empty content processing (no messages / no tweets in timelines etc) // halfly done
 - ~~Progress Bar cancelling fix~~
 
 
