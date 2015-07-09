@@ -1,18 +1,12 @@
 package com.rtweel.direct;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
-import com.rtweel.Const;
 import com.rtweel.R;
 import com.rtweel.fragments.RecyclerViewFragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
-import twitter4j.DirectMessage;
-import twitter4j.User;
 
 /**
  * Created by firrael on 7.5.15.

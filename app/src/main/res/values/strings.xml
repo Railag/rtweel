@@ -26,6 +26,7 @@
     <string name="tweet_empty_message">There are actually no tweets here</string>
     <string name="direct_empty_message">Haven\'t seen any new messages</string>
     <string name="followers_empty_message">Has no followers</string>
+    <string name="trend_empty_message">No trends available for your location</string>
 
 
     <!--detail-->
@@ -61,6 +62,7 @@
         <item name="timeline">Timeline</item>
         <item name="send_tweet">Send Tweet</item>
         <item name="messages">Messages</item>
+        <item name="trends">Trends</item>
         <item name="settings">Settings</item>
     </string-array>
 

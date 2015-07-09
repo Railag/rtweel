@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/trend_item_body"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="@color/eucalyptus"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+    <View
+        style="@style/rtweel_divider"/>
+
+</LinearLayout>

@@ -130,10 +130,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDrawer() {
-        ArrayList<String> drawerTitles = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.drawer_items)));
-        mDrawerItems = new ArrayList<>();
-        for (String s : drawerTitles)
-            mDrawerItems.add(new NavItem(s, getResources().getDrawable(R.drawable.rtweel)));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -213,6 +209,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ArrayList<String> drawerTitles = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.drawer_items)));
+        mDrawerItems = new ArrayList<>();
+        for (String s : drawerTitles)
+            mDrawerItems.add(new NavItem(s, getResources().getDrawable(R.drawable.rtweel)));
+
         mDrawerList.setAdapter(new NavAdapter(this, mDrawerItems));
 
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
@@ -238,6 +239,9 @@ public class MainActivity extends AppCompatActivity {
                         setMainFragment(new DirectMessagesMainFragment());
                         break;
                     case 4:
+                        setMainFragment(new com.rtweel.trends.TrendsFragment());
+                        break;
+                    case 5:
                         setMainFragment(new SettingsFragment());
                         break;
                 }

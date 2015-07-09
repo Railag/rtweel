@@ -41,11 +41,6 @@ public class DirectAdapter extends RecyclerView.Adapter<DirectAdapter.ViewHolder
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public DirectAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                        int viewType) {
 

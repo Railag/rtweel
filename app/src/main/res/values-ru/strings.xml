@@ -23,9 +23,10 @@
 
 
     <!-- Empty messages-->
-    <string name="tweet_empty_message">По правде говоря, здесь нет твитов</string>
-    <string name="direct_empty_message">Новые сообщения не объявлялись</string>
+    <string name="tweet_empty_message">Нет твитов</string>
+    <string name="direct_empty_message">Нет новых сообщений</string>
     <string name="followers_empty_message">Пока без подписчиков</string>
+    <string name="trend_empty_message">Тренды для вашей территории недоступны</string>
 
 
     <!--detail-->
@@ -63,6 +64,7 @@
         <item name="timeline">Лента</item>
         <item name="send_tweet">Новый твит</item>
         <item name="messages">Сообщения</item>
+        <item name="trends">Тренды</item>
         <item name="settings">Настройки</item>
     </string-array>
 
