@@ -7,6 +7,10 @@ Already done:
 - Home timeline, which is start screen
 - Profile section with 5 different timelines for each user, which you can swipe by viewpager, with header hiding animation after swiping down
 - Moving to profile via user's logos/ replies in tweets
+- Direct Messages
+- Search (both users & tweets)
+- Trends
+- HashTags
 - Followers
 - Replying on tweets function
 - Navigation via navigation drawer, with toggle and its title animation
@@ -68,6 +72,7 @@ TODO:
 - ~~Search~~
 - Empty content processing (no messages / no tweets in timelines etc) // halfly done
 - ~~Progress Bar cancelling fix~~
+- New tweets messages within viewpager visibility bug
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/main/com.rtweel/Const.java class.
