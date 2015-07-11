@@ -63,10 +63,10 @@ TODO:
 - ~~Replace main listview with recyclerview~~
 - ~~Adding floating button to scroll up and down on timeline~~
 - ~~Profile section implementation~~
-- PN system changes + ~~settings~~:
+- ~~PN system changes + settings~~:
 -  ~~- settings for PN to disable all-time notifications about new tweets~~
--  - PN for new tweet with user's mention and opening this tweet detail
--  - PN for new tweet with direct message and opening this direct message
+-  ~~- PN for new tweet with user's mention and opening this tweet detail~~
+-  ~~- PN for new tweet with direct message and opening this direct message~~
 - ~~Smooth Progress Bar for all loadings~~
 - ~~Show profile by name in nav drawer~~
 - ~~Search~~
