@@ -16,7 +16,7 @@ import twitter4j.TwitterException;
 /**
  * Created by firrael on 9.7.15.
  */
-public class TagTask extends AsyncTask<String, Void, Void> {
+public class TagTask extends AsyncTask<Query, Void, Void> {
 
     private TagFragment mFragment;
 
@@ -25,24 +25,29 @@ public class TagTask extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected Void doInBackground(Query... params) {
         Twitter twitter = Tweets.getTwitter(mFragment.getActivity());
 
-        String queryString = params[0];
+        Query query = params[0];
+        query.setResultType(Query.ResultType.mixed);
+        query.setCount(50);
 
-        if (TextUtils.isEmpty(queryString))
-            return null;
+        List<twitter4j.Status> resultList;
 
-        Query query = new Query();
-        query.setResultType(Query.ResultType.popular);
-        query.setQuery(queryString);
-        query.setCount(100);
-        //    query.setSinceId(mAdapter.getItem(0).getId());
-        List<twitter4j.Status> resultList = null;
         try {
             QueryResult result = twitter.search(query);
+            Query nextQuery = null;
+
+            if (!TextUtils.isEmpty(result.getRefreshURL())) {
+                nextQuery = new Query();
+                nextQuery.setQuery(result.getQuery());
+                nextQuery.setMaxId(result.getMaxId());
+            }
+            if (result.hasNext())
+                nextQuery = result.nextQuery();
+
             resultList = result.getTweets();
-            mFragment.update(resultList);
+            mFragment.update(resultList, nextQuery);
         } catch
                 (TwitterException e) {
             e.printStackTrace();

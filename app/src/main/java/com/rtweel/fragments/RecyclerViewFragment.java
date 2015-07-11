@@ -41,6 +41,8 @@ public abstract class RecyclerViewFragment extends BaseFragment {
     protected RecyclerView list;
     private TextView emptyView;
 
+    protected FloatingActionButton fab;
+
     private int mLastFirstVisibleItem = 0;
 
     private LinearLayoutManager mLayoutManager;
@@ -203,7 +205,7 @@ public abstract class RecyclerViewFragment extends BaseFragment {
 
 
     private void initFloatingButton(View v) {
-        final FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+        fab = (FloatingActionButton) v.findViewById(R.id.fab);
         fab.setType(1);
         fab.setColorNormal(R.color.green);
         fab.setColorPressed(R.color.blue);

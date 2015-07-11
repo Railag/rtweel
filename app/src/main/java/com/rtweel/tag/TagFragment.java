@@ -2,6 +2,7 @@ package com.rtweel.tag;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
 import com.rtweel.R;
@@ -13,6 +14,7 @@ import com.rtweel.tasks.timeline.FollowersGetTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import twitter4j.Query;
 import twitter4j.Status;
 
 /**
@@ -26,7 +28,7 @@ public class TagFragment extends RecyclerViewFragment {
 
     private TagTask task;
 
-    private String query;
+    private Query query;
 
     @Override
     protected RecyclerView.Adapter createAdapter() {
@@ -38,6 +40,9 @@ public class TagFragment extends RecyclerViewFragment {
         super.updateUp(scroll);
 
         if (!scroll.equals(Scroll.UPDATE_UP))
+            return;
+
+        if (query == null)
             return;
 
         if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
@@ -53,6 +58,9 @@ public class TagFragment extends RecyclerViewFragment {
         if (!scroll.equals(Scroll.UPDATE_DOWN))
             return;
 
+        if (query == null)
+            return;
+
         if (task == null || task.getStatus().equals(AsyncTask.Status.FINISHED)) {
             task = new TagTask(TagFragment.this);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, query);
@@ -62,7 +70,7 @@ public class TagFragment extends RecyclerViewFragment {
     @Override
     protected void instantiateListData(String username, String userScreenName, long userId) {
         Bundle args = getArguments();
-        query = args.getString(QUERY);
+        query = new Query(args.getString(QUERY));
     }
 
     @Override
@@ -90,7 +98,11 @@ public class TagFragment extends RecyclerViewFragment {
         return getString(R.string.tweet_empty_message);
     }
 
-    public void update(List<Status> resultList) {
+    public void update(List<Status> resultList, @Nullable Query nextQuery) {
         tweets.addAll(resultList);
+        if (nextQuery != null)
+            query = nextQuery;
+        else
+            query = null;
     }
 }
