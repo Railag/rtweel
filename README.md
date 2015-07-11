@@ -38,7 +38,7 @@ TODO:
 - ~~Followers~~
 - Direct messages //halfly implemented
 - Mentions //implemented, just no way to get the proper mentions for different users. search+-
-- Trends
+- ~~Trends~~
 - ~~Paging system improvement~~
 - ~~Tweet deletion~~
 - Last tweet edition
