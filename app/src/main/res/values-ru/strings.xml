@@ -99,4 +99,12 @@
     <string name="timeline_favorite">Избранное</string>
     <string name="timeline_images">Изображения</string>
     <string name="followers">Подписчики</string>
+
+
+    <!-- PN -->
+    <string name="pn_mention_title">Новое упоминание</string>
+    <string name="pn_dmessage_title">Новое сообщение</string>
+    <string name="pn_new_message">Новые твиты: </string>
+    <string name="pn_new_title">Обновление ленты</string>
+
 </resources>

@@ -98,4 +98,10 @@
     <string name="timeline_images">Images</string>
     <string name="followers">Followers</string>
 
+    <!-- PN -->
+    <string name="pn_mention_title">New mention</string>
+    <string name="pn_dmessage_title">New message</string>
+    <string name="pn_new_message">Tweets downloaded: </string>
+    <string name="pn_new_title">Timeline update</string>
+
 </resources>
