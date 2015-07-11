@@ -6,12 +6,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -57,6 +59,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         initToggle();
 
-        initTweetService();
+        updateTweetService();
 
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
@@ -276,7 +279,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void initTweetService() {
+    public void updateTweetService() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isAlreadySet = prefs.contains(SettingsFragment.PN_INTERVAL);
+        int intervalInMinutes;
+        if (isAlreadySet)
+            intervalInMinutes = prefs.getInt(SettingsFragment.PN_INTERVAL, 4 * 60);
+        else
+            intervalInMinutes = 60;
+
+        long intervalInMillis = TimeUnit.MINUTES.toMillis(intervalInMinutes);
         Intent serviceIntent = new Intent(this, TweetService.class);
         PendingIntent alarmIntent = PendingIntent.getService(this, 0,
                 serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -284,8 +296,8 @@ public class MainActivity extends AppCompatActivity {
         alarmManager
                 .setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                         SystemClock.elapsedRealtime()
-                                + AlarmManager.INTERVAL_HALF_HOUR,
-                        AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
+                                + intervalInMillis,
+                        intervalInMillis, alarmIntent);
     }
 
 

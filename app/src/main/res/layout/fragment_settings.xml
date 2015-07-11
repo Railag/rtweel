@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="15dp">
 
 
     <CheckBox
@@ -25,6 +26,93 @@
         android:id="@+id/settings_divider2"
         style="@style/rtweel_divider"
         android:layout_below="@id/save_tweet" />
+
+    <!--  Push Notifications-->
+
+    <TextView
+        android:id="@+id/settings_pn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settings_divider2"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:text="@string/pn"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/settings_divider_pn"
+        style="@style/rtweel_divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@id/settings_pn" />
+
+
+    <CheckBox
+        android:id="@+id/pn_enable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settings_divider_pn" />
+
+    <View
+        android:id="@+id/settings_divider3"
+        style="@style/rtweel_divider"
+        android:layout_below="@id/pn_enable" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settings_divider3"
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:id="@+id/settings_radiogroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/settings_radiobutton_15m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_15m" />
+
+            <RadioButton
+                android:id="@+id/settings_radiobutton_30m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_30m"  />
+
+            <RadioButton
+                android:id="@+id/settings_radiobutton_1h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_1h"  />
+
+            <RadioButton
+                android:id="@+id/settings_radiobutton_2h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_2h"  />
+
+            <RadioButton
+                android:id="@+id/settings_radiobutton_4h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_4h"  />
+
+        </RadioGroup>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pn_interval"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:layout_marginLeft="20dp"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/logout_button"

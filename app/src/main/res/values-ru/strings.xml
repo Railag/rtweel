@@ -37,8 +37,17 @@
         <!--settings-->
     <string name="pref_images_shown">Превью картинок</string>
     <string name="pref_save_tweet">Сохранять текущий текст твита, \n даже после закрытия приложения</string>
+    <string name="pref_pn_enabled">Включить уведомления</string>
     <string name="logout_message">Вы уверены, что хотите выйти из аккаунта?</string>
     <string name="logout">Выйти из аккаунта</string>
+    <string name="pn">Уведомления</string>
+    <string name="radio_15m">15м</string>
+    <string name="radio_30m">30м</string>
+    <string name="radio_1h">1ч</string>
+    <string name="radio_2h">2ч</string>
+    <string name="radio_4h">4ч</string>
+    <string name="pn_interval">Выберите интервал между уведомлениями</string>
+
 
 
     <!--content descriptions-->

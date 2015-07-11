@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -58,7 +57,7 @@ public class ChatFragment extends BaseFragment {
 
         View v = inflater.inflate(R.layout.chat_fragment, container, false);
 
-        fab = (FloatingActionButton) v.findViewById(R.id.chat_fav);
+        fab = (FloatingActionButton) v.findViewById(R.id.chat_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
