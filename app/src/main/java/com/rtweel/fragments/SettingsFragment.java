@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.rtweel.R;
@@ -73,10 +72,17 @@ public class SettingsFragment extends BaseFragment {
         mPnEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 SharedPreferences.Editor editor = mPrefs.edit();
                 editor.putBoolean(PN_ENABLED, isChecked);
                 editor.commit();
+
                 changeRadioGroup(isChecked);
+
+                if (isChecked)
+                    getMainActivity().startPNs();
+                else
+                    getMainActivity().stopPNs();
             }
         });
 
@@ -112,7 +118,7 @@ public class SettingsFragment extends BaseFragment {
                 editor.putInt(PN_INTERVAL, minutes);
                 editor.commit();
 
-                getMainActivity().updateTweetService();
+                getMainActivity().startPNs();
             }
         });
 

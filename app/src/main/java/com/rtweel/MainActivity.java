@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         initToggle();
 
-        updateTweetService();
+        startPNs();
 
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void updateTweetService() {
+    public void startPNs() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isAlreadySet = prefs.contains(SettingsFragment.PN_INTERVAL);
         int intervalInMinutes;
@@ -322,6 +322,15 @@ public class MainActivity extends AppCompatActivity {
                         SystemClock.elapsedRealtime()
                                 + intervalInMillis,
                         intervalInMillis, alarmIntent);
+
+    }
+
+    public void stopPNs() {
+        Intent serviceIntent = new Intent(this, TweetService.class);
+        PendingIntent alarmIntent = PendingIntent.getService(this, 0,
+                serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(alarmIntent);
     }
 
 
