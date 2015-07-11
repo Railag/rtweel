@@ -77,4 +77,9 @@ public class DetailImagePagerFragment extends BaseFragment {
             initPager();
         }
     }
+
+    @Override
+    protected String getTitle() {
+        return null;
+    }
 }

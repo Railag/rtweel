@@ -42,12 +42,6 @@ public class LoginFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setTitle(getString(R.string.title_login));
-    }
-
     private boolean loginCheck() {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getActivity());
@@ -87,5 +81,10 @@ public class LoginFragment extends BaseFragment {
             stopLoadingDialog();
 
         getMainActivity().setMainFragment(new HomeTweetFragment());
+    }
+
+    @Override
+    protected String getTitle() {
+        return getString(R.string.title_login);
     }
 }

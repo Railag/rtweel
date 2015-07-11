@@ -79,6 +79,8 @@
     <string name="title_send_tweet">Send Tweet</string>
     <string name="title_followers">Followers</string>
     <string name="title_messages">Direct Messages</string>
+    <string name="title_trends">Trends</string>
+    <string name="title_tag">HashTag</string>
 
     <!--Pager titles-->
     <string name="timeline_user">User</string>
@@ -86,5 +88,6 @@
     <string name="timeline_favorite">Favorites</string>
     <string name="timeline_images">Images</string>
     <string name="followers">Followers</string>
+
 
 </resources>

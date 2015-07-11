@@ -73,4 +73,9 @@ public class ImagesTweetFragment extends TweetFragment {
     protected void stopAnim() {
         hideProgressBar();
     }
+
+    @Override
+    protected String getTitle() {
+        return null;
+    }
 }

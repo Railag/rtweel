@@ -33,12 +33,6 @@ public class HomeTweetFragment extends TweetFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        setTitle(getString(R.string.title_home));
-    }
-
-    @Override
     protected void updateUp(Scroll scroll) {
 
         if (!scroll.equals(Scroll.UPDATE_UP))
@@ -99,5 +93,10 @@ public class HomeTweetFragment extends TweetFragment {
 
         anim.start();
 
+    }
+
+    @Override
+    protected String getTitle() {
+        return getString(R.string.title_home);
     }
 }

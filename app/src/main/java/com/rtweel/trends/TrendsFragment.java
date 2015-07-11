@@ -73,4 +73,9 @@ public class TrendsFragment extends RecyclerViewFragment {
 
         return v;
     }
+
+    @Override
+    protected String getTitle() {
+        return getString(R.string.title_trends);
+    }
 }

@@ -51,6 +51,11 @@ public class DetailImageFragment extends BaseFragment {
         }
     }
 
+    @Override
+    protected String getTitle() {
+        return null;
+    }
+
     private void zoomImage(String url) {
         if (mCurrentAnimator != null) {
             mCurrentAnimator.cancel();

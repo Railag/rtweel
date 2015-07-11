@@ -57,11 +57,15 @@ public class FileFragment extends BaseFragment {
         initialize(mCurrentPath);
     }
 
+    @Override
+    protected String getTitle() {
+        return getString(R.string.title_file);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_file, null);
-        setTitle(getString(R.string.title_file));
         list = (ListView) v.findViewById(R.id.file_list);
         return v;
     }

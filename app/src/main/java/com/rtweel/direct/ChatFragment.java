@@ -142,6 +142,11 @@ public class ChatFragment extends BaseFragment {
         }
     }
 
+    @Override
+    protected String getTitle() {
+        return null;
+    }
+
     public boolean isListShown() {
         return list.getVisibility() == View.VISIBLE;
     }

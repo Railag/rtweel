@@ -26,9 +26,8 @@ public class DirectMessagesMainFragment extends RecyclerViewFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        setTitle(getString(R.string.title_messages));
+    protected String getTitle() {
+        return getString(R.string.title_messages);
     }
 
     @Override

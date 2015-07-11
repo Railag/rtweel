@@ -219,6 +219,11 @@ public class SendTweetFragment extends BaseFragment {
     }
 
     @Override
+    protected String getTitle() {
+        return getString(R.string.title_send_tweet);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_send_tweet, menu);
@@ -281,8 +286,6 @@ public class SendTweetFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         mSavedInstanceState = savedInstanceState;
-
-        setTitle(getString(R.string.title_send_tweet));
 
         mTweetEntry = (EditText) v.findViewById(R.id.tweet_input);
         mTweetLengthCounter = (TextView) v.findViewById(R.id.tweet_input_counter);

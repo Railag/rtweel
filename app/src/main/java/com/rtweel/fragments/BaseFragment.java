@@ -2,8 +2,10 @@ package com.rtweel.fragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -13,7 +15,7 @@ import com.rtweel.MainActivity;
 /**
  * Created by firrael on 21.3.15.
  */
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
     private ProgressDialog mLoadingDialog;
 
     protected void startLoading(String loadingText) {
@@ -32,6 +34,14 @@ public class BaseFragment extends Fragment {
         return  (MainActivity) getActivity();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        String title = getTitle();
+        if (!TextUtils.isEmpty(title))
+            setTitle(getTitle());
+    }
+
     protected ActionBar getActionBar() {
         return getMainActivity().getSupportActionBar();
     }
@@ -47,4 +57,7 @@ public class BaseFragment extends Fragment {
     protected void setTitle(String title) {
         getMainActivity().getSupportActionBar().setTitle(title);
     }
+
+    @Nullable
+    protected abstract String getTitle();
 }

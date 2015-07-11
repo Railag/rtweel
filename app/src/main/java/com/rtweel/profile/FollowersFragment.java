@@ -95,5 +95,10 @@ public class FollowersFragment extends RecyclerViewFragment {
     public List<User> getFollowers() {
         return users;
     }
+
+    @Override
+    protected String getTitle() {
+        return null;
+    }
 }
 

@@ -74,4 +74,9 @@ public class FavoriteTweetFragment extends TweetFragment {
     protected void stopAnim() {
         hideProgressBar();
     }
+
+    @Override
+    protected String getTitle() {
+        return null;
+    }
 }

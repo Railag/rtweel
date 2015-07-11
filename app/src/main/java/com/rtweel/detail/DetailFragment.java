@@ -122,6 +122,11 @@ public class DetailFragment extends BaseFragment {
 
     }
 
+    @Override
+    protected String getTitle() {
+        return null;
+    }
+
     private void refresh(Bundle args) {
         if (args != null) {
 

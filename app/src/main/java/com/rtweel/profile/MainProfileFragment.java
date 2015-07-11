@@ -94,10 +94,14 @@ public class MainProfileFragment extends BaseFragment {
 
     }
 
+    @Override
+    protected String getTitle() {
+        return getString(R.string.title_profile);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setTitle(getString(R.string.title_profile));
         mView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         mPager = (ViewPager) mView.findViewById(R.id.profile_pager);

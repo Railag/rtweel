@@ -105,4 +105,9 @@ public class TagFragment extends RecyclerViewFragment {
         else
             query = null;
     }
+
+    @Override
+    protected String getTitle() {
+        return getString(R.string.title_tag);
+    }
 }

@@ -31,6 +31,12 @@ public class WebViewFragment extends BaseFragment {
     }
 
     @Override
+    protected String getTitle() {
+        //TODO title for url
+        return null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_webview, null, false);
 

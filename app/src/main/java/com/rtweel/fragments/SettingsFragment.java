@@ -117,5 +117,9 @@ public class SettingsFragment extends BaseFragment {
         getMainActivity().finish();
     }
 
+    @Override
+    protected String getTitle() {
+        return getString(R.string.title_settings);
+    }
 }
 

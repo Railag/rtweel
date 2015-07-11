@@ -81,6 +81,8 @@
     <string name="title_send_tweet">Новый твит</string>
     <string name="title_followers">Подписчики</string>
     <string name="title_messages">Сообщения</string>
+    <string name="title_trends">Тренды</string>
+    <string name="title_tag">Хештег</string>
 
     <!--Pager titles-->
     <string name="timeline_user">Домашняя</string>
