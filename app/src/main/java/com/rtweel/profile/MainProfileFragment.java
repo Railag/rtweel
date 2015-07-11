@@ -92,6 +92,8 @@ public class MainProfileFragment extends BaseFragment {
 
         initPagerAdapter();
 
+        if (args != null && args.containsKey(Const.OPEN_MENTIONS))
+            mPager.setCurrentItem(1, false);
     }
 
     @Override

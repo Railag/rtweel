@@ -30,6 +30,12 @@ public class TweetService extends IntentService {
     public static final String TITLE = "title";
     public static final String TYPE = "type";
 
+    public static final String LOCATION = "location";
+    public enum DESTINATION {
+        MESSAGES,
+        MENTIONS
+    }
+
     private static int sNewTweets = 0;
 
     private Timeline mTimeline;

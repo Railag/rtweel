@@ -41,6 +41,18 @@ public class TweetReceiver extends BroadcastReceiver {
                 TweetService.PN type = (TweetService.PN) data.getSerializableExtra(TweetService.TYPE);
 
                 Intent resultIntent = new Intent(context, MainActivity.class);
+
+                switch (type) {
+                    case MESSAGE:
+                        resultIntent.putExtra(TweetService.LOCATION, TweetService.DESTINATION.MESSAGES);
+                        break;
+                    case MENTION:
+                        resultIntent.putExtra(TweetService.LOCATION, TweetService.DESTINATION.MENTIONS);
+                        break;
+                    case UPDATE:
+                        break;
+                }
+
                 PendingIntent resultPendingIntent = PendingIntent
                         .getActivity(context, 0, resultIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT);

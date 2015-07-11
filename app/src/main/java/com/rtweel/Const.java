@@ -21,8 +21,7 @@ public class Const {
     public static final String IMAGE_RECT = "image_rect";
     public static final String MEDIA_URL = "media_url";
 
-
-
+    
     //tweet send
     public static final String REPLY_ID = "reply_id";
 
@@ -35,6 +34,7 @@ public class Const {
     public static final String USERNAME = "username";
     public static final String SCREEN_USERNAME = "screen_username";
     public static final String USER_ID = "user_id";
+    public static final String OPEN_MENTIONS = "open mentions";
 
 
     //auth
@@ -46,4 +46,5 @@ public class Const {
     public static final String PREFERENCE_TWITTER_OAUTH_TOKEN = "TWITTER_OAUTH_TOKEN";
     public static final String PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET = "TWITTER_OAUTH_TOKEN_SECRET";
     public static final String PREFERENCE_TWITTER_IS_LOGGED_IN = "TWITTER_IS_LOGGED_IN";
+
 }

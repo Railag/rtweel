@@ -55,6 +55,7 @@ import com.rtweel.storage.App;
 import com.rtweel.storage.AppUser;
 import com.rtweel.tasks.tweet.SearchTask;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,10 +107,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
+        if (intent.hasExtra(TweetService.LOCATION)) {
+            processPN (intent.getSerializableExtra(TweetService.LOCATION));
+        }
+
         Uri uri = intent.getData();
         if (uri != null) {
             if (uri.getScheme().equals("http") || uri.getScheme().equals("https"))
                 loadUrl(uri.toString()); //todo fix some uris not loaded
+        }
+    }
+
+    private void processPN(Serializable location) {
+        TweetService.DESTINATION destination = (TweetService.DESTINATION) location;
+        switch (destination) {
+            case MESSAGES:
+                setMainFragment(new DirectMessagesMainFragment());
+                break;
+            case MENTIONS:
+                MainProfileFragment fragment = new MainProfileFragment();
+                Bundle args = new Bundle();
+                args.putString(Const.USERNAME, AppUser.getUserName(MainActivity.this));
+                args.putString(Const.SCREEN_USERNAME, AppUser.getScreenUserName(MainActivity.this));
+                args.putLong(Const.USER_ID, AppUser.getUserId(MainActivity.this));
+                args.putBoolean(Const.OPEN_MENTIONS, true);
+                fragment.setArguments(args);
+                setMainFragment(fragment);
+                break;
         }
     }
 
