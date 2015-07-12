@@ -43,6 +43,7 @@ public class TagTask extends AsyncTask<Query, Void, Void> {
                 nextQuery.setQuery(result.getQuery());
                 nextQuery.setMaxId(result.getMaxId());
             }
+            
             if (result.hasNext())
                 nextQuery = result.nextQuery();
 

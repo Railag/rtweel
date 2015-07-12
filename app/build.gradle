@@ -31,7 +31,7 @@ android {
     productFlavors {
         dev {
             applicationId "com.firrael.rtweel.dev"
-            versionName "0.43"
+            versionName "0.44"
         }
     }
 }

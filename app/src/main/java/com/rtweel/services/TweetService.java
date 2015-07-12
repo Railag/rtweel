@@ -106,7 +106,7 @@ public class TweetService extends IntentService {
             if (size > 0) {
                 sNewTweets += size;
 
-                String message = getString(R.string.pn_new_message) + sNewTweets;
+                String message = getString(R.string.pn_new_message) +  " " + sNewTweets;
                 String title = getString(R.string.pn_new_title);
 
                 sendPN(PN.UPDATE, message, title);

@@ -99,7 +99,10 @@ public class TagFragment extends RecyclerViewFragment {
     }
 
     public void update(List<Status> resultList, @Nullable Query nextQuery) {
-        tweets.addAll(resultList);
+        for (Status s : resultList)
+            if (!tweets.contains(s))
+                tweets.add(s);
+        
         if (nextQuery != null)
             query = nextQuery;
         else

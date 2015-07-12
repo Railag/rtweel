@@ -37,6 +37,7 @@ import com.rtweel.fragments.BaseFragment;
 import com.rtweel.fragments.SendTweetFragment;
 import com.rtweel.profile.MainProfileFragment;
 import com.rtweel.storage.AppUser;
+import com.rtweel.tag.TagFragment;
 import com.rtweel.tasks.tweet.DeleteTweetTask;
 import com.rtweel.tasks.tweet.FavoriteTask;
 import com.rtweel.tasks.tweet.RetweetTask;
@@ -351,21 +352,37 @@ public class DetailFragment extends BaseFragment {
     }
 
     private void makeSpannableText(final String text) {
+
         SpannableString ss = new SpannableString(text);
+
+        ss = findSpannables(ss, '@');
+
+        ss = findSpannables(ss, '#');
+
+        textView.setText(ss);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private SpannableString findSpannables(SpannableString ss, char c) {
+
+        String text = ss.toString();
         int fi;
         int fiEnd = -1;
+
         while (true) {
-            fi = text.indexOf('@', fiEnd + 1);
+            fi = text.indexOf(c, fiEnd + 1);
             if (fi != -1) {
                 fiEnd = text.indexOf(' ', fi + 1);
                 if (fiEnd == -1)
                     fiEnd = text.length() - 1;
-                final ConsistentClickableSpan clickableSpan = new ConsistentClickableSpan();
-                clickableSpan.mFi = fi + 1; // for @
-                if (text.substring(fiEnd - 1, fiEnd).contains(RESTRICTED_SYMBOLS)) // for @name:
-                    fiEnd--;
 
-                clickableSpan.mFiEnd = fiEnd;
+                ClickableSpan clickableSpan;
+                if (c == '@')
+                    clickableSpan = getProfileSpan(fi, fiEnd, text);
+                else if (c == '#')
+                    clickableSpan = getTagSpan(fi, fiEnd, text);
+                else
+                    break;
 
                 TextPaint textPaint = new TextPaint();
                 textPaint.baselineShift = 2;
@@ -376,8 +393,27 @@ public class DetailFragment extends BaseFragment {
                 break;
         }
 
-        textView.setText(ss);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        return ss;
+    }
+
+    private ClickableSpan getTagSpan(int fi, int fiEnd, String text) {
+        final TagClickableSpan clickableSpan = new TagClickableSpan();
+        clickableSpan.mFi = fi + 1; // for char
+        if (text.substring(fiEnd - 1, fiEnd).contains(RESTRICTED_SYMBOLS)) // for @name:
+            fiEnd--;
+
+        clickableSpan.mFiEnd = fiEnd;
+        return clickableSpan;
+    }
+
+    private ClickableSpan getProfileSpan(int fi, int fiEnd, String text) {
+        final ProfileClickableSpan clickableSpan = new ProfileClickableSpan();
+        clickableSpan.mFi = fi + 1; // for char
+        if (text.substring(fiEnd - 1, fiEnd).contains(RESTRICTED_SYMBOLS)) // for @name:
+            fiEnd--;
+
+        clickableSpan.mFiEnd = fiEnd;
+        return clickableSpan;
     }
 
 
@@ -458,7 +494,7 @@ public class DetailFragment extends BaseFragment {
         mSaved.putSerializable(Const.TWEET, mTweet);
     }
 
-    private class ConsistentClickableSpan extends ClickableSpan {
+    private class ProfileClickableSpan extends ClickableSpan {
         private int mFi, mFiEnd;
 
         @Override
@@ -468,6 +504,19 @@ public class DetailFragment extends BaseFragment {
             args.putString(Const.SCREEN_USERNAME, ((TextView) widget).getText().subSequence(mFi, mFiEnd).toString());
             fragment.setArguments(args);
             getMainActivity().setMainFragment(fragment);
+        }
+    }
+
+    private class TagClickableSpan extends ClickableSpan {
+        private int mFi, mFiEnd;
+
+        @Override
+        public void onClick(View widget) {
+            TagFragment tagFragment = new TagFragment();
+            Bundle args = new Bundle();
+            args.putString(TagFragment.QUERY, ((TextView) widget).getText().subSequence(mFi, mFiEnd).toString());
+            tagFragment.setArguments(args);
+            getMainActivity().setMainFragment(tagFragment);
         }
     }
 

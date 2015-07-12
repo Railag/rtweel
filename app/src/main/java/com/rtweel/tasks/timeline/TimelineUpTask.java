@@ -52,16 +52,19 @@ public class TimelineUpTask extends AsyncTask<Timeline, Void, Integer> {
             if (result == 0)
                 return;
 
-            if (result < (100 - 3)) {
-                Toast.makeText(mFragment.getActivity(), mFragment.getString(R.string.new_tweets) + result,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(
-                        mFragment.getActivity(),
-                        mFragment.getString(R.string.new_tweets)
-                                + result
-                                + mFragment.getString(R.string.unloaded_tweets),
-                        Toast.LENGTH_LONG).show();
+            if (mFragment.getTimeline().isHomeTimeline()) {
+
+                if (result < (100 - 3)) {
+                    Toast.makeText(mFragment.getActivity(), mFragment.getString(R.string.new_tweets) + result,
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(
+                            mFragment.getActivity(),
+                            mFragment.getString(R.string.new_tweets)
+                                    + result
+                                    + mFragment.getString(R.string.unloaded_tweets),
+                            Toast.LENGTH_LONG).show();
+                }
             }
         } else
             Log.e("Exception", "TimelineUpTask lost context");
