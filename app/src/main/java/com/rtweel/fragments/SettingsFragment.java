@@ -53,6 +53,8 @@ public class SettingsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        setRetainInstance(true);
+
         mImagesShown = (CheckBox) v.findViewById(R.id.images_shown);
         mTweetSave = (CheckBox) v.findViewById(R.id.save_tweet);
 

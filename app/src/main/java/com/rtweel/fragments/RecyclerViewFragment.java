@@ -78,6 +78,8 @@ public abstract class RecyclerViewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_timeline, null);
 
+        setRetainInstance(true);
+
         if (isLoadingDialogShown())
             stopLoadingDialog();
 

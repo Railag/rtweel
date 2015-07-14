@@ -42,6 +42,8 @@ public class WebViewFragment extends BaseFragment {
 
         initWebView(v);
 
+        setRetainInstance(true);
+
         setTitle(webView.getTitle());
 
         return v;

@@ -57,6 +57,8 @@ public class ChatFragment extends BaseFragment {
 
         View v = inflater.inflate(R.layout.chat_fragment, container, false);
 
+        setRetainInstance(true);
+
         fab = (FloatingActionButton) v.findViewById(R.id.chat_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

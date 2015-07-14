@@ -34,6 +34,7 @@ public class DetailImagePagerFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_detail_image_pager, null, false);
         mPager = (ViewPager) v.findViewById(R.id.detail_image_pager);
+        setRetainInstance(true);
         return v;
     }
 

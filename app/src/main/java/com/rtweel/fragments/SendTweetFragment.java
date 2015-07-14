@@ -284,6 +284,7 @@ public class SendTweetFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.fragment_tweet_send, null);
 
         setHasOptionsMenu(true);
+        setRetainInstance(true);
 
         mSavedInstanceState = savedInstanceState;
 

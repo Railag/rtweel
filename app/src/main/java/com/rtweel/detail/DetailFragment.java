@@ -96,6 +96,7 @@ public class DetailFragment extends BaseFragment {
         mView = inflater.inflate(R.layout.fragment_detail, null);
         initViews(mView);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         return mView;
     }
 

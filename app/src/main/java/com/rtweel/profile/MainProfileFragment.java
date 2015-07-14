@@ -106,6 +106,8 @@ public class MainProfileFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        setRetainInstance(true);
+
         mPager = (ViewPager) mView.findViewById(R.id.profile_pager);
         mPagerTabStrip = (PagerTabStrip) mView.findViewById(R.id.pager_tab_strip);
 

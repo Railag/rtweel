@@ -67,6 +67,7 @@ public class FileFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_file, null);
         list = (ListView) v.findViewById(R.id.file_list);
+        setRetainInstance(true);
         return v;
     }
 

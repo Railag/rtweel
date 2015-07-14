@@ -36,6 +36,7 @@ public class DetailImageFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_detail_image, null, false);
         image = (ImageView) v.findViewById(R.id.detail_image);
+        setRetainInstance(true);
         return v;
     }
 

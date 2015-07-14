@@ -26,6 +26,8 @@ public class LoginFragment extends BaseFragment {
          * Login Check
 		 */
 
+        setRetainInstance(true);
+
         if (loginCheck()) {
             initialize();
         }
