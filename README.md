@@ -72,7 +72,7 @@ TODO:
 - ~~Search~~
 - Empty content processing (no messages / no tweets in timelines etc) // halfly done
 - ~~Progress Bar cancelling fix~~
-- New tweets messages within viewpager visibility bug
+- ~~New tweets messages within viewpager visibility bug~~
 - Main app icon
 - App icons
 - Some design things
