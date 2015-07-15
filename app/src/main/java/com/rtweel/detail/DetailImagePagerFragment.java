@@ -2,6 +2,7 @@ package com.rtweel.detail;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -58,6 +59,11 @@ public class DetailImagePagerFragment extends BaseFragment {
             @Override
             public int getCount() {
                 return mediaList.size();
+            }
+
+            @Override
+            public Parcelable saveState() {
+                return null;
             }
         };
 

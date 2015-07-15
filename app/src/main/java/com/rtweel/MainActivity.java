@@ -64,6 +64,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String MAIN_TAG = "mainTag";
+
     private FragmentManager mFragmentManager;
 
     private Fragment mCurrentFragment;
@@ -84,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        mFragmentManager = getSupportFragmentManager();
+        if (mFragmentManager == null)
+            mFragmentManager = getSupportFragmentManager();
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -99,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
 
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
-        setMainFragment(new LoginFragment());
+
+        if (findCurrentFragment() == null)
+            setMainFragment(new LoginFragment());
 
     }
 
@@ -341,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
         if (!(fragment instanceof LoginFragment || mCurrentFragment instanceof LoginFragment))
             fragmentTransaction.addToBackStack(null);
 
-        fragmentTransaction.replace(R.id.main_frame, fragment).commit();
+        fragmentTransaction.replace(R.id.main_frame, fragment, MAIN_TAG).commit();
 
         if (mCurrentFragment instanceof DetailFragment)
             show();
@@ -427,6 +433,13 @@ public class MainActivity extends AppCompatActivity {
         args.putString(Const.URL, url);
         fragment.setArguments(args);
         setMainFragment(fragment);
+    }
+
+    private Fragment findCurrentFragment() {
+        if (mFragmentManager == null)
+            mFragmentManager = getSupportFragmentManager();
+
+        return mFragmentManager.findFragmentByTag(MAIN_TAG);
     }
 
     public ProgressBar getLoadingBar() {
