@@ -1,3 +1,0 @@
--h
-Bad activity command, or no activities match: com.firrael.rtweel.dev
-Use -h for help.
