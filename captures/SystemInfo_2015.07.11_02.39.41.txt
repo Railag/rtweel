@@ -1,0 +1,85 @@
+Applications Graphics Acceleration Info:
+Uptime: 14375262 Realtime: 14375262
+
+** Graphics info for pid 24681 [com.firrael.rtweel.dev] **
+
+Recent DisplayList operations
+DrawRect
+DrawRect
+DrawText
+DrawPath
+DrawPath
+DrawRect
+DrawRoundRect
+DrawRect
+DrawRect
+DrawText
+DrawPath
+DrawRect
+DrawRoundRect
+DrawRect
+DrawText
+DrawPath
+DrawRect
+DrawRoundRect
+DrawText
+DrawBitmap
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawRect
+DrawBitmapRect
+DrawBitmapRect
+DrawBitmapRect
+DrawBitmapRect
+DrawBitmapRect
+DrawBitmapRect
+multiDraw
+  DrawText
+DrawRect
+DrawPath
+DrawText
+multiDraw
+  DrawPatch
+DrawText
+DrawText
+
+Caches:
+Current memory usage / total memory usage (bytes):
+  TextureCache           385516 / 25165824
+  LayerCache            3145728 / 16777216
+  RenderBufferCache           0 /  2097152
+  GradientCache           16384 /   524288
+  PathCache               33087 / 10485760
+  TextDropShadowCache         0 /  2097152
+  FontRenderer 0         524288 /   524288
+Other:
+  FboCache                    1 /       16
+  PatchCache                  6 /      512
+Total memory usage:
+  4105003 bytes, 3.91 MB
+
+Profile data in ms:
+
+	com.firrael.rtweel.dev/com.rtweel.MainActivity/android.view.ViewRootImpl@529fe304
+View hierarchy:
+
+  com.firrael.rtweel.dev/com.rtweel.MainActivity/android.view.ViewRootImpl@529fe304
+  39 views, 28.34 kB of display lists, 61 frames rendered
+
+
+Total ViewRootImpl: 1
+Total Views:        39
+Total DisplayList:  28.34 kB
+

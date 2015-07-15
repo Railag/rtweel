@@ -1,0 +1,74 @@
+Activity Resolver Table:
+  Full MIME Types:
+      image/*:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d4e56c
+      text/plain:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d4e56c
+
+  Base MIME Types:
+      text:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d4e56c
+
+  Wild MIME Types:
+      image:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d4e56c
+
+  Schemes:
+      https:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d4db3c
+      oauth:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d4fc00
+      http:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d4db3c
+
+  Non-Data Actions:
+      android.intent.action.MAIN:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d5154c
+
+  MIME Typed Actions:
+      android.intent.action.SEND:
+        52b3380c com.firrael.rtweel.dev/com.rtweel.MainActivity filter 52d4e56c
+
+Receiver Resolver Table:
+  Non-Data Actions:
+      com.rtweel.services.TweetReceiver.CANCEL_NOTIFICATION_ACTION:
+        52cfa8a0 com.firrael.rtweel.dev/com.rtweel.services.TweetReceiver filter 52d4ca74
+      com.rtweel.services.TweetReceiver.BROADCAST_ACTION:
+        52cfa8a0 com.firrael.rtweel.dev/com.rtweel.services.TweetReceiver filter 52d4ca74
+ 
+Registered ContentProviders:
+  com.firrael.rtweel.dev/com.rtweel.storage.TweetContentProvider:
+    Provider{52cfa748 com.rtweel.storage.TweetContentProvider}
+ 
+ContentProvider Authorities:
+  [com.rtweel.storage.TweetContentProvider]:
+    Provider{52cfa748 com.rtweel.storage.TweetContentProvider}
+      applicationInfo=ApplicationInfo{52da7da4 com.firrael.rtweel.dev}
+ 
+Packages:
+  Package [com.firrael.rtweel.dev] (52a3c504):
+    userId=10073 gids=[1015, 3003, 1028]
+    pkg=Package{52dcaf08 com.firrael.rtweel.dev}
+    codePath=/data/app/com.firrael.rtweel.dev-1.apk
+    resourcePath=/data/app/com.firrael.rtweel.dev-1.apk
+    nativeLibraryPath=/data/app-lib/com.firrael.rtweel.dev-1
+    versionCode=1 targetSdk=22
+    versionName=0.43
+    applicationInfo=ApplicationInfo{52da7da4 com.firrael.rtweel.dev}
+    flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    dataDir=/data/data/com.firrael.rtweel.dev
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    timeStamp=2015-07-11 02:37:45
+    firstInstallTime=2015-04-27 15:56:54
+    lastUpdateTime=2015-07-11 02:37:45
+    signatures=PackageSignatures{52a13738 [52a0ae5c]}
+    permissionsFixed=true haveGids=true installStatus=1
+    pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    User 0:  installed=true stopped=false notLaunched=false enabled=0
+    grantedPermissions:
+      android.permission.READ_EXTERNAL_STORAGE
+      android.permission.READ_PHONE_STATE
+      android.permission.RECEIVE_BOOT_COMPLETED
+      android.permission.ACCESS_NETWORK_STATE
+      android.permission.INTERNET
+      android.permission.WRITE_EXTERNAL_STORAGE
