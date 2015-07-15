@@ -77,6 +77,7 @@ TODO:
 - App icons
 - Some design things
 - Direct messages design update
+- Retain fragment fix for detail image
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/main/com.rtweel/Const.java class.
