@@ -30,6 +30,8 @@ public class HomeTweetFragment extends TweetFragment {
         mTimeline.setUserName(username);
         mTimeline.setScreenUserName(screenUserName);
         mTimeline.setUserId(userId);
+
+        setRetainInstance(true);
     }
 
     @Override

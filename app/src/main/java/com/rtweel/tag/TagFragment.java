@@ -71,6 +71,7 @@ public class TagFragment extends RecyclerViewFragment {
     protected void instantiateListData(String username, String userScreenName, long userId) {
         Bundle args = getArguments();
         query = new Query(args.getString(QUERY));
+        setRetainInstance(true);
     }
 
     @Override

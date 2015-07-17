@@ -57,6 +57,7 @@ public class DirectMessagesMainFragment extends RecyclerViewFragment {
 
     @Override
     protected void instantiateListData(String username, String userScreenName, long userId) {
+        setRetainInstance(true);
     }
 
     @Override
