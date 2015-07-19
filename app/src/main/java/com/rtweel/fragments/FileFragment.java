@@ -10,17 +10,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.rtweel.R;
-import com.rtweel.storage.App;
 import com.rtweel.Const;
 import com.rtweel.filechooser.FileAdapter;
-import com.rtweel.filechooser.Line;
+import com.rtweel.filechooser.FileItem;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -83,17 +78,17 @@ public class FileFragment extends BaseFragment {
             }
         });
 
-        getActionBar().setTitle("Current Dir: " + startPath.getName());
-        List<Line> pathList = new ArrayList<Line>();
-        List<Line> fileList = new ArrayList<Line>();
+        getActionBar().setTitle(getString(R.string.file_current_dir) + ":" + startPath.getName());
+        List<FileItem> pathList = new ArrayList<FileItem>();
+        List<FileItem> fileList = new ArrayList<FileItem>();
         if (paths != null && paths.length > 0) {
             try {
                 for (File path : paths) {
                     if (path.isDirectory())
-                        pathList.add(new Line(path.getName(), "Folder", path
+                        pathList.add(new FileItem(path.getName(), getString(R.string.file_folder), path
                                 .getAbsolutePath()));
                     else {
-                        fileList.add(new Line(path.getName(), "File Size: "
+                        fileList.add(new FileItem(path.getName(), getString(R.string.file_size) + ":"
                                 + path.length(), path.getAbsolutePath()));
                     }
                 }
@@ -107,18 +102,20 @@ public class FileFragment extends BaseFragment {
         }
         if (!startPath.getName().contains("sdcard") && startPath.getParent() != null) {
             pathList.add(0,
-                    new Line("..", "Parent Directory", startPath.getParent()));
+                    new FileItem("..", getString(R.string.file_parent_directory), startPath.getParent()));
         }
-        mAdapter = new FileAdapter(getActivity(), R.layout.file, pathList);
+
+        mAdapter = new FileAdapter(getActivity(), pathList);
         list.setAdapter(mAdapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Line line = mAdapter.getItem(position);
-                if (line.getData().equalsIgnoreCase("folder")
-                        || line.getData().equalsIgnoreCase("parent directory")) {
+                FileItem line = mAdapter.getItem(position);
+                if (line.getDetails().equalsIgnoreCase("folder")
+                        || line.getDetails().equalsIgnoreCase("parent directory")) {
                     mCurrentPath = new File(line.getPath());
+                    getLoadingBar().setVisibility(View.VISIBLE);
                     initialize(mCurrentPath);
                 } else {
                     onFileClick(line);
@@ -127,47 +124,10 @@ public class FileFragment extends BaseFragment {
             }
         });
 
+        getLoadingBar().setVisibility(View.GONE);
     }
 
-    private void onFileClick(Line line) {
-        final String path = line.getPath();
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                File file = new File(Environment.getExternalStorageDirectory()
-                        + App.PHOTO_PATH + ".jpg");
-                FileOutputStream output = null;
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    output = new FileOutputStream(file);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                FileInputStream input = null;
-                try {
-                    input = new FileInputStream(new File(path));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                byte[] buf = new byte[1024];
-                int lenght;
-                try {
-                    while ((lenght = input.read(buf)) > 0) {
-                        output.write(buf, 0, lenght);
-                    }
-                    input.close();
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
+    private void onFileClick(FileItem line) {
         SendTweetFragment fragment = new SendTweetFragment();
         Bundle args = new Bundle();
         args.putString(Const.FILE_URI, line.getPath());

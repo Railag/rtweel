@@ -4,14 +4,14 @@ import android.support.annotation.NonNull;
 
 import java.util.Locale;
 
-public class Line implements Comparable<Line> {
+public class FileItem implements Comparable<FileItem> {
 	private String mName;
-	private String mData;
+	private String mDetails;
 	private String mPath;
 
-	public Line(String name, String data, String path) {
+	public FileItem(String name, String details, String path) {
 		mName = name;
-		mData = data;
+		mDetails = details;
 		mPath = path;
 	}
 
@@ -19,8 +19,8 @@ public class Line implements Comparable<Line> {
 		return mName;
 	}
 
-	public String getData() {
-		return mData;
+	public String getDetails() {
+		return mDetails;
 	}
 
 	public String getPath() {
@@ -28,10 +28,10 @@ public class Line implements Comparable<Line> {
 	}
 
 	@Override
-	public int compareTo(@NonNull Line line) {
+	public int compareTo(@NonNull FileItem item) {
 		if (this.mName != null)
 			return this.mName.toLowerCase(Locale.getDefault()).compareTo(
-					line.getName().toLowerCase(Locale.getDefault()));
+					item.getName().toLowerCase(Locale.getDefault()));
 		else
 			throw new IllegalArgumentException();
 	}

@@ -20,6 +20,18 @@
     <string name="bad_connection_message">Нестабильное интернет-соединение, что может сказаться на работе приложения</string>
     <string name="new_tweets">Новые твиты:</string>
     <string name="unloaded_tweets">\n остались незагруженные твиты, Вы можете дозагрузить их, сделав ещё один свайп вверх</string>
+    <string name="tweet_send_success">Твит успешно отправлен</string>
+    <string name="tweet_send_failed">Ошибка, твит не отправлен</string>
+    <string name="tweet_send_image_failed">Ошибка получения изображения</string>
+    <string name="send_tweet_image_capture_no_camera">Ошибка, на телефоне не найдено приложение для работы с камерой</string>
+    <string name="tweet_send_network_problems">Проблемы с соединением</string>
+    <string name="tweet_send_empty">Твит не может быть пустым</string>
+    <string name="tweet_send_too_long">Твит слишком большой</string>
+    <string name="file_current_dir">"Текущая директория: "</string>
+    <string name="file_folder">Директория</string>
+    <string name="file_size">"Размер файла: "</string>
+    <string name="file_parent_directory">Назад</string>
+
 
 
     <!-- Empty messages-->
@@ -106,5 +118,4 @@
     <string name="pn_dmessage_title">Новое сообщение</string>
     <string name="pn_new_message">Новые твиты: </string>
     <string name="pn_new_title">Обновление ленты</string>
-
 </resources>

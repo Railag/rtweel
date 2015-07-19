@@ -1,52 +1,80 @@
 package com.rtweel.filechooser;
 
-import java.util.List;
-
-import com.rtweel.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class FileAdapter extends ArrayAdapter<Line> {
-	private Context mContext;
-	private int mId;
-	private List<Line> mList;
+import com.rtweel.R;
 
-	public FileAdapter(Context context, int textViewId, List<Line> list) {
-		super(context, textViewId, list);
-		mContext = context;
-		mId = textViewId;
-		mList = list;
-	}
+import java.util.List;
 
-	public Line getItem(int number) {
-		return mList.get(number);
-	}
+public class FileAdapter extends BaseAdapter {
+    private Context mContext;
+    private List<FileItem> mList;
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+    public FileAdapter(Context context, List<FileItem> list) {
+        mContext = context;
+        mList = list;
+    }
 
-		if (convertView == null) {
-			LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-			convertView = layoutInflater.inflate(mId, null);
-		}
+    @Override
+    public int getCount() {
+        return mList.size();
+    }
 
-		final Line line = mList.get(position);
-		if (line != null) {
-			TextView fileName = (TextView) convertView.findViewById(R.id.file_name);
-			TextView fileClass = (TextView) convertView.findViewById(R.id.file_class);
+    public FileItem getItem(int number) {
+        return mList.get(number);
+    }
 
-			if (fileName != null)
-				fileName.setText(line.getName());
-			if (fileClass != null)
-				fileClass.setText(line.getData());
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-		}
-		return convertView;
-	}
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        final FileItem item = mList.get(position);
+
+        if (convertView == null) {
+            LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+            convertView = layoutInflater.inflate(R.layout.file_item, parent, false);
+
+            TextView name = (TextView) convertView.findViewById(R.id.file_item_name);
+            TextView details = (TextView) convertView.findViewById(R.id.file_item_details);
+
+            ViewHolder vh = new ViewHolder(name, details);
+            convertView.setTag(vh);
+        }
+
+        ViewHolder vh = (ViewHolder) convertView.getTag();
+
+        vh.getNameView().setText(item.getName());
+        vh.getDetailsView().setText(item.getDetails());
+
+        return convertView;
+    }
+
+
+    static class ViewHolder {
+        private TextView name;
+        private TextView details;
+
+        ViewHolder(TextView name, TextView details) {
+            this.name = name;
+            this.details = details;
+        }
+
+        public TextView getNameView() {
+            return name;
+        }
+
+        public TextView getDetailsView() {
+            return details;
+        }
+    }
 
 }

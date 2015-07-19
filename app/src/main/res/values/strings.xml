@@ -20,6 +20,18 @@
     <string name="bad_connection_message">No network connection, application requires it for normal functionality</string>
     <string name="new_tweets">New tweets:</string>
     <string name="unloaded_tweets">\n There are unloaded new tweets, you can make up swipe one more time</string>
+    <string name="tweet_send_success">Tweet successfully sent</string>
+    <string name="tweet_send_failed">Tweet sending failed</string>
+    <string name="tweet_send_image_failed">Image capturing failed</string>
+    <string name="send_tweet_image_capture_no_camera">No camera apps are present on the phone, can\'t take a photo</string>
+    <string name="tweet_send_network_problems">Network problems</string>
+    <string name="tweet_send_empty">Tweet must contain some symbols, can\'t be empty</string>
+    <string name="tweet_send_too_long">Tweet is too long</string>
+    <string name="file_current_dir">"Current Dir: "</string>
+    <string name="file_folder">Folder</string>
+    <string name="file_size">"File Size: "</string>
+    <string name="file_parent_directory">Parent Directory</string>
+
 
 
     <!-- Empty Messages-->
@@ -103,5 +115,4 @@
     <string name="pn_dmessage_title">New message</string>
     <string name="pn_new_message">Tweets downloaded: </string>
     <string name="pn_new_title">Timeline update</string>
-
 </resources>

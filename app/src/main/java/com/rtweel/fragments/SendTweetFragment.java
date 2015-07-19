@@ -17,7 +17,6 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,14 +30,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.rtweel.R;
-import com.rtweel.tasks.tweet.SendTweetTask;
-import com.rtweel.storage.App;
 import com.rtweel.Const;
+import com.rtweel.R;
+import com.rtweel.storage.App;
+import com.rtweel.tasks.tweet.SendTweetTask;
+import com.rtweel.utils.Photo;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -67,19 +65,20 @@ public class SendTweetFragment extends BaseFragment {
 
     private long mReplyId = -1L;
 
+    private String mPhotoPath;
+
 
     @Override
     public void onStart() {
         super.onStart();
 
         Bundle args = getArguments();
-        if(args != null) {
+        if (args != null) {
             if (args.containsKey(Const.REPLY_ID))
                 mReplyId = args.getLong(Const.REPLY_ID);
-            else if(args.containsKey(Const.FILE_URI)) {
-                String path = args.getString(Const.FILE_URI);
-                Bitmap bitmap = BitmapFactory.decodeFile(path);
-                setImage(bitmap);
+            if (args.containsKey(Const.FILE_URI)) {
+                mPhotoPath = args.getString(Const.FILE_URI);
+                updateImage();
 
                 mCurrentMax = 117;
 
@@ -92,13 +91,10 @@ public class SendTweetFragment extends BaseFragment {
         mTweetProgress.setProgressColor(getResources().getColor(R.color.green_progress));
         mTweetProgress.setBackgroundColor(getResources().getColor(R.color.light_gray_progress));
 
-//        mTweetProgress.setHeaderColor(Color.parseColor("#38c0ae"));
         mTweetProgress.setMax(mCurrentMax);
         int charsCount = mTweetEntry.getText().length();
         mTweetProgress.setProgress(charsCount);
         mTweetLengthCounter.setText(charsCount + "/" + mCurrentMax);
-//        mTweetProgress.setIconImageDrawable(getResources().getDrawable(R.drawable.rtweel));
-
 
         mTweetEntry.addTextChangedListener(new TextWatcher() {
 
@@ -135,18 +131,28 @@ public class SendTweetFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                String uri = Environment.getExternalStorageDirectory()
-                        + App.PHOTO_PATH + ".jpg";
-                File file = new File(uri);
+
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+                    mPhotoPath = getActivity().getExternalCacheDir()
+                            + Const.PHOTO_PATH;
+                else
+                    mPhotoPath = getActivity().getCacheDir() + Const.PHOTO_PATH;
+
+                File file = new File(mPhotoPath);
+
+                boolean isCreated = false;
+
                 try {
-                    file.createNewFile();
+                    isCreated = file.createNewFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+
+                if (isCreated && intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                     startActivityForResult(intent, PHOTO_REQUEST_CODE);
-                }
+                } else
+                    Toast.makeText(getActivity(), getString(R.string.send_tweet_image_capture_no_camera), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -177,9 +183,7 @@ public class SendTweetFragment extends BaseFragment {
                     mTweetEntry.setText(data.getExtras().getString(
                             Intent.EXTRA_TEXT));
                 } else if (data.hasExtra(Intent.EXTRA_STREAM)) {
-                    // String uri =
-                    // data.getExtras().getString(Intent.EXTRA_STREAM);
-                    Uri uri = (Uri) getActivity().getIntent().getExtras().getParcelable(
+                    Uri uri = getActivity().getIntent().getExtras().getParcelable(
                             Intent.EXTRA_STREAM);
                     Cursor cursor = null;
                     String path = null;
@@ -196,23 +200,10 @@ public class SendTweetFragment extends BaseFragment {
                             cursor.close();
                         }
                     }
-                    Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    mTweetPicture.setImageBitmap(bitmap);
-                    FileOutputStream stream = null;
-                    File file = new File(
-                            Environment.getExternalStorageDirectory()
-                                    + App.PHOTO_PATH + ".jpg");
-                    try {
-                        stream = new FileOutputStream(file);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    //Bitmap bitmap = BitmapFactory.decodeFile(path);
+                    Photo.setPicture(path, mTweetPicture);
+                    //mTweetPicture.setImageBitmap(bitmap);
+                    mPhotoPath = path;
                 }
             }
         }
@@ -227,7 +218,6 @@ public class SendTweetFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_send_tweet, menu);
-
     }
 
     @Override
@@ -237,17 +227,15 @@ public class SendTweetFragment extends BaseFragment {
             case R.id.tweet_send_ok: {
                 if (mIsValidTweetSize) {
                     if (!App.isOnline(getActivity())) {
-                        Log.i("DEBUG",
-                                "sendtweetactivity send tweet button onClick NO NETWORK");
                         Toast.makeText(getActivity(),
-                                "Network problems",
+                                getString(R.string.tweet_send_network_problems),
                                 Toast.LENGTH_LONG).show();
                         return false;
                     }
                     String tweet = mTweetEntry.getText().toString();
                     if (TextUtils.isEmpty(tweet)) {
                         Toast toast = Toast.makeText(getActivity(),
-                                "Tweet must contain some symbols, can't be empty",
+                                getString(R.string.tweet_send_empty),
                                 Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
@@ -256,11 +244,11 @@ public class SendTweetFragment extends BaseFragment {
 
 
                     new SendTweetTask(getActivity(), mReplyId)
-                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet);
+                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet, mPhotoPath);
                     mTweetEntry.setText("");
                 } else {
                     Toast toast = Toast.makeText(getActivity(),
-                            "Too long tweet, must be less than" + mCurrentMax + " symbols",
+                            getString(R.string.tweet_send_too_long),
                             Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
@@ -300,9 +288,8 @@ public class SendTweetFragment extends BaseFragment {
 
     }
 
-    public void setImage(Bitmap bitmap) {
-        if (bitmap != null)
-            mTweetPicture.setImageBitmap(bitmap);
+    public void updateImage() {
+        Photo.setPicture(mPhotoPath, mTweetPicture);
     }
 
     @Override
@@ -319,17 +306,14 @@ public class SendTweetFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PHOTO_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Bitmap bitmap = BitmapFactory.decodeFile(Environment
-                        .getExternalStorageDirectory()
-                        + App.PHOTO_PATH
-                        + ".jpg");
-                setImage(bitmap);
-                mCurrentMax = 117;
+                if (mPhotoPath != null) {
+                    updateImage();
+                    mCurrentMax = 117;
+                }
             }
-
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(getActivity(),
-                    "Image capturing failed", Toast.LENGTH_LONG).show();
+                    getString(R.string.tweet_send_image_failed), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -358,11 +342,20 @@ public class SendTweetFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
-        File file = new File(Environment.getExternalStorageDirectory()
-                + App.PHOTO_PATH + ".jpg");
-        if(file.exists())
-            file.delete();
         super.onDestroy();
+
+        File prefix;
+
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+            prefix = getActivity().getExternalCacheDir();
+        else
+            prefix = getActivity().getCacheDir();
+
+        File file = new File(prefix
+                + Const.PHOTO_PATH);
+        if (file.exists())
+            file.delete();
     }
+
 }
 

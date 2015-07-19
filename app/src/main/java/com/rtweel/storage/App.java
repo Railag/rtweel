@@ -11,11 +11,7 @@ import android.net.NetworkInfo;
 import com.rtweel.BuildConfig;
 
 public class App extends Application {
-
-
-    public static final String BUILD = BuildConfig.APPLICATION_ID;
-    public static final String PHOTO_PATH = "/Android/data/" + BUILD + "/photo";
-
+    
     private static SQLiteDatabase sDb;
 
     @Override

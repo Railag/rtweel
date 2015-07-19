@@ -14,6 +14,7 @@
     <color name="caribbean_green">#00CC99</color>
     <color name="celadon">#ACE1AF</color>
     <color name="eucalyptus">#44D7A8</color>
+    <color name="white">#FFFFFF</color>
 
     <integer-array name="colors">
         <item name="green">@color/green</item>

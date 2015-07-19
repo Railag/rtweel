@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import twitter4j.DirectMessage;
 import twitter4j.RateLimitStatusEvent;
 import twitter4j.RateLimitStatusListener;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.auth.AccessToken;
 
@@ -25,6 +26,7 @@ import twitter4j.auth.AccessToken;
 
 public class Tweets {
     private static Twitter sTwitter;
+    private static Status sLatestTweet;
 
     public static String[] getProjection() {
         return getProjection(false);
@@ -76,6 +78,14 @@ public class Tweets {
         new GetScreenNameTask(context, null, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, sTwitter);
 
         return sTwitter;
+    }
+
+    public static void saveLatestTweet(Status tweet) {
+        sLatestTweet = tweet;
+    }
+
+    public static Status getLatestTweet() {
+        return sLatestTweet;
     }
 
 
