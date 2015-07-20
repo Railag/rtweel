@@ -40,8 +40,8 @@ TODO:
 - ~~Adding network exceptions avoiding~~, ~~screen rotating info saving~~
 - ~~Logout~~
 - ~~Followers~~
-- Direct messages //halfly implemented
-- Mentions //implemented, just no way to get the proper mentions for different users. search+-
+- ~~Direct messages~~
+- ~~Mentions~~
 - ~~Trends~~
 - ~~Paging system improvement~~
 - ~~Tweet deletion~~
@@ -49,12 +49,12 @@ TODO:
 - ~~links~~ ~~and pictures in tweets~~
 - ~~some effects~~
 - ~~localization (EN/RU)~~
-- File choosing section improvements
-- Update token exception fix
+- ~~File choosing section improvements~~
+- ~~Update token exception fix~~
 - ~~Round image views for profile images~~
 - ~~All media resources processing in detail screen~~
 - ~~Changing activity structure to fully fragments based~~
-- Improving app behavior with bad connections
+- ~~Improving app behavior with bad connections~~
 - ~~Improving timeline system~~
 - ~~Replacing rotate animation with something more smoother~~
 - Adding webview for urls handling // some bugs there
@@ -70,7 +70,7 @@ TODO:
 - ~~Smooth Progress Bar for all loadings~~
 - ~~Show profile by name in nav drawer~~
 - ~~Search~~
-- Empty content processing (no messages / no tweets in timelines etc) // halfly done
+- ~~Empty content processing (no messages / no tweets in timelines etc)~~
 - ~~Progress Bar cancelling fix~~
 - ~~New tweets messages within viewpager visibility bug~~
 - Main app icon
@@ -78,6 +78,7 @@ TODO:
 - Some design things
 - Direct messages design update
 - Retain fragment fix for detail image
+- Add search under mentions timeline for fetching
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/main/com.rtweel/Const.java class.
