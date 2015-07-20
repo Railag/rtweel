@@ -340,7 +340,7 @@ public abstract class RecyclerViewFragment extends BaseFragment {
         }
     }
 
-    public enum State {
+    protected enum State {
         LOADED,
         LOADING,
         EMPTY
@@ -357,7 +357,7 @@ public abstract class RecyclerViewFragment extends BaseFragment {
         }
     }
 
-    public void refreshState(State state) {
+    protected void refreshState(State state) {
         switch (state) {
             case LOADED:
                 list.setVisibility(View.VISIBLE);

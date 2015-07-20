@@ -45,12 +45,12 @@ public class MentionsTask extends AsyncTask<String, Void, List<Status>> {
         query.setQuery(queryString);
         query.setCount(50);
 
-        if (mFragment.getTimeline().getTweets().size() > 0) {
-            if (mIsUp)
-                query.setSinceId(mFragment.getNewestItemId());
-            else
-                query.setMaxId(mFragment.getOldestItemId());
-        }
+//        if (mFragment.getTimeline().getTweets().size() > 0) {
+//            if (mIsUp)
+//                query.setSinceId(mFragment.getNewestItemId());
+//            else
+//                query.setMaxId(mFragment.getOldestItemId());
+//        }
 
         List<twitter4j.Status> resultList = null;
         try {

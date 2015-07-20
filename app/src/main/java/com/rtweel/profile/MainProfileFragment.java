@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -188,7 +189,14 @@ public class MainProfileFragment extends BaseFragment {
 
                 return title;
             }
+
+            @Override
+            public Parcelable saveState() {
+                return null;
+            }
         };
+
+
 
         mPager.setAdapter(mPagerAdapter);
 
