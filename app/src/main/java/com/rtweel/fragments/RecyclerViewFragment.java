@@ -340,13 +340,13 @@ public abstract class RecyclerViewFragment extends BaseFragment {
         }
     }
 
-    private enum State {
+    protected enum State {
         LOADED,
         LOADING,
         EMPTY
     }
 
-    private State getState() {
+    protected State getState() {
         if (adapter.getItemCount() > 0)
             return State.LOADED;
         else {

@@ -3,8 +3,6 @@ package com.rtweel.tasks.tweet;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.rtweel.SearchAdapter;
@@ -16,8 +14,6 @@ import java.util.List;
 
 import twitter4j.Query;
 import twitter4j.QueryResult;
-import twitter4j.ResponseList;
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -50,17 +46,14 @@ public class SearchTask extends AsyncTask<String, Void, List<SearchItem>> {
         query.setResultType(Query.RECENT);
         query.setQuery(queryString);
         query.setCount(10);
-        //    query.setSinceId(mAdapter.getItem(0).getId());
+
         List<twitter4j.Status> resultList = null;
         List<twitter4j.User> users = null;
         try {
             QueryResult result = twitter.search(query);
             users = twitter.searchUsers(queryString, 0);
             resultList = result.getTweets();
-
-            //    TODO fetch next page   result.nextQuery();
-        } catch
-                (TwitterException e) {
+        } catch (TwitterException e) {
             e.printStackTrace();
         }
 
@@ -74,7 +67,7 @@ public class SearchTask extends AsyncTask<String, Void, List<SearchItem>> {
         }
 
         if (resultList != null && resultList.size() > 0)
-            for(twitter4j.Status s : resultList)
+            for (twitter4j.Status s : resultList)
                 items.add(new SearchItem(s));
 
         return items;
