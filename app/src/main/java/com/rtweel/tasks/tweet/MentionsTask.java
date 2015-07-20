@@ -78,6 +78,11 @@ public class MentionsTask extends AsyncTask<String, Void, List<Status>> {
                         timeline.getTweets().add(s);
             }
             mFragment.getAdapter().notifyDataSetChanged();
+
+            if (mFragment.getTimeline().getTweets().size() > 0)
+                mFragment.setStateLoaded();
+
+            mFragment.stopLoadingAnim();
         }
     }
 
