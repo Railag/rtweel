@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rtweel"
-    android:versionCode="1" >
+<manifest package="com.rtweel"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1">
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false"/>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
@@ -17,63 +17,56 @@
         android:allowBackup="true"
         android:icon="@drawable/rtweel"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
 
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
                     android:host="rtweel.com"
-                    android:scheme="oauth" />
+                    android:scheme="oauth"/>
             </intent-filter>
 
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND"/>
 
 
-                <data android:mimeType="text/plain" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
-
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
+                <data android:mimeType="text/plain"/>
+                <data android:mimeType="image/*"/>
             </intent-filter>
 
         </activity>
 
         <service
             android:name="com.rtweel.services.TweetService"
-            android:exported="false" />
+            android:exported="false"/>
 
         <receiver
             android:name="com.rtweel.services.TweetReceiver"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.rtweel.services.TweetReceiver.BROADCAST_ACTION" />
-                <action android:name="com.rtweel.services.TweetReceiver.CANCEL_NOTIFICATION_ACTION" />
+                <action android:name="com.rtweel.services.TweetReceiver.BROADCAST_ACTION"/>
+                <action android:name="com.rtweel.services.TweetReceiver.CANCEL_NOTIFICATION_ACTION"/>
             </intent-filter>
         </receiver>
 
         <provider
             android:name=".storage.TweetContentProvider"
             android:authorities="com.rtweel.storage.TweetContentProvider"
-            android:exported="false" />
+            android:exported="false"/>
 
     </application>
 

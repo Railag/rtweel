@@ -8,7 +8,6 @@ public class Const {
     //web view
     public static final String URL = "url";
 
-
     //detail tweet
 	public static final String POSITION = "position";
 
@@ -47,5 +46,4 @@ public class Const {
     public static final String PREFERENCE_TWITTER_OAUTH_TOKEN = "TWITTER_OAUTH_TOKEN";
     public static final String PREFERENCE_TWITTER_OAUTH_TOKEN_SECRET = "TWITTER_OAUTH_TOKEN_SECRET";
     public static final String PREFERENCE_TWITTER_IS_LOGGED_IN = "TWITTER_IS_LOGGED_IN";
-
 }

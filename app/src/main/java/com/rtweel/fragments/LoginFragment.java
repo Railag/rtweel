@@ -5,12 +5,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
+import com.rtweel.Const;
 import com.rtweel.R;
 import com.rtweel.tasks.auth.TwitterAuthenticateTask;
-import com.rtweel.Const;
 import com.rtweel.tasks.tweet.TwitterGetAccessTokenTask;
 
 /**
@@ -58,17 +56,14 @@ public class LoginFragment extends BaseFragment {
                         Const.TWITTER_CALLBACK_URL)) {
                     String verifier = uri
                             .getQueryParameter(Const.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
-                    Log.i("DEBUG", "Verification..");
-                        new TwitterGetAccessTokenTask(getActivity())
-                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, verifier).get();
+                    new TwitterGetAccessTokenTask(getActivity())
+                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, verifier).get();
 
-                        initialize();
+                    initialize();
                 } else {
-                    Log.i("DEBUG", "Browser authentification...");
                     new TwitterAuthenticateTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             } catch (Exception e) {
-                Log.i("DEBUG", e.toString());
                 e.printStackTrace();
             }
             return false;

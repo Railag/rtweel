@@ -4,10 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.rtweel.storage.Tweets;
 import com.rtweel.utils.TwitterUtil;
 
 import twitter4j.auth.RequestToken;
@@ -31,8 +28,8 @@ public class TwitterAuthenticateTask extends AsyncTask<Void, Void, Void> {
                     Uri.parse(token
                             .getAuthenticationURL()));
             mContext.startActivity(intent);
-        } else
-            Log.i("DEBUG", "Auth network problems");
+        }
+
         return null;
     }
 }

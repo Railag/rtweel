@@ -1,12 +1,15 @@
 package com.rtweel.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -32,8 +35,7 @@ public class WebViewFragment extends BaseFragment {
 
     @Override
     protected String getTitle() {
-        //TODO title for url
-        return null;
+        return webView.getTitle();
     }
 
     @Override
@@ -49,12 +51,24 @@ public class WebViewFragment extends BaseFragment {
         return v;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWebView(View v) {
         webView = (WebView) v.findViewById(R.id.webview);
 
         webView.setWebViewClient(new WVClient());
 
         webView.setWebChromeClient(new WebChromeClient());
+
+        CookieManager.getInstance().setAcceptCookie(true);
+
+        final WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setSupportZoom(false);
+        settings.setUseWideViewPort(false);
+        settings.setSupportMultipleWindows(false);
+        settings.setGeolocationEnabled(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setGeolocationDatabasePath(getActivity().getFilesDir().getPath());
 
     }
 

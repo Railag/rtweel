@@ -54,6 +54,10 @@ import com.rtweel.services.TweetService;
 import com.rtweel.storage.App;
 import com.rtweel.storage.AppUser;
 import com.rtweel.tasks.tweet.SearchTask;
+import com.rtweel.trends.TrendsFragment;
+
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.protocol.HTTP;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -61,6 +65,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -115,12 +122,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(TweetService.LOCATION)) {
             processPN (intent.getSerializableExtra(TweetService.LOCATION));
-        }
-
-        Uri uri = intent.getData();
-        if (uri != null) {
-            if (uri.getScheme().equals("http") || uri.getScheme().equals("https"))
-                loadUrl(uri.toString()); //todo fix some uris not loaded
         }
     }
 
@@ -272,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                         setMainFragment(new DirectMessagesMainFragment());
                         break;
                     case 4:
-                        setMainFragment(new com.rtweel.trends.TrendsFragment());
+                        setMainFragment(new TrendsFragment());
                         break;
                     case 5:
                         setMainFragment(new SettingsFragment());

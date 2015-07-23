@@ -18,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +85,7 @@ public class DetailFragment extends BaseFragment {
 
     private int mediaIds[] = {1, 2, 3, 4, 5};
 
-    private final static String RESTRICTED_SYMBOLS = ":";
+    private final static String RESTRICTED_SYMBOLS = ":.";
 
     private static String sPath;
 
@@ -155,7 +154,7 @@ public class DetailFragment extends BaseFragment {
 
                 @Override
                 public void onClick(View v) {
-                    if (!name.equals(AppUser.getUserName(getActivity()))) {
+                    if (! name.equals(AppUser.getUserName(getActivity()))) {
                         new RetweetTask(DetailFragment.this, retweetsButton, retweetsCountView,
                                 mIsRetweeted).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id, mRetweetId);
                     } else {
@@ -183,7 +182,7 @@ public class DetailFragment extends BaseFragment {
 
         if (start != null) {
             sPath = Environment.getExternalStorageDirectory() + "/"
-                    + getActivity().getPackageName() + "/" + "tmp" + ".jpg";
+                    + getActivity().getPackageName() + "/tmp.jpg";
             mTweet = (Status) start.getSerializable(Const.TWEET);
             final String name = mTweet.getUser().getName();
             String date = DateParser.parse(mTweet.getCreatedAt().toString());
@@ -360,36 +359,45 @@ public class DetailFragment extends BaseFragment {
 
         ss = findSpannables(ss, '#');
 
+        ss = findSpannables(ss, 'h');
+
         textView.setText(ss);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private SpannableString findSpannables(SpannableString ss, char c) {
 
         String text = ss.toString();
         int fi;
-        int fiEnd = -1;
+        int fiEnd = - 1;
 
         while (true) {
             fi = text.indexOf(c, fiEnd + 1);
-            if (fi != -1) {
+            if (fi != - 1) {
                 fiEnd = text.indexOf(' ', fi + 1);
-                if (fiEnd == -1)
-                    fiEnd = text.length() - 1;
+                if (fiEnd == - 1)
+                    fiEnd = text.length();
 
-                ClickableSpan clickableSpan;
+                ClickableSpan clickableSpan = null;
                 if (c == '@')
                     clickableSpan = getProfileSpan(fi, fiEnd, text);
                 else if (c == '#')
                     clickableSpan = getTagSpan(fi, fiEnd, text);
-                else
-                    break;
+                else if (c == 'h') {
+                    int interval = fiEnd - fi;
+                    if (interval > ss.length() - fi)
+                        continue;
+                    String url = ss.subSequence(fi, fiEnd).toString();
+                    if (url.startsWith("http"))
+                        clickableSpan = getUrlSpan(fi, fiEnd, text);
+                }
 
-                TextPaint textPaint = new TextPaint();
-                textPaint.baselineShift = 2;
-                clickableSpan.updateDrawState(textPaint);
+                if (clickableSpan != null) {
+                    TextPaint textPaint = new TextPaint();
+                    textPaint.baselineShift = 2;
+                    clickableSpan.updateDrawState(textPaint);
 
-                ss.setSpan(clickableSpan, fi, fiEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(clickableSpan, fi, fiEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             } else
                 break;
         }
@@ -400,7 +408,7 @@ public class DetailFragment extends BaseFragment {
     private ClickableSpan getTagSpan(int fi, int fiEnd, String text) {
         final TagClickableSpan clickableSpan = new TagClickableSpan();
         clickableSpan.mFi = fi + 1; // for char
-        if (text.substring(fiEnd - 1, fiEnd).contains(RESTRICTED_SYMBOLS)) // for @name:
+        if (RESTRICTED_SYMBOLS.contains(text.substring(fiEnd - 1, fiEnd))) // for @name:
             fiEnd--;
 
         clickableSpan.mFiEnd = fiEnd;
@@ -410,13 +418,24 @@ public class DetailFragment extends BaseFragment {
     private ClickableSpan getProfileSpan(int fi, int fiEnd, String text) {
         final ProfileClickableSpan clickableSpan = new ProfileClickableSpan();
         clickableSpan.mFi = fi + 1; // for char
-        if (text.substring(fiEnd - 1, fiEnd).contains(RESTRICTED_SYMBOLS)) // for @name:
+        if (RESTRICTED_SYMBOLS.contains(text.substring(fiEnd - 1, fiEnd))) // for @name:
             fiEnd--;
 
         clickableSpan.mFiEnd = fiEnd;
         return clickableSpan;
     }
 
+    private ClickableSpan getUrlSpan(int fi, int fiEnd, String text) {
+        final UrlClickableSpan clickableSpan = new UrlClickableSpan();
+        clickableSpan.mFi = fi;
+        String substr = text.substring(fiEnd - 1, fiEnd);
+        if (RESTRICTED_SYMBOLS.contains(substr))
+            fiEnd--;
+
+
+        clickableSpan.mFiEnd = fiEnd;
+        return clickableSpan;
+    }
 
     private void saveToFile(ImageView v) {
         Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(),
@@ -426,8 +445,8 @@ public class DetailFragment extends BaseFragment {
         v.invalidate();
         String tempFilePath = sPath;
         File tempFile = new File(tempFilePath);
-        if (!tempFile.exists()) {
-            if (!tempFile.getParentFile().exists()) {
+        if (! tempFile.exists()) {
+            if (! tempFile.getParentFile().exists()) {
                 tempFile.getParentFile().mkdirs();
             }
         }
@@ -466,11 +485,11 @@ public class DetailFragment extends BaseFragment {
     }
 
     public void changeIsRetweeted() {
-        mIsRetweeted = !mIsRetweeted;
+        mIsRetweeted = ! mIsRetweeted;
     }
 
     public void changeIsFavorited() {
-        mIsFavorited = !mIsFavorited;
+        mIsFavorited = ! mIsFavorited;
     }
 
     public void setRetweetId(Long id) {
@@ -518,6 +537,16 @@ public class DetailFragment extends BaseFragment {
             args.putString(TagFragment.QUERY, ((TextView) widget).getText().subSequence(mFi, mFiEnd).toString());
             tagFragment.setArguments(args);
             getMainActivity().setMainFragment(tagFragment);
+        }
+    }
+
+    private class UrlClickableSpan extends ClickableSpan {
+        private int mFi, mFiEnd;
+
+        @Override
+        public void onClick(View widget) {
+            String url = ((TextView) widget).getText().subSequence(mFi, mFiEnd).toString();
+            getMainActivity().loadUrl(url);
         }
     }
 
