@@ -3,6 +3,7 @@ package com.rtweel.tasks.tweet;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -31,11 +32,12 @@ public class SendTweetTask extends AsyncTask<String, String, Boolean> {
     protected Boolean doInBackground(String... params) {
 
         StatusUpdate update = new StatusUpdate(params[0]);
-//        File file = new File(Environment.getExternalStorageDirectory()
-//                + App.PHOTO_PATH + ".jpg");
-        File file = new File(params[1]);
-        if (file.exists()) {
-            update.setMedia(file);
+
+        if (!TextUtils.isEmpty(params[1])) {
+            File file = new File(params[1]);
+            if (file.exists()) {
+                update.setMedia(file);
+            }
         }
 
 
