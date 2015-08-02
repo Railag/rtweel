@@ -45,7 +45,7 @@ TODO:
 - ~~Trends~~
 - ~~Paging system improvement~~
 - ~~Tweet deletion~~
-- Last tweet edition
+- ~~Last tweet edition~~
 - ~~links~~ ~~and pictures in tweets~~
 - ~~some effects~~
 - ~~localization (EN/RU)~~
@@ -57,7 +57,7 @@ TODO:
 - ~~Improving app behavior with bad connections~~
 - ~~Improving timeline system~~
 - ~~Replacing rotate animation with something more smoother~~
-- Adding webview for urls handling // some bugs there
+- ~~Adding webview for urls handling~~
 - ~~Replacing standard menu with nav drawer one~~
 - Add view pager for detail tweet scrolling
 - ~~Replace main listview with recyclerview~~
@@ -78,7 +78,7 @@ TODO:
 - Some design things
 - Direct messages design update
 - Retain fragment fix for detail image
-- Add search under mentions timeline for fetching
+- ~~Add search under mentions timeline for fetching~~
 
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/main/com.rtweel/Const.java class.
