@@ -89,7 +89,7 @@
         <item name="settings">Настройки</item>
     </string-array>
 
-    <string name="go_to_profile_text">Перейти к профилю</string>
+    <string name="change_last_tweet">Заменить последний твит</string>
     <string name="goToProfile_hint">Имя профиля</string>
 
 

@@ -87,7 +87,7 @@
         <item name="settings">Settings</item>
     </string-array>
 
-    <string name="go_to_profile_text">Go to Profile</string>
+    <string name="change_last_tweet">Change last tweet</string>
     <string name="goToProfile_hint">Input profile name</string>
 
 

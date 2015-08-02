@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -23,7 +22,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -35,7 +33,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,11 +50,9 @@ import com.rtweel.profile.MainProfileFragment;
 import com.rtweel.services.TweetService;
 import com.rtweel.storage.App;
 import com.rtweel.storage.AppUser;
+import com.rtweel.tasks.tweet.LastTweetRefreshTweetTask;
 import com.rtweel.tasks.tweet.SearchTask;
 import com.rtweel.trends.TrendsFragment;
-
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.protocol.HTTP;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -65,9 +60,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -121,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Intent intent = getIntent();
         if (intent.hasExtra(TweetService.LOCATION)) {
-            processPN (intent.getSerializableExtra(TweetService.LOCATION));
+            processPN(intent.getSerializableExtra(TweetService.LOCATION));
         }
     }
 
@@ -170,24 +162,26 @@ public class MainActivity extends AppCompatActivity {
 
         View footer = LayoutInflater.from(this).inflate(R.layout.drawer_footer, null, false);
         mDrawerList.addFooterView(footer);
-        final EditText footerEdit = (EditText) footer.findViewById(R.id.goToProfile_input);
-        Button footerButton = (Button) footer.findViewById(R.id.goToProfile_button);
-        footerButton.setOnClickListener(new View.OnClickListener() {
+        Button editLastTweetButton = (Button) footer.findViewById(R.id.edit_last_tweet_button);
+        editLastTweetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(footerEdit.getText()))
-                    return;
 
                 mDrawerLayout.closeDrawers();
                 hideKeyboard();
 
-                MainProfileFragment fragment = new MainProfileFragment();
-                Bundle args = new Bundle();
-                args.putString(Const.SCREEN_USERNAME, footerEdit.getText().toString());
-                fragment.setArguments(args);
-                setMainFragment(fragment);
+                long tweetId = AppUser.getLastUserTweetId(MainActivity.this);
+
+                LastTweetRefreshTweetTask task = new LastTweetRefreshTweetTask(MainActivity.this);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweetId);
+
+                showLoadingBar();
             }
         });
+
+        if (!AppUser.showLastTweet(this))
+            editLastTweetButton.setVisibility(View.GONE);
+
 
         final AutoCompleteTextView actv = (AutoCompleteTextView) footer.findViewById(R.id.search_field);
 
@@ -485,5 +479,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void hideLoadingBar() {
         mLoadingBar.setVisibility(View.GONE);
+    }
+
+    public void showLastTweetButton() {
+        findViewById(R.id.edit_last_tweet_button).setVisibility(View.VISIBLE);
+    }
+
+    public void hideLastTweetButton() {
+        findViewById(R.id.edit_last_tweet_button).setVisibility(View.GONE);
     }
 }

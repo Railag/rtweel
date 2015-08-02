@@ -26,7 +26,6 @@ import twitter4j.auth.AccessToken;
 
 public class Tweets {
     private static Twitter sTwitter;
-    private static Status sLatestTweet;
 
     public static String[] getProjection() {
         return getProjection(false);
@@ -79,14 +78,4 @@ public class Tweets {
 
         return sTwitter;
     }
-
-    public static void saveLatestTweet(Status tweet) {
-        sLatestTweet = tweet;
-    }
-
-    public static Status getLatestTweet() {
-        return sLatestTweet;
-    }
-
-
 }

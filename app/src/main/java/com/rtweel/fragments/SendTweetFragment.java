@@ -67,6 +67,8 @@ public class SendTweetFragment extends BaseFragment {
 
     private String mPhotoPath;
 
+    private long mLastTweetId = -1L;
+
 
     @Override
     public void onStart() {
@@ -85,6 +87,12 @@ public class SendTweetFragment extends BaseFragment {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 String tweetText = prefs.getString(Const.TWEET_TEXT, "");
                 mTweetEntry.setText(tweetText);
+            }
+            if (args.containsKey(Const.TWEET_ID)) {
+                String tweetText = args.getString(Const.TWEET_TEXT);
+                mTweetEntry.setText(tweetText);
+
+                mLastTweetId = args.getLong(Const.TWEET_ID);
             }
         }
 
@@ -243,7 +251,7 @@ public class SendTweetFragment extends BaseFragment {
                     }
 
 
-                    new SendTweetTask(getActivity(), mReplyId)
+                    new SendTweetTask(getActivity(), mReplyId, mLastTweetId)
                             .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet, mPhotoPath);
                     mTweetEntry.setText("");
                 } else {
@@ -334,7 +342,7 @@ public class SendTweetFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (prefs.getBoolean(SettingsFragment.SAVE_TWEET_PREFS, true)) {
+        if (prefs.getBoolean(SettingsFragment.SAVE_TWEET_PREFS, true) && mLastTweetId == -1L) {
             String tweetText = prefs.getString(Const.TWEET_TEXT, "");
             mTweetEntry.setText(tweetText);
         }

@@ -24,6 +24,7 @@ public class Const {
     //tweet send
     public static final String REPLY_ID = "reply_id";
     public static final String PHOTO_PATH = "/tempPhoto.jpg";
+    public static final String TWEET_ID = "tweet_id";
 
     //files
 	public static final String FILE_URI = "file_uri";

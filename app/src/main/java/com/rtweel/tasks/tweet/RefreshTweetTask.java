@@ -16,11 +16,11 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.api.TweetsResources;
 
-public class RefreshTweetTask extends AsyncTask<Long, Void, twitter4j.Status> {
+public abstract class RefreshTweetTask extends AsyncTask<Long, Void, twitter4j.Status> {
 
-    private MainActivity mActivity;
-    private Long mId;
-    private int mPosition;
+    protected MainActivity mActivity;
+    protected Long mId;
+    protected int mPosition;
 
     public RefreshTweetTask(Context activity, int position) {
         mActivity = (MainActivity) activity;
@@ -40,25 +40,5 @@ public class RefreshTweetTask extends AsyncTask<Long, Void, twitter4j.Status> {
             e.printStackTrace();
         }
         return result;
-    }
-
-    @Override
-    protected void onPostExecute(twitter4j.Status result) {
-        super.onPostExecute(result);
-        if(mActivity != null) {
-            if (result != null) {
-                Fragment fragment = mActivity.getCurrentFragment();
-                if (fragment instanceof DetailFragment) {
-                    DetailFragment detailFragment = (DetailFragment) fragment;
-                    Bundle args = new Bundle();
-                    args.putSerializable(Const.TWEET, result);
-                    args.putInt(Const.POSITION, mPosition);
-                    detailFragment.setResult(args);
-                }
-            } else {
-                new DeleteTweetTask((BaseFragment) mActivity.getCurrentFragment(), mPosition).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mId);
-            }
-        } else
-            Log.e("Exception", "RefreshTweetTask lost context");
     }
 }

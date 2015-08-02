@@ -13,17 +13,13 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.rtweel.detail.DetailFragment;
-import com.rtweel.fragments.BaseFragment;
-import com.rtweel.fragments.HomeTweetFragment;
 import com.rtweel.profile.MainProfileFragment;
-import com.rtweel.profile.TweetFragment;
-import com.rtweel.tasks.tweet.RefreshTweetTask;
+import com.rtweel.tasks.tweet.DetailRefreshTweetTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -85,7 +81,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         }
 
         if (convertView == null) {
-            convertView =  LayoutInflater.from(mContext)
+            convertView = LayoutInflater.from(mContext)
                     .inflate(R.layout.search_item, parent, false);
 
             TextView textView = (TextView) convertView
@@ -118,9 +114,9 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         holder.getAuthorView().setText(author);
 
         if (TextUtils.isEmpty(text))
-            ((View)holder.getTextView().getParent()).setVisibility(View.GONE);
+            ((View) holder.getTextView().getParent()).setVisibility(View.GONE);
         else
-            ((View)holder.getTextView().getParent()).setVisibility(View.VISIBLE);
+            ((View) holder.getTextView().getParent()).setVisibility(View.VISIBLE);
 
         holder.getTextView().setText(text);
 
@@ -161,7 +157,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                         } else {
                             Status tweet = item.getTweet();
 
-                            new RefreshTweetTask(mContext, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet.getId());
+                            new DetailRefreshTweetTask(mContext, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet.getId());
 
                             DetailFragment fragment = new DetailFragment();
                             Bundle args = new Bundle();
@@ -180,7 +176,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     @Override
     public Filter getFilter() {
 
-        Filter filter = new  Filter() {
+        Filter filter = new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();

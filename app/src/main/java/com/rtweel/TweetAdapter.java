@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.rtweel.tasks.tweet.RefreshTweetTask;
 import com.rtweel.detail.DetailFragment;
 import com.rtweel.fragments.SettingsFragment;
+import com.rtweel.tasks.tweet.DetailRefreshTweetTask;
 import com.rtweel.timelines.Timeline;
 import com.rtweel.utils.DateParser;
 import com.squareup.picasso.Picasso;
@@ -134,7 +134,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
                     Status tweet = adapter.mData.get(position);
 
-                    new RefreshTweetTask(adapter.mContext, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet.getId());
+                    new DetailRefreshTweetTask(adapter.mContext, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet.getId());
 
                     DetailFragment fragment = new DetailFragment();
                     Bundle args = new Bundle();
