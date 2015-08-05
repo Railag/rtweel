@@ -6,6 +6,7 @@ Already done:
 - Twitter OAuth authentification through integrated twitter4j library, initial browser login
 - Home timeline, which is start screen
 - Profile section with 5 different timelines for each user, which you can swipe by viewpager, with header hiding animation after swiping down
+- Detail tweet scrolling via viewpager
 - Moving to profile via user's logos/ replies in tweets
 - Direct Messages
 - Search (both users & tweets)
@@ -59,7 +60,7 @@ TODO:
 - ~~Replacing rotate animation with something more smoother~~
 - ~~Adding webview for urls handling~~
 - ~~Replacing standard menu with nav drawer one~~
-- Add view pager for detail tweet scrolling
+- ~~Add view pager for detail tweet scrolling~~
 - ~~Replace main listview with recyclerview~~
 - ~~Adding floating button to scroll up and down on timeline~~
 - ~~Profile section implementation~~
@@ -77,7 +78,7 @@ TODO:
 - App icons
 - Some design things
 - Direct messages design update
-- Retain fragment fix for detail image
+- ~~Retain fragment fix for detail image~~
 - ~~Add search under mentions timeline for fetching~~
 
 
