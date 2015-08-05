@@ -10,6 +10,8 @@ public class Const {
 
     //detail tweet
 	public static final String POSITION = "position";
+    public static final String TWEET_LIST = "tweet_list";
+    public static final String TWEET_POSITION = "tweet_position";
 
     //chat
     public static final String CHAT_MESSAGES = "chat_messages";

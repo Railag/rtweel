@@ -39,6 +39,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rtweel.detail.DetailFragment;
+import com.rtweel.detail.DetailPagerFragment;
+import com.rtweel.detail.Hide;
 import com.rtweel.direct.ChatFragment;
 import com.rtweel.direct.DirectMessagesMainFragment;
 import com.rtweel.fragments.HomeTweetFragment;
@@ -105,7 +107,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (findCurrentFragment() == null)
             setMainFragment(new LoginFragment());
+        else {
 
+            if (findCurrentFragment() instanceof Hide)
+                hide();
+        }
     }
 
     @Override
@@ -376,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if (mCurrentFragment instanceof DetailFragment)
+            if (mCurrentFragment instanceof DetailPagerFragment)
                 show();
 
             mFragmentManager.popBackStackImmediate();

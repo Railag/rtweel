@@ -60,17 +60,16 @@ import twitter4j.Status;
 /**
  * Created by firrael on 22.3.15.
  */
-public class DetailFragment extends BaseFragment {
+public class DetailFragment extends BaseFragment implements Hide {
 
+    private final static String RESTRICTED_SYMBOLS = ":.";
+    private static String sPath;
     private View mView;
-
     private Boolean mIsRetweeted;
     private Boolean mIsFavorited;
     private Long mRetweetId;
-
     private Status mTweet;
     private Bundle mSaved;
-
     private TextView nameView;
     private TextView textView;
     private TextView dateView;
@@ -82,20 +81,13 @@ public class DetailFragment extends BaseFragment {
     private TextView retweetsCountView;
     private TextView favsCountView;
     private RoundedImageView profilePictureView;
-
     private int mediaIds[] = {1, 2, 3, 4, 5};
-
-    private final static String RESTRICTED_SYMBOLS = ":.";
-
-    private static String sPath;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_detail, null);
         initViews(mView);
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
         return mView;
     }
 
@@ -123,6 +115,7 @@ public class DetailFragment extends BaseFragment {
 
     }
 
+    @Nullable
     @Override
     protected String getTitle() {
         return null;
@@ -154,7 +147,7 @@ public class DetailFragment extends BaseFragment {
 
                 @Override
                 public void onClick(View v) {
-                    if (! name.equals(AppUser.getUserName(getActivity()))) {
+                    if (!name.equals(AppUser.getUserName(getActivity()))) {
                         new RetweetTask(DetailFragment.this, retweetsButton, retweetsCountView,
                                 mIsRetweeted).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id, mRetweetId);
                     } else {
@@ -368,13 +361,13 @@ public class DetailFragment extends BaseFragment {
 
         String text = ss.toString();
         int fi;
-        int fiEnd = - 1;
+        int fiEnd = -1;
 
         while (true) {
             fi = text.indexOf(c, fiEnd + 1);
-            if (fi != - 1) {
+            if (fi != -1) {
                 fiEnd = text.indexOf(' ', fi + 1);
-                if (fiEnd == - 1)
+                if (fiEnd == -1)
                     fiEnd = text.length();
 
                 ClickableSpan clickableSpan = null;
@@ -445,8 +438,8 @@ public class DetailFragment extends BaseFragment {
         v.invalidate();
         String tempFilePath = sPath;
         File tempFile = new File(tempFilePath);
-        if (! tempFile.exists()) {
-            if (! tempFile.getParentFile().exists()) {
+        if (!tempFile.exists()) {
+            if (!tempFile.getParentFile().exists()) {
                 tempFile.getParentFile().mkdirs();
             }
         }
@@ -485,11 +478,11 @@ public class DetailFragment extends BaseFragment {
     }
 
     public void changeIsRetweeted() {
-        mIsRetweeted = ! mIsRetweeted;
+        mIsRetweeted = !mIsRetweeted;
     }
 
     public void changeIsFavorited() {
-        mIsFavorited = ! mIsFavorited;
+        mIsFavorited = !mIsFavorited;
     }
 
     public void setRetweetId(Long id) {

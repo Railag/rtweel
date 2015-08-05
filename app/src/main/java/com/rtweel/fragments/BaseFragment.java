@@ -55,6 +55,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void setTitle(String title) {
+        if (TextUtils.isEmpty(title))
+            return;
+
         getMainActivity().getSupportActionBar().setTitle(title);
     }
 

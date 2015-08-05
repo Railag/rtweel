@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp">
 
-        <ImageView
-            android:id="@+id/detail_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/cd_tweet_media" />
+    <!--<ImageView-->
+        <!--android:id="@+id/detail_image"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:contentDescription="@string/cd_tweet_media" />-->
 
 </RelativeLayout>

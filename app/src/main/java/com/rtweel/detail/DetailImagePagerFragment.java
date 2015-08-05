@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by firrael on 7.5.15.
  */
-public class DetailImagePagerFragment extends BaseFragment {
+public class DetailImagePagerFragment extends BaseFragment implements Hide {
     private View v;
 
     private ViewPager mPager;
@@ -30,6 +30,8 @@ public class DetailImagePagerFragment extends BaseFragment {
     private ArrayList<String> mediaList;
     private int selectedMedia;
     private Rect startRect;
+
+    private String lastUrl = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class DetailImagePagerFragment extends BaseFragment {
 
     private void initPager() {
         mPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
+
             @Override
             public Fragment getItem(int position) {
                 DetailImageFragment fragment = new DetailImageFragment();
@@ -51,14 +54,22 @@ public class DetailImagePagerFragment extends BaseFragment {
                 points.add(startRect.top);
                 points.add(startRect.right);
                 points.add(startRect.bottom);
+                if (lastUrl.equals(mediaList.get(position)))
+                    args.putBoolean(DetailImageFragment.RESTORED, true);
                 args.putIntegerArrayList(Const.IMAGE_RECT, points);
                 fragment.setArguments(args);
+                lastUrl = mediaList.get(position);
                 return fragment;
             }
 
             @Override
             public int getCount() {
                 return mediaList.size();
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return "Image #" + (position + 1);
             }
 
             @Override
