@@ -31,6 +31,8 @@
     <string name="file_folder">Директория</string>
     <string name="file_size">"Размер файла: "</string>
     <string name="file_parent_directory">Назад</string>
+    <string name="detail_image_pager_title">Изображение №</string>
+
 
 
 

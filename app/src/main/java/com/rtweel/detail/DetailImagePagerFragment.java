@@ -69,7 +69,7 @@ public class DetailImagePagerFragment extends BaseFragment implements Hide {
 
             @Override
             public CharSequence getPageTitle(int position) {
-                return "Image #" + (position + 1);
+                return getString(R.string.detail_image_pager_title) + (position + 1);
             }
 
             @Override

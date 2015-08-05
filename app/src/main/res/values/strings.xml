@@ -31,6 +31,8 @@
     <string name="file_folder">Folder</string>
     <string name="file_size">"File Size: "</string>
     <string name="file_parent_directory">Parent Directory</string>
+    <string name="detail_image_pager_title">Image #</string>
+
 
 
 
