@@ -70,12 +70,14 @@ public class MentionsTask extends AsyncTask<String, Void, List<Status>> {
 
         if (mFragment != null) {
             Timeline timeline = mFragment.getTimeline();
-            for (twitter4j.Status s : resultList) {
-                if (!timeline.getTweets().contains(s))
-                    if (mIsUp)
-                        timeline.getTweets().add(0, s);
-                    else
-                        timeline.getTweets().add(s);
+            if (resultList != null) {
+                for (twitter4j.Status s : resultList) {
+                    if (!timeline.getTweets().contains(s))
+                        if (mIsUp)
+                            timeline.getTweets().add(0, s);
+                        else
+                            timeline.getTweets().add(s);
+                }
             }
             mFragment.getAdapter().notifyDataSetChanged();
 

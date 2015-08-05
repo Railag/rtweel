@@ -112,6 +112,6 @@ public class TagFragment extends RecyclerViewFragment {
 
     @Override
     protected String getTitle() {
-        return getString(R.string.title_tag);
+        return "#" + query.getQuery();
     }
 }

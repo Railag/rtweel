@@ -350,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentTransaction.replace(R.id.main_frame, fragment, MAIN_TAG).commit();
 
-        if (mCurrentFragment instanceof DetailFragment)
+        if (mCurrentFragment instanceof Hide &&  ! (fragment instanceof Hide) )
             show();
 
         mCurrentFragment = fragment;
