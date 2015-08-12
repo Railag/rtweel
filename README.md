@@ -80,8 +80,7 @@ TODO:
 - Direct messages design update
 - ~~Retain fragment fix for detail image~~
 - ~~Add search under mentions timeline for fetching~~
-- Fix Google Chrome auth callback
-
+- ~~Fix Google Chrome auth callback~~
 
 Note: To launch this, you'll need to get your own consumer key and consumer secret for twitter app at dev.twitter.com and put them into app/src/main/com.rtweel/Const.java class.
 
