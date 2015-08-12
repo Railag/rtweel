@@ -1,6 +1,8 @@
 package com.rtweel.fragments;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.webkit.WebViewClient;
 
 import com.rtweel.Const;
 import com.rtweel.R;
+import com.rtweel.tasks.tweet.TwitterGetAccessTokenTask;
 
 /**
  * Created by firrael on 4.5.15.
@@ -69,7 +72,7 @@ public class WebViewFragment extends BaseFragment {
         settings.setGeolocationEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setGeolocationDatabasePath(getActivity().getFilesDir().getPath());
-
+        settings.setSavePassword(false);
     }
 
     private void loadUrl(String url) {
@@ -89,6 +92,16 @@ public class WebViewFragment extends BaseFragment {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             setTitle(url);
+
+            if (url.contains(Const.TWITTER_CALLBACK_URL)) {
+                getMainActivity().showLoadingBar();
+                Uri uri = Uri.parse(url);
+                String verifier = uri.getQueryParameter(Const.URL_PARAMETER_TWITTER_OAUTH_VERIFIER);
+                new TwitterGetAccessTokenTask(getMainActivity())
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, verifier);
+
+                return true;
+            }
             return super.shouldOverrideUrlLoading(view, url);
         }
 

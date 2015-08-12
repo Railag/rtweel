@@ -32,6 +32,8 @@
     <string name="file_size">"File Size: "</string>
     <string name="file_parent_directory">Parent Directory</string>
     <string name="detail_image_pager_title">Image #</string>
+    <string name="login_dialog_try_again">Try again</string>
+    <string name="login_dialog_message">There was a problem with browser auth, press \'Try again\' button to login via Rtweel internal browser</string>
 
 
 

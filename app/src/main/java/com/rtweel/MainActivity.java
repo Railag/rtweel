@@ -25,6 +25,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
     private void initDrawer() {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         View footer = LayoutInflater.from(this).inflate(R.layout.drawer_footer, null, false);
@@ -295,16 +297,24 @@ public class MainActivity extends AppCompatActivity {
                 R.string.drawer_open,
                 R.string.drawer_closed
         ) {
-
         };
 
+
+
         mDrawerLayout.setDrawerListener(mToggle);
+
+        mToggle.setDrawerIndicatorEnabled(false);
+        mToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 
         setTitleClickable();
-
 
         mToggle.syncState();
     }
@@ -417,8 +427,10 @@ public class MainActivity extends AppCompatActivity {
 
                     if (mDrawerLayout.isDrawerOpen(mDrawerList))
                         mDrawerLayout.closeDrawers();
-                    else
-                        mDrawerLayout.openDrawer(GravityCompat.START);
+                    else {
+                        if (! (mDrawerLayout.getDrawerLockMode(Gravity.LEFT) == DrawerLayout.LOCK_MODE_LOCKED_CLOSED) )
+                            mDrawerLayout.openDrawer(GravityCompat.START);
+                    }
                 }
             });
 
@@ -494,5 +506,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void hideLastTweetButton() {
         findViewById(R.id.edit_last_tweet_button).setVisibility(View.GONE);
+    }
+
+    public DrawerLayout getDrawer() {
+        return mDrawerLayout;
+    }
+
+    public ActionBarDrawerToggle getToggle() {
+        return mToggle;
     }
 }
