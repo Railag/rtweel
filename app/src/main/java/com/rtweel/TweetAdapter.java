@@ -134,10 +134,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     RecyclerView rv = (RecyclerView) main.getParent();
                     TweetAdapter adapter = (TweetAdapter) rv.getAdapter();
 
-                    Status tweet = adapter.mData.get(position);
-
-                    new DetailRefreshTweetTask(adapter.mContext, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tweet.getId());
-
                     DetailPagerFragment fragment = new DetailPagerFragment();
                     Bundle args = new Bundle();
                     args.putSerializable(Const.TWEET_LIST, new ArrayList<>(adapter.mData));

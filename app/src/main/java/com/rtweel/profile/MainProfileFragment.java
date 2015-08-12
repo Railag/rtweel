@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -38,14 +37,9 @@ public class MainProfileFragment extends BaseFragment {
     private final static int PAGER_SIZE = 5;
     private final static int ANIMATION_TIME = 2000;
 
-    private View mView;
-
     private ViewPager mPager;
 
     private FragmentCollection mCollection;
-
-    private PagerAdapter mPagerAdapter;
-    private PagerTabStrip mPagerTabStrip;
 
     private TextView mProfileNameNormal;
     private TextView mProfileNameLink;
@@ -55,8 +49,6 @@ public class MainProfileFragment extends BaseFragment {
     private RoundedImageView mLogo;
 
     private TextView mDescription;
-
-    private HideHeaderOnScrollListener mListener;
 
     private View mHeaderLayout;
 
@@ -105,31 +97,30 @@ public class MainProfileFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_profile, container, false);
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
         setRetainInstance(true);
 
-        mPager = (ViewPager) mView.findViewById(R.id.profile_pager);
-        mPagerTabStrip = (PagerTabStrip) mView.findViewById(R.id.pager_tab_strip);
+        mPager = (ViewPager) v.findViewById(R.id.profile_pager);
 
-        mBackground = (ImageView) mView.findViewById(R.id.profile_background);
-        mLogo = (RoundedImageView) mView.findViewById(R.id.profile_picture);
+        mBackground = (ImageView) v.findViewById(R.id.profile_background);
+        mLogo = (RoundedImageView) v.findViewById(R.id.profile_picture);
 
-        mProfileNameNormal = (TextView) mView.findViewById(R.id.profile_name_normal);
-        mProfileNameLink = (TextView) mView.findViewById(R.id.profile_name_link);
+        mProfileNameNormal = (TextView) v.findViewById(R.id.profile_name_normal);
+        mProfileNameLink = (TextView) v.findViewById(R.id.profile_name_link);
 
-        mDescription = (TextView) mView.findViewById(R.id.profile_description);
+        mDescription = (TextView) v.findViewById(R.id.profile_description);
 
-        mHeaderLayout = mView.findViewById(R.id.header_layout);
+        mHeaderLayout = v.findViewById(R.id.header_layout);
 
         mCollection = new FragmentCollection();
 
-        return mView;
+        return v;
     }
 
 
     private void initPagerAdapter() {
-        mPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
+        PagerAdapter pagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -197,8 +188,7 @@ public class MainProfileFragment extends BaseFragment {
         };
 
 
-
-        mPager.setAdapter(mPagerAdapter);
+        mPager.setAdapter(pagerAdapter);
 
     }
 
@@ -210,7 +200,7 @@ public class MainProfileFragment extends BaseFragment {
         args.putLong(Const.USER_ID, mProfileId);
         recyclerViewFragment.setArguments(args);
 
-        mListener = new HideHeaderOnScrollListener() {
+        HideHeaderOnScrollListener listener = new HideHeaderOnScrollListener() {
             @Override
             public void onScrollDown() {
                 if (!mIsBlocked)
@@ -229,7 +219,7 @@ public class MainProfileFragment extends BaseFragment {
             }
         };
 
-        recyclerViewFragment.setHideHeaderListener(mListener);
+        recyclerViewFragment.setHideHeaderListener(listener);
 
         return recyclerViewFragment;
     }

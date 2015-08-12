@@ -110,4 +110,9 @@ public class DetailPagerFragment extends BaseFragment implements Hide {
     public void onResume() {
         super.onResume();
     }
+
+
+    public DetailFragment getCurrentFragment() {
+        return (DetailFragment) mPagerAdapter.instantiateItem(mPager, mPager.getCurrentItem());
+    }
 }

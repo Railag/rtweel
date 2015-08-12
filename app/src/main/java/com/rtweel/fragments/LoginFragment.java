@@ -20,11 +20,11 @@ public class LoginFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //setRetainInstance(true);
+
 		/*
          * Login Check
 		 */
-
-        setRetainInstance(true);
 
         if (loginCheck()) {
             initialize();

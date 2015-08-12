@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
 
         final FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        if (!(fragment instanceof LoginFragment || mCurrentFragment instanceof LoginFragment))
+        if ( !(fragment instanceof LoginFragment || mCurrentFragment instanceof LoginFragment) )
             fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.replace(R.id.main_frame, fragment, MAIN_TAG).commit();
@@ -353,7 +353,8 @@ public class MainActivity extends AppCompatActivity {
         if (mCurrentFragment instanceof Hide &&  ! (fragment instanceof Hide) )
             show();
 
-        mCurrentFragment = fragment;
+        if ( !(fragment instanceof LoginFragment) )
+            mCurrentFragment = fragment;
     }
 
     @Override

@@ -5,9 +5,9 @@ package com.rtweel.listeners;
  */
 public interface HideHeaderOnScrollListener {
 
-    public void onScrollDown();
+    void onScrollDown();
 
-    public void onTop();
+    void onTop();
 
-    public boolean isHidden();
+    boolean isHidden();
 }

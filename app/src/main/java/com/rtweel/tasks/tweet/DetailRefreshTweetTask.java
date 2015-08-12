@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.rtweel.Const;
 import com.rtweel.detail.DetailFragment;
+import com.rtweel.detail.DetailPagerFragment;
 import com.rtweel.fragments.BaseFragment;
 
 
@@ -26,8 +27,8 @@ public class DetailRefreshTweetTask extends RefreshTweetTask {
         if(mActivity != null) {
             if (result != null) {
                 Fragment fragment = mActivity.getCurrentFragment();
-                if (fragment instanceof DetailFragment) {
-                    DetailFragment detailFragment = (DetailFragment) fragment;
+                if (fragment instanceof DetailPagerFragment) {
+                    DetailFragment detailFragment = ((DetailPagerFragment) fragment).getCurrentFragment();
                     Bundle args = new Bundle();
                     args.putSerializable(Const.TWEET, result);
                     args.putInt(Const.POSITION, mPosition);

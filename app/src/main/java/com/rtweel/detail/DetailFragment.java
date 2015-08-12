@@ -38,6 +38,7 @@ import com.rtweel.profile.MainProfileFragment;
 import com.rtweel.storage.AppUser;
 import com.rtweel.tag.TagFragment;
 import com.rtweel.tasks.tweet.DeleteTweetTask;
+import com.rtweel.tasks.tweet.DetailRefreshTweetTask;
 import com.rtweel.tasks.tweet.FavoriteTask;
 import com.rtweel.tasks.tweet.RetweetTask;
 import com.rtweel.utils.DateParser;
@@ -110,9 +111,15 @@ public class DetailFragment extends BaseFragment implements Hide {
     public void onStart() {
         super.onStart();
 
-        Bundle start = getArguments();
-        init(start);
+        getMainActivity().showLoadingBar();
 
+        Bundle start = getArguments();
+        mTweet = (Status) start.getSerializable(Const.TWEET);
+        int position = start.getInt(Const.TWEET_POSITION);
+
+        new DetailRefreshTweetTask(getActivity(), position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTweet.getId());
+
+        init(start);
     }
 
     @Nullable
@@ -491,6 +498,8 @@ public class DetailFragment extends BaseFragment implements Hide {
 
     public void setResult(Bundle args) {
         refresh(args);
+        if (getMainActivity() != null)
+            getMainActivity().hideLoadingBar();
     }
 
     @Override
