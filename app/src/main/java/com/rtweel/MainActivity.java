@@ -39,7 +39,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rtweel.detail.DetailFragment;
 import com.rtweel.detail.DetailPagerFragment;
 import com.rtweel.detail.Hide;
 import com.rtweel.direct.ChatFragment;
@@ -300,7 +299,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-
         mDrawerLayout.setDrawerListener(mToggle);
 
         mToggle.setDrawerIndicatorEnabled(false);
@@ -355,15 +353,15 @@ public class MainActivity extends AppCompatActivity {
 
         final FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        if ( !(fragment instanceof LoginFragment || mCurrentFragment instanceof LoginFragment) )
+        if (!(fragment instanceof LoginFragment ))
             fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.replace(R.id.main_frame, fragment, MAIN_TAG).commit();
 
-        if (mCurrentFragment instanceof Hide &&  ! (fragment instanceof Hide) )
+        if (mCurrentFragment instanceof Hide && !(fragment instanceof Hide))
             show();
 
-        if ( !(fragment instanceof LoginFragment) )
+        if (!(fragment instanceof LoginFragment))
             mCurrentFragment = fragment;
     }
 
@@ -374,34 +372,39 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (mFragmentManager.getBackStackEntryCount() == 0)
-            super.onBackPressed();
-        else {
-            if (mCurrentFragment instanceof WebViewFragment) {
-                WebViewFragment wv = (WebViewFragment) mCurrentFragment;
-                if (wv.isCanGoBack()) {
-                    wv.goBack();
-                    return;
-                }
+        if (mFragmentManager == null)
+            mFragmentManager = getSupportFragmentManager();
+
+        if (mCurrentFragment instanceof WebViewFragment) {
+            WebViewFragment wv = (WebViewFragment) mCurrentFragment;
+            if (wv.isCanGoBack()) {
+                wv.goBack();
+                return;
             }
+        }
 
-            if (mCurrentFragment instanceof ChatFragment) {
-                ChatFragment fragment = (ChatFragment) mCurrentFragment;
-                if (!fragment.isListShown()) {
-                    fragment.showList();
-                    return;
-                }
+        if (mCurrentFragment instanceof ChatFragment) {
+            ChatFragment fragment = (ChatFragment) mCurrentFragment;
+            if (!fragment.isListShown()) {
+                fragment.showList();
+                return;
             }
+        }
 
-            if (mCurrentFragment instanceof DetailPagerFragment)
-                show();
+        if (mCurrentFragment instanceof DetailPagerFragment)
+            show();
 
+        int stackSize = mFragmentManager.getBackStackEntryCount();
+        if (stackSize > 0) {
             mFragmentManager.popBackStackImmediate();
-
             List<Fragment> fragments = mFragmentManager.getFragments();
             if (!fragments.isEmpty())
                 mCurrentFragment = fragments.get(fragments.size() - 2);
+            if ( ! (mCurrentFragment instanceof LoginFragment) && ! (mCurrentFragment instanceof HomeTweetFragment))
+                return;
         }
+
+        super.onBackPressed();
     }
 
     @Override
@@ -428,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
                     if (mDrawerLayout.isDrawerOpen(mDrawerList))
                         mDrawerLayout.closeDrawers();
                     else {
-                        if (! (mDrawerLayout.getDrawerLockMode(Gravity.LEFT) == DrawerLayout.LOCK_MODE_LOCKED_CLOSED) )
+                        if (!(mDrawerLayout.getDrawerLockMode(Gravity.LEFT) == DrawerLayout.LOCK_MODE_LOCKED_CLOSED))
                             mDrawerLayout.openDrawer(GravityCompat.START);
                     }
                 }

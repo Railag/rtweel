@@ -113,12 +113,6 @@ public class LoginFragment extends BaseFragment {
         getMainActivity().setMainFragment(new HomeTweetFragment());
         getMainActivity().getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         getMainActivity().getToggle().setDrawerIndicatorEnabled(true);
-//        getMainActivity().getToggle().setToolbarNavigationClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                getMainActivity().getDrawer().
-//            }
-//        });
     }
 
     @Override

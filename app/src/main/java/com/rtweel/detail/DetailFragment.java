@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,6 +150,7 @@ public class DetailFragment extends BaseFragment implements Hide {
                 favsButton.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN);
             }
 
+            Log.i("FIX", mTweet.getText());
             retweetsCountView.setText(String.valueOf(retweetsCount));
             retweetsButton.setOnClickListener(new View.OnClickListener() {
 

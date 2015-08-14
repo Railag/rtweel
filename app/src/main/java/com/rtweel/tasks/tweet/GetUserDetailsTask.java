@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.rtweel.R;
 import com.rtweel.profile.MainProfileFragment;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -92,7 +93,7 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
                     mDescription.setBackgroundColor(Color.parseColor("#" + user.getProfileBackgroundColor()));
                 }
             } else
-                Toast.makeText(context, "Network problems", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.network_problems, Toast.LENGTH_SHORT).show();
         } else
             Log.e("Exception", "GetUserDetailsTask lost context");
 

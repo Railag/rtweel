@@ -34,6 +34,8 @@
     <string name="detail_image_pager_title">Изображение №</string>
     <string name="login_dialog_try_again">Продолжить</string>
     <string name="login_dialog_message">Возникла проблема с авторизацией, нажмите \'Продолжить\' чтобы авторизоваться через Rtweel-браузер</string>
+    <string name="network_problems">Проблемы с сетью</string>
+
 
 
 
