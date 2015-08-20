@@ -79,8 +79,6 @@ public class SendTweetTask extends AsyncTask<String, String, Boolean> {
 
             AppUser.setLastTweetId(tweet.getId());
             AppUser.setLastTweetTime(new Date().getTime());
-            MainActivity mActivity = (MainActivity) mContext;
-            mActivity.showLastTweetButton();
 
             return true;
         } catch (TwitterException e) {
@@ -95,6 +93,8 @@ public class SendTweetTask extends AsyncTask<String, String, Boolean> {
     protected void onPostExecute(Boolean result) {
         if (mContext != null) {
             if (result) {
+                MainActivity mActivity = (MainActivity) mContext;
+                mActivity.showLastTweetButton();
                 Toast toast = Toast.makeText(mContext, mContext.getString(R.string.tweet_send_success),
                         Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
