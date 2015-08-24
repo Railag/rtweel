@@ -32,6 +32,7 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
     private final TextView mUsername;
     private final TextView mUsernameLinked;
     private final TextView mDescription;
+    private final String mScreenName;
 
     public GetUserDetailsTask(MainProfileFragment fragment, ImageView background, RoundedImageView image, TextView username, TextView usernameLinked, TextView description) {
         mFragment = fragment;
@@ -40,6 +41,7 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
         mUsername = username;
         mUsernameLinked = usernameLinked;
         mDescription = description;
+        mScreenName = mUsernameLinked.getText().toString();
     }
 
     @Override
@@ -51,9 +53,8 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
 
         User user = null;
         try {
-            String screenName = mUsernameLinked.getText().toString();
 
-            user = twitter.showUser(screenName);
+            user = twitter.showUser(mScreenName);
 
         } catch (IllegalStateException | TwitterException e) {
             e.printStackTrace();

@@ -72,6 +72,7 @@ public class DetailFragment extends BaseFragment implements Hide {
     private Boolean mIsFavorited;
     private Long mRetweetId;
     private Status mTweet;
+    private int mPosition;
     private Bundle mSaved;
     private TextView nameView;
     private TextView textView;
@@ -117,9 +118,9 @@ public class DetailFragment extends BaseFragment implements Hide {
 
         Bundle start = getArguments();
         mTweet = (Status) start.getSerializable(Const.TWEET);
-        int position = start.getInt(Const.TWEET_POSITION);
+        mPosition = start.getInt(Const.TWEET_POSITION);
 
-        new DetailRefreshTweetTask(getActivity(), position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTweet.getId());
+        new DetailRefreshTweetTask(getActivity(), mPosition).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mTweet.getId());
 
         init(start);
     }
@@ -134,6 +135,9 @@ public class DetailFragment extends BaseFragment implements Hide {
         if (args != null) {
 
             mTweet = (Status) args.getSerializable(Const.TWEET);
+            if (retweetsCountView == null)
+                return;
+
             final String name = mTweet.getUser().getName();
             final long id = mTweet.getId();
 
@@ -191,7 +195,7 @@ public class DetailFragment extends BaseFragment implements Hide {
             String date = DateParser.parse(mTweet.getCreatedAt().toString());
 
 
-            final int position = start.getInt(Const.POSITION);
+            mPosition = start.getInt(Const.POSITION);
 
             String imageUri = mTweet.getUser().getBiggerProfileImageURL();
             final long id = mTweet.getId();
@@ -262,7 +266,7 @@ public class DetailFragment extends BaseFragment implements Hide {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 new DeleteTweetTask(DetailFragment.this,
-                                        position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
+                                        mPosition).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
                             }
                         });
                         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

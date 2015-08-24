@@ -28,10 +28,10 @@ public class DetailRefreshTweetTask extends RefreshTweetTask {
             if (result != null) {
                 Fragment fragment = mActivity.getCurrentFragment();
                 if (fragment instanceof DetailPagerFragment) {
-                    DetailFragment detailFragment = ((DetailPagerFragment) fragment).getCurrentFragment();
+                    DetailFragment detailFragment = ((DetailPagerFragment) fragment).getItem(mPosition);
                     Bundle args = new Bundle();
                     args.putSerializable(Const.TWEET, result);
-                    args.putInt(Const.POSITION, mPosition);
+                    args.putInt(Const.TWEET_POSITION, mPosition);
                     detailFragment.setResult(args);
                 }
             } else {

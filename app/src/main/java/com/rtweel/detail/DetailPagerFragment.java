@@ -54,7 +54,7 @@ public class DetailPagerFragment extends BaseFragment implements Hide {
                 DetailFragment fragment = new DetailFragment();
                 Bundle args = new Bundle();
                 args.putSerializable(Const.TWEET, tweet);
-                args.putInt(Const.POSITION, position);
+                args.putInt(Const.TWEET_POSITION, position);
                 fragment.setArguments(args);
                 return fragment;
             }
@@ -111,8 +111,7 @@ public class DetailPagerFragment extends BaseFragment implements Hide {
         super.onResume();
     }
 
-
-    public DetailFragment getCurrentFragment() {
-        return (DetailFragment) mPagerAdapter.instantiateItem(mPager, mPager.getCurrentItem());
+    public DetailFragment getItem(int position) {
+        return (DetailFragment) mPagerAdapter.instantiateItem(mPager, position);
     }
 }
