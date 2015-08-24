@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,7 +65,7 @@ import twitter4j.Status;
  */
 public class DetailFragment extends BaseFragment implements Hide {
 
-    private final static String RESTRICTED_SYMBOLS = ":.";
+    private final static String RESTRICTED_SYMBOLS = ":.,";
     private static String sPath;
     private View mView;
     private Boolean mIsRetweeted;
@@ -364,6 +365,7 @@ public class DetailFragment extends BaseFragment implements Hide {
         ss = findSpannables(ss, 'h');
 
         textView.setText(ss);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private SpannableString findSpannables(SpannableString ss, char c) {
@@ -380,17 +382,21 @@ public class DetailFragment extends BaseFragment implements Hide {
                     fiEnd = text.length();
 
                 ClickableSpan clickableSpan = null;
-                if (c == '@')
-                    clickableSpan = getProfileSpan(fi, fiEnd, text);
-                else if (c == '#')
-                    clickableSpan = getTagSpan(fi, fiEnd, text);
-                else if (c == 'h') {
-                    int interval = fiEnd - fi;
-                    if (interval > ss.length() - fi)
-                        continue;
-                    String url = ss.subSequence(fi, fiEnd).toString();
-                    if (url.startsWith("http"))
-                        clickableSpan = getUrlSpan(fi, fiEnd, text);
+                switch (c) {
+                    case '@':
+                        clickableSpan = getProfileSpan(fi, fiEnd, text);
+                        break;
+                    case '#':
+                        clickableSpan = getTagSpan(fi, fiEnd, text);
+                        break;
+                    case 'h':
+                        int interval = fiEnd - fi;
+                        if (interval > ss.length() - fi)
+                            continue;
+                        String url = ss.subSequence(fi, fiEnd).toString();
+                        if (url.startsWith("http"))
+                            clickableSpan = getUrlSpan(fi, fiEnd, text);
+                        break;
                 }
 
                 if (clickableSpan != null) {
@@ -408,7 +414,7 @@ public class DetailFragment extends BaseFragment implements Hide {
     }
 
     private ClickableSpan getTagSpan(int fi, int fiEnd, String text) {
-        final TagClickableSpan clickableSpan = new TagClickableSpan();
+        TagClickableSpan clickableSpan = new TagClickableSpan();
         clickableSpan.mFi = fi + 1; // for char
         if (RESTRICTED_SYMBOLS.contains(text.substring(fiEnd - 1, fiEnd))) // for @name:
             fiEnd--;
@@ -418,7 +424,7 @@ public class DetailFragment extends BaseFragment implements Hide {
     }
 
     private ClickableSpan getProfileSpan(int fi, int fiEnd, String text) {
-        final ProfileClickableSpan clickableSpan = new ProfileClickableSpan();
+        ProfileClickableSpan clickableSpan = new ProfileClickableSpan();
         clickableSpan.mFi = fi + 1; // for char
         if (RESTRICTED_SYMBOLS.contains(text.substring(fiEnd - 1, fiEnd))) // for @name:
             fiEnd--;
@@ -428,7 +434,7 @@ public class DetailFragment extends BaseFragment implements Hide {
     }
 
     private ClickableSpan getUrlSpan(int fi, int fiEnd, String text) {
-        final UrlClickableSpan clickableSpan = new UrlClickableSpan();
+        UrlClickableSpan clickableSpan = new UrlClickableSpan();
         clickableSpan.mFi = fi;
         String substr = text.substring(fiEnd - 1, fiEnd);
         if (RESTRICTED_SYMBOLS.contains(substr))

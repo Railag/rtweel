@@ -58,7 +58,8 @@ public abstract class BaseFragment extends Fragment {
         if (TextUtils.isEmpty(title))
             return;
 
-        getMainActivity().getSupportActionBar().setTitle(title);
+        if (getMainActivity() != null)
+            getMainActivity().getSupportActionBar().setTitle(title);
     }
 
     @Nullable
