@@ -351,6 +351,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void setMainFragment(final Fragment fragment) {
 
+        if (mLoadingBar.isShown())
+            hideLoadingBar();
+
         final FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
         if (!(fragment instanceof LoginFragment ))
@@ -367,6 +370,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (mLoadingBar.isShown())
+            hideLoadingBar();
+
         if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
             mDrawerLayout.closeDrawers();
             return;
