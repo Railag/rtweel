@@ -60,12 +60,12 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String MAIN_TAG = "mainTag";
+    private static int TAG_COUNT = 0;
 
     private FragmentManager mFragmentManager;
 
@@ -104,14 +104,10 @@ public class MainActivity extends AppCompatActivity {
 
         mLoadingBar = (ProgressBar) findViewById(R.id.loading);
 
+        setMainFragment(new LoginFragment());
 
-        if (findCurrentFragment() == null)
-            setMainFragment(new LoginFragment());
-        else {
-
-            if (findCurrentFragment() instanceof Hide)
-                hide();
-        }
+        if (findCurrentFragment() instanceof Hide)
+            hide();
     }
 
     @Override
@@ -354,18 +350,14 @@ public class MainActivity extends AppCompatActivity {
         if (mLoadingBar.isShown())
             hideLoadingBar();
 
-        final FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-
-        if (!(fragment instanceof LoginFragment ))
-            fragmentTransaction.addToBackStack(null);
-
-        fragmentTransaction.replace(R.id.main_frame, fragment, MAIN_TAG).commit();
-
         if (mCurrentFragment instanceof Hide && !(fragment instanceof Hide))
             show();
 
-        if (!(fragment instanceof LoginFragment))
-            mCurrentFragment = fragment;
+        mCurrentFragment = fragment;
+
+        final FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack(MAIN_TAG + TAG_COUNT++);
+        fragmentTransaction.replace(R.id.main_frame, fragment, MAIN_TAG + TAG_COUNT).commit();
     }
 
     @Override
@@ -380,6 +372,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (mFragmentManager == null)
             mFragmentManager = getSupportFragmentManager();
+
+        mCurrentFragment = mFragmentManager.findFragmentByTag(MAIN_TAG + TAG_COUNT);
 
         if (mCurrentFragment instanceof WebViewFragment) {
             WebViewFragment wv = (WebViewFragment) mCurrentFragment;
@@ -402,13 +396,25 @@ public class MainActivity extends AppCompatActivity {
 
         int stackSize = mFragmentManager.getBackStackEntryCount();
         if (stackSize > 0) {
-            mFragmentManager.popBackStackImmediate();
-            List<Fragment> fragments = mFragmentManager.getFragments();
-            if (!fragments.isEmpty())
-                mCurrentFragment = fragments.get(fragments.size() - 2);
-            if ( ! (mCurrentFragment instanceof LoginFragment) && ! (mCurrentFragment instanceof HomeTweetFragment))
+            if (stackSize == 2) {
+                finish();
                 return;
+            }
+            mFragmentManager.popBackStackImmediate();
+            TAG_COUNT--;
+            return;
         }
+//        int stackSize = mFragmentManager.getBackStackEntryCount();
+//        if (stackSize > 0) {
+//            mFragmentManager.popBackStackImmediate();
+//            List<Fragment> fragments = mFragmentManager.getFragments();
+//            if (!fragments.isEmpty())
+//                mCurrentFragment = fragments.get(fragments.size() - 2);
+//            if ( ! (mCurrentFragment instanceof LoginFragment) && ! (mCurrentFragment instanceof HomeTweetFragment)) {
+//                finish();
+//                return;
+//            }
+//        }
 
         super.onBackPressed();
     }
@@ -470,7 +476,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isLoggedIn() {
-        return mCurrentFragment != null;
+        return !(mCurrentFragment instanceof LoginFragment);
     }
 
     public Fragment getCurrentFragment() {
