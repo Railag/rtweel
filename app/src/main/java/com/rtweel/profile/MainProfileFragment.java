@@ -29,6 +29,7 @@ import com.rtweel.fragments.RecyclerViewFragment;
 import com.rtweel.listeners.HideHeaderOnScrollListener;
 import com.rtweel.storage.Tweets;
 import com.rtweel.tasks.tweet.GetUserDetailsTask;
+import com.rtweel.utils.ProfileViewPager;
 
 /**
  * Created by firrael on 25.3.15.
@@ -38,7 +39,7 @@ public class MainProfileFragment extends BaseFragment {
     private final static int PAGER_SIZE = 5;
     private final static int ANIMATION_TIME = 2000;
 
-    private ViewPager mPager;
+    private ProfileViewPager mPager;
 
     private FragmentCollection mCollection;
 
@@ -80,7 +81,7 @@ public class MainProfileFragment extends BaseFragment {
             mProfileId = args.getLong(Const.USER_ID);
         }
 
-        mPager.setEnabled(false);
+        mPager.setPagingEnabled(false);
 
         getMainActivity().showLoadingBar();
 
@@ -101,7 +102,7 @@ public class MainProfileFragment extends BaseFragment {
 
         Bundle args = getArguments();
 
-        mPager.setEnabled(true);
+        mPager.setPagingEnabled(true);
 
         getMainActivity().hideLoadingBar();
 
@@ -121,7 +122,7 @@ public class MainProfileFragment extends BaseFragment {
 
         setRetainInstance(true);
 
-        mPager = (ViewPager) v.findViewById(R.id.profile_pager);
+        mPager = (ProfileViewPager) v.findViewById(R.id.profile_pager);
 
         mBackground = (ImageView) v.findViewById(R.id.profile_background);
         mLogo = (RoundedImageView) v.findViewById(R.id.profile_picture);

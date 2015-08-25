@@ -48,7 +48,7 @@
         android:padding="5dp"
         android:textSize="13sp" />
 
-    <android.support.v4.view.ViewPager
+    <com.rtweel.utils.ProfileViewPager
         android:id="@+id/profile_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -62,6 +62,6 @@
             android:paddingTop="4dp"
             android:textColor="#fff" />
 
-    </android.support.v4.view.ViewPager>
+    </com.rtweel.utils.ProfileViewPager>
 
 </LinearLayout>
