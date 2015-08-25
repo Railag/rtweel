@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rtweel.Const;
@@ -79,11 +80,30 @@ public class MainProfileFragment extends BaseFragment {
             mProfileId = args.getLong(Const.USER_ID);
         }
 
+        mPager.setEnabled(false);
+
+        getMainActivity().showLoadingBar();
+
         GetUserDetailsTask task = new GetUserDetailsTask(this, mBackground, mLogo, mProfileNameNormal, mProfileNameLink, mDescription);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Tweets.getTwitter(getActivity()));
 
+    }
+
+    public void init() {
+        if (mProfileId == -1 && TextUtils.isEmpty(mProfileNameLink.getText())) {
+            Toast.makeText(getActivity(), R.string.network_problems, Toast.LENGTH_SHORT).show();
+            getMainActivity().onBackPressed();
+            return;
+        }
+
 
         initPagerAdapter();
+
+        Bundle args = getArguments();
+
+        mPager.setEnabled(true);
+
+        getMainActivity().hideLoadingBar();
 
         if (args != null && args.containsKey(Const.OPEN_MENTIONS))
             mPager.setCurrentItem(1, false);
@@ -123,6 +143,7 @@ public class MainProfileFragment extends BaseFragment {
         PagerAdapter pagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
+
                 switch (position) {
                     case 0:
                         return mCollection.getUser();

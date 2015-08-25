@@ -93,6 +93,8 @@ public class GetUserDetailsTask extends AsyncTask<Twitter, Void, User> {
                     mDescription.setText(user.getDescription());
                     mDescription.setBackgroundColor(Color.parseColor("#" + user.getProfileBackgroundColor()));
                 }
+
+                mFragment.init();
             } else
                 Toast.makeText(context, R.string.network_problems, Toast.LENGTH_SHORT).show();
         } else
